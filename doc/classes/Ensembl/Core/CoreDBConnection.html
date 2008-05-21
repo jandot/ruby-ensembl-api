@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html 
+     PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <title>Class: Ensembl::Core::CoreDBConnection</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+  <meta http-equiv="Content-Script-Type" content="text/javascript" />
+  <link rel="stylesheet" href="../../.././rdoc-style.css" type="text/css" media="screen" />
+  <script type="text/javascript">
+  // <![CDATA[
+
+  function popupCode( url ) {
+    window.open(url, "Code", "resizable=yes,scrollbars=yes,toolbar=no,status=no,height=150,width=400")
+  }
+
+  function toggleCode( id ) {
+    if ( document.getElementById )
+      elem = document.getElementById( id );
+    else if ( document.all )
+      elem = eval( "document.all." + id );
+    else
+      return false;
+
+    elemStyle = elem.style;
+    
+    if ( elemStyle.display != "block" ) {
+      elemStyle.display = "block"
+    } else {
+      elemStyle.display = "none"
+    }
+
+    return true;
+  }
+  
+  // Make codeblocks hidden by default
+  document.writeln( "<style type=\"text/css\">div.method-source-code { display: none }</style>" )
+  
+  // ]]>
+  </script>
+
+</head>
+<body>
+
+
+
+    <div id="classHeader">
+        <table class="header-table">
+        <tr class="top-aligned-row">
+          <td><strong>Class</strong></td>
+          <td class="class-name-in-header">Ensembl::Core::CoreDBConnection</td>
+        </tr>
+        <tr class="top-aligned-row">
+            <td><strong>In:</strong></td>
+            <td>
+                <a href="../../../files/lib/ensembl/db_connection_rb.html">
+                lib/ensembl/db_connection.rb
+                </a>
+        <br />
+            </td>
+        </tr>
+
+        <tr class="top-aligned-row">
+            <td><strong>Parent:</strong></td>
+            <td>
+                ActiveRecord::Base
+            </td>
+        </tr>
+        </table>
+    </div>
+  <!-- banner header -->
+
+  <div id="bodyContent">
+
+
+
+  <div id="contextContent">
+
+    <div id="description">
+      <h1>DESCRIPTION</h1>
+<p>
+The <a href="CoreDBConnection.html">Ensembl::Core::CoreDBConnection</a> is
+the actual connection established with the <a
+href="../../Ensembl.html">Ensembl</a> server.
+</p>
+
+    </div>
+
+
+   </div>
+
+    <div id="method-list">
+      <h3 class="section-bar">Methods</h3>
+
+      <div class="name-list">
+      <a href="#M000065">connect</a>&nbsp;&nbsp;
+      </div>
+    </div>
+
+  </div>
+
+
+    <!-- if includes -->
+
+    <div id="section">
+
+
+
+
+
+      
+
+
+    <!-- if method_list -->
+    <div id="methods">
+      <h3 class="section-bar">Public Class methods</h3>
+
+      <div id="method-M000065" class="method-detail">
+        <a name="M000065"></a>
+
+        <div class="method-heading">
+          <a href="CoreDBConnection.src/M000065.html" target="Code" class="method-signature"
+            onclick="popupCode('CoreDBConnection.src/M000065.html');return false;">
+          <span class="method-name">connect</span><span class="method-args">(species, release = ENSEMBL_RELEASE)</span>
+          </a>
+        </div>
+      
+        <div class="method-description">
+          <h1>DESCRIPTION</h1>
+<p>
+The <a
+href="CoreDBConnection.html#M000065">Ensembl::Core::CoreDBConnection#connect</a>
+method makes the connection to the <a href="../../Ensembl.html">Ensembl</a>
+core database for a given species. By default, it connects to release 45
+for that species. You <em>could</em> use a lower number, but some parts of
+the API might not work, or worse: give the wrong results.
+</p>
+<h1>USAGE</h1>
+<pre>
+ # Connect to release 45 of human
+ Ensembl::Core::CoreDBConnection.connect('homo_sapiens')
+
+ # Connect to release 42 of chicken
+ Ensembl::Core::CoreDBConnection.connect('gallus_gallus')
+</pre>
+<hr size="1"></hr><p>
+<b>Arguments</b>:
+</p>
+<ul>
+<li>species:: species to <a href="CoreDBConnection.html#M000065">connect</a>
+to. Arguments should be in snake_case
+
+</li>
+<li>ensembl_release:: the release of the database to <a
+href="CoreDBConnection.html#M000065">connect</a> to
+
+</li>
+</ul>
+<pre>
+ (default = 45)
+</pre>
+        </div>
+      </div>
+
+
+    </div>
+
+
+  </div>
+
+
+<div id="validator-badges">
+  <p><small><a href="http://validator.w3.org/check/referer">[Validate]</a></small></p>
+</div>
+
+</body>
+</html>

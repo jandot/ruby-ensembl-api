@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html 
+     PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html>
+<head>
+  <title>connect (Ensembl::Core::CoreDBConnection)</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+  <link rel="stylesheet" href="../../../.././rdoc-style.css" type="text/css" media="screen" />
+</head>
+<body class="standalone-code">
+  <pre><span class="ruby-comment cmt"># File lib/ensembl/db_connection.rb, line 50</span>
+      <span class="ruby-keyword kw">def</span> <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">connect</span>(<span class="ruby-identifier">species</span>)
+        <span class="ruby-identifier">db_name</span> = <span class="ruby-constant">Ensembl</span><span class="ruby-operator">::</span><span class="ruby-constant">DummyDBConnection</span>.<span class="ruby-identifier">connection</span>.<span class="ruby-identifier">select_values</span>(<span class="ruby-value str">'show databases'</span>).<span class="ruby-identifier">select</span>{<span class="ruby-operator">|</span><span class="ruby-identifier">v</span><span class="ruby-operator">|</span> <span class="ruby-identifier">v</span> <span class="ruby-operator">=~</span> <span class="ruby-node">/#{species}_core_#{ENSEMBL_RELEASE.to_s}/</span>}[<span class="ruby-value">0</span>]
+        
+        <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">db_name</span>.<span class="ruby-identifier">nil?</span>
+          <span class="ruby-identifier">warn</span> <span class="ruby-node">&quot;WARNING: No connection to database established. Check that the species is in snake_case (was: #{species}).&quot;</span>
+        <span class="ruby-keyword kw">else</span>
+          <span class="ruby-identifier">establish_connection</span>(
+                              <span class="ruby-identifier">:adapter</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-constant">DB_ADAPTER</span>,
+                              <span class="ruby-identifier">:host</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-constant">DB_HOST</span>,
+                              <span class="ruby-identifier">:database</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">db_name</span>,
+                              <span class="ruby-identifier">:username</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-constant">DB_USERNAME</span>,
+                              <span class="ruby-identifier">:password</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-constant">DB_PASSWORD</span>
+                            )
+        <span class="ruby-keyword kw">end</span>
+        
+      <span class="ruby-keyword kw">end</span></pre>
+</body>
+</html>

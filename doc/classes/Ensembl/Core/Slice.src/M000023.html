@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html 
+     PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html>
+<head>
+  <title>excise (Ensembl::Core::Slice)</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+  <link rel="stylesheet" href="../../../.././rdoc-style.css" type="text/css" media="screen" />
+</head>
+<body class="standalone-code">
+  <pre><span class="ruby-comment cmt"># File lib/ensembl/core/slice.rb, line 278</span>
+      <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">excise</span>(<span class="ruby-identifier">ranges</span>)
+        <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">ranges</span>.<span class="ruby-identifier">class</span> <span class="ruby-operator">!=</span> <span class="ruby-constant">Array</span>
+          <span class="ruby-identifier">raise</span> <span class="ruby-constant">RuntimeError</span>, <span class="ruby-value str">&quot;Argument should be an array of ranges&quot;</span>
+        <span class="ruby-keyword kw">end</span>
+        <span class="ruby-identifier">ranges</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">r</span><span class="ruby-operator">|</span>
+          <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">r</span>.<span class="ruby-identifier">class</span> <span class="ruby-operator">!=</span> <span class="ruby-constant">Range</span>
+            <span class="ruby-identifier">raise</span> <span class="ruby-constant">RuntimeError</span>, <span class="ruby-value str">&quot;Argument should be an array of ranges&quot;</span>
+          <span class="ruby-keyword kw">end</span>
+        <span class="ruby-keyword kw">end</span>
+
+        <span class="ruby-identifier">answer</span> = <span class="ruby-constant">Array</span>.<span class="ruby-identifier">new</span>
+        <span class="ruby-identifier">previous_excised_stop</span> = <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">start</span> <span class="ruby-operator">-</span> <span class="ruby-value">1</span>
+        <span class="ruby-identifier">ranges</span>.<span class="ruby-identifier">sort_by</span>{<span class="ruby-operator">|</span><span class="ruby-identifier">r</span><span class="ruby-operator">|</span> <span class="ruby-identifier">r</span>.<span class="ruby-identifier">first</span>}.<span class="ruby-identifier">each</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">r</span><span class="ruby-operator">|</span>
+          <span class="ruby-identifier">subslice_start</span> = <span class="ruby-identifier">previous_excised_stop</span> <span class="ruby-operator">+</span> <span class="ruby-value">1</span>
+          <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">subslice_start</span> <span class="ruby-operator">&lt;=</span> <span class="ruby-identifier">r</span>.<span class="ruby-identifier">first</span> <span class="ruby-operator">-</span> <span class="ruby-value">1</span>
+            <span class="ruby-identifier">answer</span>.<span class="ruby-identifier">push</span>(<span class="ruby-constant">Slice</span>.<span class="ruby-identifier">new</span>(<span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">seq_region</span>, <span class="ruby-identifier">subslice_start</span>, <span class="ruby-identifier">r</span>.<span class="ruby-identifier">first</span> <span class="ruby-operator">-</span> <span class="ruby-value">1</span>))
+          <span class="ruby-keyword kw">end</span>
+          <span class="ruby-identifier">previous_excised_stop</span> = <span class="ruby-identifier">r</span>.<span class="ruby-identifier">last</span>
+          <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">r</span>.<span class="ruby-identifier">last</span> <span class="ruby-operator">&gt;</span> <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">stop</span>
+            <span class="ruby-keyword kw">return</span> <span class="ruby-identifier">answer</span>
+          <span class="ruby-keyword kw">end</span>
+        <span class="ruby-keyword kw">end</span>
+        <span class="ruby-identifier">subslice_start</span> = <span class="ruby-identifier">previous_excised_stop</span> <span class="ruby-operator">+</span> <span class="ruby-value">1</span>
+        <span class="ruby-identifier">answer</span>.<span class="ruby-identifier">push</span>(<span class="ruby-constant">Slice</span>.<span class="ruby-identifier">new</span>(<span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">seq_region</span>, <span class="ruby-identifier">subslice_start</span>, <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">stop</span>))
+        <span class="ruby-keyword kw">return</span> <span class="ruby-identifier">answer</span>
+      <span class="ruby-keyword kw">end</span></pre>
+</body>
+</html>

@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html 
+     PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html>
+<head>
+  <title>project (Ensembl::Core::Slice)</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+  <link rel="stylesheet" href="../../../.././rdoc-style.css" type="text/css" media="screen" />
+</head>
+<body class="standalone-code">
+  <pre><span class="ruby-comment cmt"># File lib/ensembl/core/project.rb, line 54</span>
+      <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">project</span>(<span class="ruby-identifier">coord_system_name</span>)
+        <span class="ruby-identifier">answer</span> = <span class="ruby-constant">Array</span>.<span class="ruby-identifier">new</span> <span class="ruby-comment cmt"># an array of slices</span>
+        <span class="ruby-identifier">source_coord_system</span> = <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">seq_region</span>.<span class="ruby-identifier">coord_system</span>
+        <span class="ruby-identifier">target_coord_system</span> = <span class="ruby-keyword kw">nil</span>
+        <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">coord_system_name</span> <span class="ruby-operator">==</span> <span class="ruby-value str">'toplevel'</span>
+          <span class="ruby-identifier">target_coord_system</span> = <span class="ruby-constant">CoordSystem</span>.<span class="ruby-identifier">find_toplevel</span>
+          <span class="ruby-identifier">coord_system_name</span> = <span class="ruby-identifier">target_coord_system</span>.<span class="ruby-identifier">name</span>
+        <span class="ruby-keyword kw">elsif</span> <span class="ruby-identifier">coord_system_name</span> <span class="ruby-operator">==</span> <span class="ruby-value str">'seqlevel'</span>
+          <span class="ruby-identifier">target_coord_system</span> = <span class="ruby-constant">CoordSystem</span>.<span class="ruby-identifier">find_seqlevel</span>
+          <span class="ruby-identifier">coord_system_name</span> = <span class="ruby-identifier">target_coord_system</span>.<span class="ruby-identifier">name</span>
+        <span class="ruby-keyword kw">else</span>
+          <span class="ruby-identifier">target_coord_system</span> = <span class="ruby-constant">CoordSystem</span>.<span class="ruby-identifier">find_by_name</span>(<span class="ruby-identifier">coord_system_name</span>)
+        <span class="ruby-keyword kw">end</span>
+      
+        <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">target_coord_system</span>.<span class="ruby-identifier">rank</span> <span class="ruby-operator">&lt;</span> <span class="ruby-identifier">source_coord_system</span>.<span class="ruby-identifier">rank</span>
+          <span class="ruby-comment cmt"># We're going from component to assembly, which is easy.</span>
+          <span class="ruby-identifier">assembly_links</span> = <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">seq_region</span>.<span class="ruby-identifier">assembly_links_as_component</span>(<span class="ruby-identifier">coord_system_name</span>)
+          <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">assembly_links</span>.<span class="ruby-identifier">length</span> <span class="ruby-operator">&gt;</span> <span class="ruby-value">1</span>
+            <span class="ruby-identifier">raise</span> <span class="ruby-value str">&quot;ERROR: There are more than 1 assembled sequence region for this component.&quot;</span>
+          <span class="ruby-keyword kw">end</span>
+      
+          <span class="ruby-identifier">assembly_link</span> = <span class="ruby-identifier">assembly_links</span>[<span class="ruby-value">0</span>]
+          <span class="ruby-identifier">target_seq_region</span> = <span class="ruby-identifier">assembly_link</span>.<span class="ruby-identifier">asm_seq_region</span>
+          <span class="ruby-identifier">target_start</span> = <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">start</span> <span class="ruby-operator">+</span> <span class="ruby-identifier">assembly_link</span>.<span class="ruby-identifier">asm_start</span> <span class="ruby-operator">-</span> <span class="ruby-identifier">assembly_link</span>.<span class="ruby-identifier">cmp_start</span>
+          <span class="ruby-identifier">target_stop</span> = <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">stop</span> <span class="ruby-operator">+</span> <span class="ruby-identifier">assembly_link</span>.<span class="ruby-identifier">asm_start</span> <span class="ruby-operator">-</span> <span class="ruby-identifier">assembly_link</span>.<span class="ruby-identifier">cmp_start</span>
+          <span class="ruby-identifier">target_strand</span> = <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">strand</span> <span class="ruby-operator">*</span> <span class="ruby-identifier">assembly_link</span>.<span class="ruby-identifier">ori</span> <span class="ruby-comment cmt"># 1x1=&gt;1, 1x-1=&gt;-1, -1x-1=&gt;1</span>
+      
+          <span class="ruby-identifier">answer</span>.<span class="ruby-identifier">push</span>(<span class="ruby-constant">Slice</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">target_seq_region</span>, <span class="ruby-identifier">target_start</span>, <span class="ruby-identifier">target_stop</span>, <span class="ruby-identifier">target_strand</span>))
+        <span class="ruby-keyword kw">else</span>
+          <span class="ruby-comment cmt"># If we're going from assembly to component, the answer of the target method</span>
+          <span class="ruby-comment cmt"># is an array consisting of Slices intermitted with Gaps.</span>
+      
+          <span class="ruby-comment cmt"># Get all AssemblyLinks starting from this assembly and for which</span>
+          <span class="ruby-comment cmt"># the cmp_seq_region.coord_system is what we want.</span>
+          <span class="ruby-identifier">assembly_links</span> = <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">seq_region</span>.<span class="ruby-identifier">assembly_links_as_assembly</span>(<span class="ruby-identifier">coord_system_name</span>)
+      
+          <span class="ruby-comment cmt"># Now reject all the components that lie _before_ the source, then</span>
+          <span class="ruby-comment cmt"># reject all the components that lie _after_ the source.</span>
+          <span class="ruby-comment cmt"># Then sort based on their positions.</span>
+          <span class="ruby-identifier">sorted_overlapping_assembly_links</span> = <span class="ruby-identifier">assembly_links</span>.<span class="ruby-identifier">reject</span>{<span class="ruby-operator">|</span><span class="ruby-identifier">al</span><span class="ruby-operator">|</span> <span class="ruby-identifier">al</span>.<span class="ruby-identifier">asm_end</span> <span class="ruby-operator">&lt;</span> <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">start</span>}.<span class="ruby-identifier">reject</span>{<span class="ruby-operator">|</span><span class="ruby-identifier">al</span><span class="ruby-operator">|</span> <span class="ruby-identifier">al</span>.<span class="ruby-identifier">asm_start</span> <span class="ruby-operator">&gt;</span> <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">stop</span>}.<span class="ruby-identifier">sort_by</span>{<span class="ruby-operator">|</span><span class="ruby-identifier">al</span><span class="ruby-operator">|</span> <span class="ruby-identifier">al</span>.<span class="ruby-identifier">asm_start</span>}
+          <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">sorted_overlapping_assembly_links</span>.<span class="ruby-identifier">length</span> <span class="ruby-operator">==</span> <span class="ruby-value">0</span>
+            <span class="ruby-keyword kw">return</span> []
+          <span class="ruby-keyword kw">end</span>
+          
+          <span class="ruby-comment cmt"># What we'll do, is create slices for all the underlying components,</span>
+          <span class="ruby-comment cmt"># including the first and the last one. At first, the first and last</span>
+          <span class="ruby-comment cmt"># components are added in their entirity and will only be cropped afterwards.</span>
+          <span class="ruby-identifier">previous_stop</span> = <span class="ruby-keyword kw">nil</span>
+          <span class="ruby-identifier">sorted_overlapping_assembly_links</span>.<span class="ruby-identifier">each_index</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">i</span><span class="ruby-operator">|</span>
+            <span class="ruby-identifier">this_link</span> = <span class="ruby-identifier">sorted_overlapping_assembly_links</span>[<span class="ruby-identifier">i</span>]
+            <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">i</span> <span class="ruby-operator">==</span> <span class="ruby-value">0</span>
+              <span class="ruby-identifier">answer</span>.<span class="ruby-identifier">push</span>(<span class="ruby-constant">Slice</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">this_link</span>.<span class="ruby-identifier">cmp_seq_region</span>, <span class="ruby-identifier">this_link</span>.<span class="ruby-identifier">cmp_start</span>, <span class="ruby-identifier">this_link</span>.<span class="ruby-identifier">cmp_end</span>, <span class="ruby-identifier">this_link</span>.<span class="ruby-identifier">ori</span> <span class="ruby-operator">*</span> <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">strand</span>))
+                <span class="ruby-keyword kw">next</span>
+            <span class="ruby-keyword kw">end</span>
+            <span class="ruby-identifier">previous_link</span> = <span class="ruby-identifier">sorted_overlapping_assembly_links</span>[<span class="ruby-identifier">i</span><span class="ruby-operator">-</span><span class="ruby-value">1</span>]
+      
+            <span class="ruby-comment cmt"># If there is a gap with the previous link: add a gap</span>
+            <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">this_link</span>.<span class="ruby-identifier">asm_start</span> <span class="ruby-operator">&gt;</span> ( <span class="ruby-identifier">previous_link</span>.<span class="ruby-identifier">asm_end</span> <span class="ruby-operator">+</span> <span class="ruby-value">1</span> )
+              <span class="ruby-identifier">gap_size</span> = <span class="ruby-identifier">this_link</span>.<span class="ruby-identifier">asm_start</span> <span class="ruby-operator">-</span> <span class="ruby-identifier">previous_link</span>.<span class="ruby-identifier">asm_end</span> <span class="ruby-operator">-</span> <span class="ruby-value">1</span>
+              <span class="ruby-identifier">answer</span>.<span class="ruby-identifier">push</span>(<span class="ruby-constant">Gap</span>.<span class="ruby-identifier">new</span>(<span class="ruby-constant">CoordSystem</span>.<span class="ruby-identifier">find_by_name</span>(<span class="ruby-identifier">coord_system_name</span>), <span class="ruby-identifier">gap_size</span>))
+            <span class="ruby-keyword kw">end</span>
+      
+            <span class="ruby-comment cmt"># And add the component itself as a Slice</span>
+            <span class="ruby-identifier">answer</span>.<span class="ruby-identifier">push</span>(<span class="ruby-constant">Slice</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">this_link</span>.<span class="ruby-identifier">cmp_seq_region</span>, <span class="ruby-identifier">this_link</span>.<span class="ruby-identifier">cmp_start</span>, <span class="ruby-identifier">this_link</span>.<span class="ruby-identifier">cmp_end</span>, <span class="ruby-identifier">this_link</span>.<span class="ruby-identifier">ori</span> <span class="ruby-operator">*</span> <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">strand</span>))
+          <span class="ruby-keyword kw">end</span>
+          
+          <span class="ruby-comment cmt"># Now see if we have to crop the first and/or last slice</span>
+          <span class="ruby-identifier">first_link</span> = <span class="ruby-identifier">sorted_overlapping_assembly_links</span>[<span class="ruby-value">0</span>]
+          <span class="ruby-keyword kw">if</span> <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">start</span> <span class="ruby-operator">&gt;</span> <span class="ruby-identifier">first_link</span>.<span class="ruby-identifier">asm_start</span>
+            <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">first_link</span>.<span class="ruby-identifier">ori</span> <span class="ruby-operator">==</span> <span class="ruby-value">-1</span>
+              <span class="ruby-identifier">answer</span>[<span class="ruby-value">0</span>].<span class="ruby-identifier">stop</span> = <span class="ruby-identifier">first_link</span>.<span class="ruby-identifier">cmp_start</span> <span class="ruby-operator">+</span> ( <span class="ruby-identifier">first_link</span>.<span class="ruby-identifier">asm_end</span> <span class="ruby-operator">-</span> <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">start</span> )
+            <span class="ruby-keyword kw">else</span>
+              <span class="ruby-identifier">answer</span>[<span class="ruby-value">0</span>].<span class="ruby-identifier">start</span> = <span class="ruby-identifier">first_link</span>.<span class="ruby-identifier">cmp_start</span> <span class="ruby-operator">+</span> ( <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">start</span> <span class="ruby-operator">-</span> <span class="ruby-identifier">first_link</span>.<span class="ruby-identifier">asm_start</span> )
+            <span class="ruby-keyword kw">end</span>
+          <span class="ruby-keyword kw">end</span>
+          
+          <span class="ruby-identifier">last_link</span> = <span class="ruby-identifier">sorted_overlapping_assembly_links</span>[<span class="ruby-value">-1</span>]
+          <span class="ruby-keyword kw">if</span> <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">stop</span> <span class="ruby-operator">&lt;</span> <span class="ruby-identifier">last_link</span>.<span class="ruby-identifier">asm_end</span>
+            <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">last_link</span>.<span class="ruby-identifier">ori</span> <span class="ruby-operator">==</span> <span class="ruby-value">-1</span>
+              <span class="ruby-identifier">answer</span>[<span class="ruby-value">-1</span>].<span class="ruby-identifier">start</span> = <span class="ruby-identifier">last_link</span>.<span class="ruby-identifier">cmp_start</span> <span class="ruby-operator">+</span> ( <span class="ruby-identifier">last_link</span>.<span class="ruby-identifier">asm_end</span> <span class="ruby-operator">-</span> <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">stop</span>)
+            <span class="ruby-keyword kw">else</span>
+              <span class="ruby-identifier">answer</span>[<span class="ruby-value">-1</span>].<span class="ruby-identifier">stop</span> = <span class="ruby-identifier">last_link</span>.<span class="ruby-identifier">cmp_start</span> <span class="ruby-operator">+</span> ( <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">stop</span> <span class="ruby-operator">-</span> <span class="ruby-identifier">last_link</span>.<span class="ruby-identifier">asm_start</span> )
+            <span class="ruby-keyword kw">end</span>
+          <span class="ruby-keyword kw">end</span>
+          
+          <span class="ruby-comment cmt"># And check if we have to add Ns at the front and/or back</span>
+          <span class="ruby-keyword kw">if</span> <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">start</span> <span class="ruby-operator">&lt;</span> <span class="ruby-identifier">first_link</span>.<span class="ruby-identifier">asm_start</span>
+            <span class="ruby-identifier">gap_size</span> = <span class="ruby-identifier">first_link</span>.<span class="ruby-identifier">asm_start</span> <span class="ruby-operator">-</span> <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">start</span>
+            <span class="ruby-identifier">answer</span>.<span class="ruby-identifier">unshift</span>(<span class="ruby-constant">Gap</span>.<span class="ruby-identifier">new</span>(<span class="ruby-constant">CoordSystem</span>.<span class="ruby-identifier">find_by_name</span>(<span class="ruby-identifier">coord_system_name</span>), <span class="ruby-identifier">gap_size</span>))
+          <span class="ruby-keyword kw">end</span>
+          <span class="ruby-keyword kw">if</span> <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">stop</span> <span class="ruby-operator">&gt;</span> <span class="ruby-identifier">last_link</span>.<span class="ruby-identifier">asm_end</span>
+            <span class="ruby-identifier">gap_size</span> = <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">stop</span> <span class="ruby-operator">-</span> <span class="ruby-identifier">last_link</span>.<span class="ruby-identifier">asm_end</span>
+            <span class="ruby-identifier">answer</span>.<span class="ruby-identifier">push</span>(<span class="ruby-constant">Gap</span>.<span class="ruby-identifier">new</span>(<span class="ruby-constant">CoordSystem</span>.<span class="ruby-identifier">find_by_name</span>(<span class="ruby-identifier">coord_system_name</span>), <span class="ruby-identifier">gap_size</span>))
+          <span class="ruby-keyword kw">end</span>
+        <span class="ruby-keyword kw">end</span>
+        
+        <span class="ruby-keyword kw">return</span> <span class="ruby-identifier">answer</span>
+        
+      <span class="ruby-keyword kw">end</span></pre>
+</body>
+</html>
