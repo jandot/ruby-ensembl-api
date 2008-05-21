@@ -1,5 +1,5 @@
 require 'rubygems'
-require_gem 'activerecord'
+require 'activerecord'
 
 DB_ADAPTER = 'mysql'
 DB_HOST = 'ensembldb.ensembl.org'
