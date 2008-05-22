@@ -15,7 +15,7 @@ require 'ensembl'
 
 include Ensembl::Core
 
-CoreDBConnection.connect('homo_sapiens')
+DBConnection.connect('homo_sapiens')
 
 class AssemblyExceptions < Test::Unit::TestCase
   def test_chr_x

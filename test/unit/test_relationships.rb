@@ -16,7 +16,7 @@ require 'ensembl'
 
 include Ensembl::Core
 
-CoreDBConnection.connect('homo_sapiens')
+DBConnection.connect('homo_sapiens')
 
 # Let's see if we can 'find' things
 class SimpleRecordsTest < Test::Unit::TestCase

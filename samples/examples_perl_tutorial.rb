@@ -7,7 +7,7 @@ require 'progressbar'
 include Ensembl::Core
 
 ## Connecting to the Database
-CoreDBConnection.connect('homo_sapiens')
+DBConnection.connect('homo_sapiens')
 
 ## Object adaptors
 # not necessary, ruby uses class methods instead

@@ -16,7 +16,7 @@ require 'ensembl'
 
 include Ensembl::Core
 
-CoreDBConnection.connect('homo_sapiens')
+DBConnection.connect('homo_sapiens')
 
 class CodingPositions < Test::Unit::TestCase
   def setup

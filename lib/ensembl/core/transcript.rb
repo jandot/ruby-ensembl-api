@@ -23,7 +23,7 @@ module Ensembl
     #
     # = USAGE
     #  #TODO
-    class Transcript < CoreDBConnection
+    class Transcript < DBConnection
       include Sliceable
 
       set_table_name 'transcript'

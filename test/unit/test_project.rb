@@ -15,7 +15,7 @@ require 'ensembl'
 
 include Ensembl::Core
 
-CoreDBConnection.connect('bos_taurus')
+DBConnection.connect('bos_taurus')
 
 class CoordinateMappingsTestSimple < Test::Unit::TestCase
   # First see if the relationships work

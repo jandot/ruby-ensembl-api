@@ -3,7 +3,7 @@ require '../lib/ensembl'
 
 include Ensembl::Core
 
-CoreDBConnection.connect('homo_sapiens')
+DBConnection.connect('homo_sapiens')
 
 puts "== Get a slice =="
 slice = Slice.fetch_by_region('chromosome','4',10000,99999,-1)
@@ -20,8 +20,8 @@ puts "5'UTR: " + transcript.five_prime_utr_seq
 puts "CDS: " + transcript.cds_seq
 puts "peptide: " + transcript.protein_seq
 
-CoreDBConnection.connection.disconnect!
-CoreDBConnection.connect('bos_taurus')
+DBConnection.connection.disconnect!
+DBConnection.connect('bos_taurus')
 
 puts "== Transforming a cow gene from chromosome level to scaffold level =="
 gene = Gene.find(2408)

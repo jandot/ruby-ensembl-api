@@ -14,7 +14,7 @@ require 'test/unit'
 require 'ensembl'
 
 include Ensembl::Core
-CoreDBConnection.connect('bos_taurus')
+DBConnection.connect('bos_taurus')
 
 class GetFeatures < Test::Unit::TestCase
   # Chr4.003.122 has no simple features in itself, but the corresponding region

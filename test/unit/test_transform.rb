@@ -15,7 +15,7 @@ require 'test/unit'
 require 'ensembl'
 
 include Ensembl::Core
-CoreDBConnection.connect('bos_taurus')
+DBConnection.connect('bos_taurus')
 
 # For all tests, the source (i.e. the seq_region that the feature is annotated
 # on initially) remains forward.
