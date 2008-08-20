@@ -1110,6 +1110,11 @@ module Ensembl
         answer.flatten!
         return answer
       end
+      
+      def go_terms
+        go_db_id = ExternalDb.find_by_db_name('GO').id
+        return self.all_xrefs.select{|x| x.external_db_id == go_db_id}.collect{|x| x.dbprimary_acc}.uniq
+      end
 
     end
 

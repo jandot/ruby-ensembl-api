@@ -52,3 +52,10 @@ class SimpleRecordsTest < Test::Unit::TestCase
     assert_equal('SRY_HUMAN', @sry_transcript.name)
   end
 end
+
+class RelationshipsTest < Test::Unit::TestCase
+  def test_go_terms
+    gene = Gene.find(91283)
+    assert_equal(['GO:0000166','GO:0000287','GO:0003779','GO:0004674','GO:0005515','GO:0005524','GO:0005737','GO:0006468','GO:0007243','GO:0015629','GO:0016740','GO:0051128'], gene.go_terms.sort)
+  end
+end
