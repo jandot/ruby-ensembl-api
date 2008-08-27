@@ -46,7 +46,7 @@ module Ensembl
       # * ensembl_release:: the release of the database to connect to
       #  (default = 45)
       def self.connect(species, release = ENSEMBL_RELEASE)
-        db_name = Ensembl::DummyDBConnection.connection.select_values('show databases').select{|v| v =~ /#{species}_core_#{ENSEMBL_RELEASE.to_s}/}[0]
+        db_name = Ensembl::DummyDBConnection.connection.select_values('show databases').select{|v| v =~ /#{species}_core_#{release.to_s}/}[0]
 
         if db_name.nil?
           warn "WARNING: No connection to database established. Check that the species is in snake_case (was: #{species})."
