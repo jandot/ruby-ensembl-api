@@ -5,7 +5,7 @@ spec = Gem::Specification.new do |s|
   s.version = "0.9"
 
   s.author = "Jan Aerts"
-  s.email = "jan.aerts@bbsrc.ac.uk"
+  s.email = "jan.aerts@gmail.com"
   s.homepage = "http://rubyforge.org/projects/bioruby-annex/"
   s.summary = "API to Ensembl databases"
   s.description = "ensembl-api provides a ruby API to the Ensembl databases (http://www.ensembl.org)"
