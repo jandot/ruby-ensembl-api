@@ -21,17 +21,17 @@ class GetFeatures < Test::Unit::TestCase
   # covered by the chromosome has 37. In addition, contigs within the scaffold
   # have 85. Total should therefore be 122.
   def test_simple_features
-    scaffold = SeqRegion.find_by_name('Chr4.003.122')
-    assert_equal(0, scaffold.simple_features.length)
-    assert_equal(122, scaffold.slice.simple_features.length)
-    slice = Slice.fetch_by_region('scaffold','Chr4.003.122')
-    assert_equal(122, slice.simple_features.length)
+    contig = SeqRegion.find_by_name('AAFC03055312')
+    assert_equal(19, contig.simple_features.length)
+    assert_equal(19, contig.slice.simple_features.length)
+    slice = Slice.fetch_by_region('contig','AAFC03055312')
+    assert_equal(19, slice.simple_features.length)
   end
 end
 
 class SliceMethodMissing < Test::Unit::TestCase
   def setup
-    @slice = Slice.new(SeqRegion.find_by_name('4'),10000,10000000)
+    @slice = Slice.fetch_by_region('chromosome','4',10000,10000000)
   end
   
   # There is not NotExistingTable class
@@ -41,7 +41,7 @@ class SliceMethodMissing < Test::Unit::TestCase
   
   # A slice can get its exons
   def test_exons
-    assert_equal(256, @slice.exons.length)
+    assert_equal(291, @slice.exons.length)
     assert_equal(Exon, @slice.exons[0].class)
   end
   
@@ -51,6 +51,6 @@ class SliceMethodMissing < Test::Unit::TestCase
   end
   
   def test_transcripts
-    assert_equal(34, @slice.transcripts.length)
+    assert_equal(36, @slice.transcripts.length)
   end
 end

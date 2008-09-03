@@ -7,7 +7,7 @@
 #
 # $Id:
 require 'pathname'
-libpath = Pathname.new(File.join(File.dirname(__FILE__), ['..'] * 3, 'lib')).cleanpath.to_s
+libpath = Pathname.new(File.join(File.dirname(__FILE__), ['..'] * 4, 'lib')).cleanpath.to_s
 $:.unshift(libpath) unless $:.include?(libpath)
 
 require 'test/unit'
@@ -18,85 +18,85 @@ include Ensembl::Core
 
 DBConnection.connect('homo_sapiens', 50)
 
-class SequenceForSlice < Test::Unit::TestCase
-  def test_forward_strand_seqlevel
-    slice = Slice.new(SeqRegion.find(170931),5,15)
-    seq = 'gcagtggtgtg'
-    assert_equal(seq, slice.seq)
-  end
-
-  def test_reverse_strand_seqlevel
-    slice = Slice.new(SeqRegion.find(170931),5,15, -1)
-    seq = 'cacaccactgc'
-    assert_equal(seq, slice.seq)
-  end
-
-  def test_forward_strand_not_seqlevel_single_target
-    slice = Slice.new(SeqRegion.find(226044),69437100,69437110)
-    seq = 'gtctatttaca'
-    assert_equal(seq, slice.seq)
-  end
-
-  def test_reverse_strand_not_seqlevel_single_target
-    slice = Slice.new(SeqRegion.find(226044),69437100,69437110,-1)
-    seq = 'tgtaaatagac'
-    assert_equal(seq, slice.seq)
-  end
-
-  def test_forward_strand_not_seqlevel_composite_target
-    seq = ''
-    File.open('../../data/seq_forward_composite.fa').reject{|l| l=~/^>/}.each do |line|
-      line.chomp!
-      seq += line
-    end
-    seq.downcase!
-    slice = Slice.new(SeqRegion.find(226044),69387650,69487649)
-    assert_equal(seq, slice.seq)
-  end
-
-  def test_reverse_strand_not_seqlevel_composite_target
-    slice = Slice.new(SeqRegion.find(226044),69437061,69437160,-1)
-    assert_equal('nnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnatgtaaatagacaactaacaagatagctgagattgtttccttatccagaca', slice.seq)
-  end
-
-end
-
-class SequenceForUnsplicedFeature < Test::Unit::TestCase
-  def test_forward_strand_seqlevel
-    marker_feature = MarkerFeature.find(1323757)
-    marker_seq = 'ggcttacttggaaaggtctcttccaacccaatattattcaaatactttcaattttcttctaatgtttttagtgtgtgtgtgtgtgtgtgtgtgtgtgtgtgtgtgtgtgtggttttgttttatttcttttaattctctgatacatttagaatttcttttattattttattttattttattatttatttatttatttttgagacagagttttgctc'
-    assert_equal(marker_seq, marker_feature.seq)
-  end
-
-  def test_reverse_strand_seqlevel
-    gene = Gene.find_by_name('ANKRD56')
-
-    ankrd56_seq = 'atggcccgagagctgagccaggaggcactactggactttctgtgccaggctgggggccgcgtgaccaacgctgccttgctgagccacttcaagagctttctccgagaccccgacgcgtcccccagccagcaccagcaccgccgcgagctcttcaagggcttcgtcaactcggtcgccgcagtgcgccaggaccccgacggcaccaagtacgtggtgctcaagaggagatacagggaccttttgggggaggaggggctgcagcgaccccgcgagccgcccgcggccgcccccagtgcagggggagctgcgccctgctccccgcgaggcgcgcgccggggggagccgccccagcagcagcccaggcggcggcggcgcgagaaggagccggaggaggagccagcaggtgcagcagccagagccgccgacgcagcttgcaatggactcccgggcagcgactcccgtagggcgcccgggaagggcggcggatcgaagggcagtcccggacagaggccgccggtgcccgcagctgcagcggcaggggcccaggcgagagcgagctgcgcggcggcgaagacgcagggccgctgctgctgggaatgcctccagaacaacctggctgtactgccgggagagctcggcgcactcccgcactcggccaccgcggaggagaagccggcacgggctctgcctgcccaggatgaccgcggggcttccagggagcgggaagaaggcgcgctagctgagccggcgcctgtgcctgcagtggctcactcgcctcccgccaccgtcgaggctgcgacaagcagggcttccccgcctgctctcctgcccggccccgctccccgcggagaccggccggagctgctgacccccagctccctgcattattcgaccctgcagcagcagcagcagcgcactcgagagtgggtggccaggcacccgcaggtgcccgaggcccgtgatcagggccctatccgcgcctggtcggtgctgccagacaacttcctccagctgcccttggaacccggctccacggagcctaattcagagccgccagacccctgtctttcctcgcactctctctttcctgttgttccggatgagtcctgggaatcctgggcggggaacccttcattgactgtctttcgcagcattcgttgtcagctgtccctccaagatctggatgactttgtggaccaggagagtgatggcagtgaggagagcagcagtgggcccaaagactccccgggggcttctgaagaggggctgcaggttgtcttgggaaccccagatagggggaagctcaggaatccagctgggggcctttctgtatctcggaaggagggcagccccagccggagccctcagggtctcagaaacagaggggatggtcacatctctcagcaggtccctgcaggggctaatggccttgcaggccaccccctgaagcctttgccttggccagttcctaagttaaggaggtccctcaggaggagctctctggcagggagagccaaattgtcctcctctgatgaggagtacctcgatgagggcttgctgaaaagaagtcggcgcccacctcgatccaggaagccctccaaggcaggaacggcacccagcccaagggttgatgcaggtttatcactaaaacttgcagaggttaaggctgttgtggccgagcggggttggcgacacagcctgtgggtccccagtggggaggggtctgcagccttggccccccacagaacttctgagcacaaatcatccctggttccactagatgccagggagcatgagtggattgtgaagcttgccagtggctcctggattcaggtgtggactttgttctgggaggaccctcaactggccttgcacaaagactttttgactgggtacactgcgttgcactggatagccaaacatggtgacctcagggcccttcaggacttggtgtctggagcaaagaaggcagggattgtccttgatgtaaacgtgaggtccagttgtggatataccccgctgcaccttgcagccattcacggccaccagggggtcatcaaattgctagtgcaaaggttggcttctcgggtaaatgtcagggacagcagtgggaagaagccatggcagtatctaaccagtaatacctctggggaaatatggcagctgttgggagctcctcggggcaagcccattttccctgtctatcccttagttggaagttcttcccctaccagaaaggccaagagcaaggaaatatctagaagtgtcacccgaaaaacttccttcgctgcactactcaaaagtcagcacaacaagtggaaactggccaaccagtatgagaaattccacagtccaagggaaagagaagagtatagtgactga'
-    assert_equal(ankrd56_seq, gene.seq)
-  end
-
-  def test_reverse_strand_not_seqlevel
-    gene = Gene.find_by_name('DRD3')
-    drd3_gene_seq = ''
-    File.open('../../data/seq_drd3_gene.fa').reject{|l| l=~/^>/}.each do |line|
-      line.chomp!
-      drd3_gene_seq += line
-    end
-    drd3_gene_seq.downcase!
-    assert_equal(drd3_gene_seq, gene.seq)
-
-  end
-
-  def test_exon
-    exon = Exon.find(719588)
-    assert_equal('atggcatctctgagccagctgagtggccacctgaactacacctgtggggcagagaactccacaggtgccagccaggcccgcccacatgcctactatgccctctcctactgcgcgctcatcctggccatcgtcttcggcaatggcctggtgtgcatggctgtgctgaaggagcgggccctgcagactaccaccaactacttagtagtgagcctggctgtggcagacttgctggtggccaccttggtgatgccctgggtggtatacctggag', exon.seq)
-  end
-
-end
+#class SequenceForSlice < Test::Unit::TestCase
+#  def test_forward_strand_seqlevel
+#    slice = Slice.new(SeqRegion.find(170931),5,15)
+#    seq = 'gcagtggtgtg'
+#    assert_equal(seq, slice.seq)
+#  end
+#
+#  def test_reverse_strand_seqlevel
+#    slice = Slice.new(SeqRegion.find(170931),5,15, -1)
+#    seq = 'cacaccactgc'
+#    assert_equal(seq, slice.seq)
+#  end
+#
+#  def test_forward_strand_not_seqlevel_single_target
+#    slice = Slice.new(SeqRegion.find(226044),69437100,69437110)
+#    seq = 'gtctatttaca'
+#    assert_equal(seq, slice.seq)
+#  end
+#
+#  def test_reverse_strand_not_seqlevel_single_target
+#    slice = Slice.new(SeqRegion.find(226044),69437100,69437110,-1)
+#    seq = 'tgtaaatagac'
+#    assert_equal(seq, slice.seq)
+#  end
+#
+#  def test_forward_strand_not_seqlevel_composite_target
+#    seq = ''
+#    File.open('../../data/seq_forward_composite.fa').reject{|l| l=~/^>/}.each do |line|
+#      line.chomp!
+#      seq += line
+#    end
+#    seq.downcase!
+#    slice = Slice.new(SeqRegion.find(226044),69387650,69487649)
+#    assert_equal(seq, slice.seq)
+#  end
+#
+#  def test_reverse_strand_not_seqlevel_composite_target
+#    slice = Slice.new(SeqRegion.find(226044),69437061,69437160,-1)
+#    assert_equal('nnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnatgtaaatagacaactaacaagatagctgagattgtttccttatccagaca', slice.seq)
+#  end
+#
+#end
+#
+#class SequenceForUnsplicedFeature < Test::Unit::TestCase
+#  def test_forward_strand_seqlevel
+#    marker_feature = MarkerFeature.find(1323757)
+#    marker_seq = 'ggcttacttggaaaggtctcttccaacccaatattattcaaatactttcaattttcttctaatgtttttagtgtgtgtgtgtgtgtgtgtgtgtgtgtgtgtgtgtgtgtggttttgttttatttcttttaattctctgatacatttagaatttcttttattattttattttattttattatttatttatttatttttgagacagagttttgctc'
+#    assert_equal(marker_seq, marker_feature.seq)
+#  end
+#
+#  def test_reverse_strand_seqlevel
+#    gene = Gene.find_by_name('ANKRD56')
+#
+#    ankrd56_seq = 'atggcccgagagctgagccaggaggcactactggactttctgtgccaggctgggggccgcgtgaccaacgctgccttgctgagccacttcaagagctttctccgagaccccgacgcgtcccccagccagcaccagcaccgccgcgagctcttcaagggcttcgtcaactcggtcgccgcagtgcgccaggaccccgacggcaccaagtacgtggtgctcaagaggagatacagggaccttttgggggaggaggggctgcagcgaccccgcgagccgcccgcggccgcccccagtgcagggggagctgcgccctgctccccgcgaggcgcgcgccggggggagccgccccagcagcagcccaggcggcggcggcgcgagaaggagccggaggaggagccagcaggtgcagcagccagagccgccgacgcagcttgcaatggactcccgggcagcgactcccgtagggcgcccgggaagggcggcggatcgaagggcagtcccggacagaggccgccggtgcccgcagctgcagcggcaggggcccaggcgagagcgagctgcgcggcggcgaagacgcagggccgctgctgctgggaatgcctccagaacaacctggctgtactgccgggagagctcggcgcactcccgcactcggccaccgcggaggagaagccggcacgggctctgcctgcccaggatgaccgcggggcttccagggagcgggaagaaggcgcgctagctgagccggcgcctgtgcctgcagtggctcactcgcctcccgccaccgtcgaggctgcgacaagcagggcttccccgcctgctctcctgcccggccccgctccccgcggagaccggccggagctgctgacccccagctccctgcattattcgaccctgcagcagcagcagcagcgcactcgagagtgggtggccaggcacccgcaggtgcccgaggcccgtgatcagggccctatccgcgcctggtcggtgctgccagacaacttcctccagctgcccttggaacccggctccacggagcctaattcagagccgccagacccctgtctttcctcgcactctctctttcctgttgttccggatgagtcctgggaatcctgggcggggaacccttcattgactgtctttcgcagcattcgttgtcagctgtccctccaagatctggatgactttgtggaccaggagagtgatggcagtgaggagagcagcagtgggcccaaagactccccgggggcttctgaagaggggctgcaggttgtcttgggaaccccagatagggggaagctcaggaatccagctgggggcctttctgtatctcggaaggagggcagccccagccggagccctcagggtctcagaaacagaggggatggtcacatctctcagcaggtccctgcaggggctaatggccttgcaggccaccccctgaagcctttgccttggccagttcctaagttaaggaggtccctcaggaggagctctctggcagggagagccaaattgtcctcctctgatgaggagtacctcgatgagggcttgctgaaaagaagtcggcgcccacctcgatccaggaagccctccaaggcaggaacggcacccagcccaagggttgatgcaggtttatcactaaaacttgcagaggttaaggctgttgtggccgagcggggttggcgacacagcctgtgggtccccagtggggaggggtctgcagccttggccccccacagaacttctgagcacaaatcatccctggttccactagatgccagggagcatgagtggattgtgaagcttgccagtggctcctggattcaggtgtggactttgttctgggaggaccctcaactggccttgcacaaagactttttgactgggtacactgcgttgcactggatagccaaacatggtgacctcagggcccttcaggacttggtgtctggagcaaagaaggcagggattgtccttgatgtaaacgtgaggtccagttgtggatataccccgctgcaccttgcagccattcacggccaccagggggtcatcaaattgctagtgcaaaggttggcttctcgggtaaatgtcagggacagcagtgggaagaagccatggcagtatctaaccagtaatacctctggggaaatatggcagctgttgggagctcctcggggcaagcccattttccctgtctatcccttagttggaagttcttcccctaccagaaaggccaagagcaaggaaatatctagaagtgtcacccgaaaaacttccttcgctgcactactcaaaagtcagcacaacaagtggaaactggccaaccagtatgagaaattccacagtccaagggaaagagaagagtatagtgactga'
+#    assert_equal(ankrd56_seq, gene.seq)
+#  end
+#
+#  def test_reverse_strand_not_seqlevel
+#    gene = Gene.find_by_name('DRD3')
+#    drd3_gene_seq = ''
+#    File.open('../../data/seq_drd3_gene.fa').reject{|l| l=~/^>/}.each do |line|
+#      line.chomp!
+#      drd3_gene_seq += line
+#    end
+#    drd3_gene_seq.downcase!
+#    assert_equal(drd3_gene_seq, gene.seq)
+#
+#  end
+#
+#  def test_exon
+#    exon = Exon.find(719588)
+#    assert_equal('atggcatctctgagccagctgagtggccacctgaactacacctgtggggcagagaactccacaggtgccagccaggcccgcccacatgcctactatgccctctcctactgcgcgctcatcctggccatcgtcttcggcaatggcctggtgtgcatggctgtgctgaaggagcgggccctgcagactaccaccaactacttagtagtgagcctggctgtggcagacttgctggtggccaccttggtgatgccctgggtggtatacctggag', exon.seq)
+#  end
+#
+#end
 
 class SequenceForSlicedFeature < Test::Unit::TestCase
   def test_transcript_foward
-    transcript = Transcript.find(276333)
+    transcript = Transcript.find(73491) # UB2R1 = CDC34
     ub2r1_transcript_seq = ''
     File.open('../../data/seq_ub2r1_transcript.fa').reject{|l| l=~/^>/}.each do |line|
       line.chomp!
@@ -108,14 +108,14 @@ class SequenceForSlicedFeature < Test::Unit::TestCase
   end
 
   def test_transcript_reverse
-    transcript = Transcript.find(276225)
-    cso19_transcript_seq = ''
-    File.open('../../data/seq_cso19_transcript.fa').reject{|l| l=~/^>/}.each do |line|
+    transcript = Transcript.find(107548)
+    rnd3_transcript_seq = ''
+    File.open('../../data/seq_rnd3_transcript.fa').reject{|l| l=~/^>/}.each do |line|
       line.chomp!
-      cso19_transcript_seq += line
+      rnd3_transcript_seq += line
     end
-    cso19_transcript_seq.downcase!
-    assert_equal(cso19_transcript_seq, transcript.seq)
+    rnd3_transcript_seq.downcase!
+    assert_equal(rnd3_transcript_seq, transcript.seq)
   end
 
 end
@@ -123,9 +123,9 @@ end
 class SequenceForCDS < Test::Unit::TestCase
   def setup
     # Transcript tr_fw is ENST00000215574
-    @tr_fw = Transcript.find(276333)
+    @tr_fw = Transcript.find(73491)
     # Transcript tr_rev is ENST00000315489
-    @tr_rev = Transcript.find(276225)
+    @tr_rev = Transcript.find(73411)
   end
 
   def test_cds_fw

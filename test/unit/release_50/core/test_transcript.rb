@@ -21,9 +21,9 @@ DBConnection.connect('homo_sapiens', 50)
 class CodingPositions < Test::Unit::TestCase
   def setup
     # Transcript tr_fw is ENST00000215574
-    @tr_fw = Transcript.find(276333)
+    @tr_fw = Transcript.find(73491)
     # Transcript tr_rev is ENST00000358041
-    @tr_rev = Transcript.find(276403)
+    @tr_rev = Transcript.find(73774)
   end
 
   def test_transcript_coords
@@ -58,16 +58,16 @@ end
 class GenomicVsCDna < Test::Unit::TestCase
   def setup
     # Transcript tr_fw is ENST00000215574
-    @tr_fw = Transcript.find(276333)
+    @tr_fw = Transcript.find(73491)
     # Transcript tr_rev is ENST00000315489
-    @tr_rev = Transcript.find(276225)
+    @tr_rev = Transcript.find(73411)
   end
   
   def test_identify_exon
-    assert_equal(Exon.find(621287), @tr_fw.exon_for_cdna_position(601))
-    assert_equal(Exon.find(621287), @tr_fw.exon_for_genomic_position(488053))
-    assert_equal(Exon.find(620486), @tr_rev.exon_for_cdna_position(541))
-    assert_equal(Exon.find(620486), @tr_rev.exon_for_genomic_position(418719))
+    assert_equal(Exon.find(374767), @tr_fw.exon_for_cdna_position(601))
+    assert_equal(Exon.find(374767), @tr_fw.exon_for_genomic_position(488053))
+    assert_equal(Exon.find(374458), @tr_rev.exon_for_cdna_position(541))
+    assert_equal(Exon.find(374458), @tr_rev.exon_for_genomic_position(418719))
   end
   
   def test_cdna2genomic
