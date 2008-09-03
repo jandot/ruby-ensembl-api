@@ -1094,6 +1094,19 @@ module Ensembl
       end
       
       # = DESCRIPTION
+      # The Gene#find_by_stable_id class method fetches a Gene object based on
+      # its stable ID (i.e. the "ENSG" accession number). If the name is
+      # not found, it returns nil.
+      def self.find_by_stable_id(stable_id)
+        gene_stable_id = GeneStableId.find_by_stable_id(stable_id)
+        if gene_stable_id.nil?
+          return nil
+        else
+          return gene_stable_id.gene
+        end
+      end
+      
+      # = DESCRIPTION
       # The Gene#all_xrefs method is a convenience method in that it combines
       # three methods into one. It collects all xrefs for the gene itself, plus
       # all xrefs for all transcripts for the gene, and all xrefs for all

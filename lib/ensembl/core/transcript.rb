@@ -104,6 +104,19 @@ module Ensembl
       end
       
       # = DESCRIPTION
+      # The Transcript#find_by_stable_id class method fetches a Transcript object based on
+      # its stable ID (i.e. the "ENST" accession number). If the name is
+      # not found, it returns nil.
+      def self.find_by_stable_id(stable_id)
+        transcript_stable_id = TranscriptStableId.find_by_stable_id(stable_id)
+        if transcript_stable_id.nil?
+          return nil
+        else
+          return transcript_stable_id.gene
+        end
+      end
+      
+      # = DESCRIPTION
       # The Transcript#seq method returns the full sequence of all concatenated
       # exons.
       def seq
