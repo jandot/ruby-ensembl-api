@@ -191,6 +191,7 @@ module Ensembl
       def display_name
       	return [self.seq_region.coord_system.name, self.seq_region.coord_system.version, self.seq_region.name, self.start.to_s, self.stop.to_s, self.strand.to_s].join(':')
       end
+      alias to_s display_name
 
       # = DESCRIPTION
       # The Slice#overlaps? method checks if this slice overlaps another one.
