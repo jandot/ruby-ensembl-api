@@ -7,18 +7,32 @@ DB_USERNAME = 'anonymous'
 DB_PASSWORD = ''
 
 module Ensembl
-  class DummyDBConnection < ActiveRecord::Base
+  class OldDummyDBConnection < ActiveRecord::Base
     self.abstract_class = true
-
+    
     establish_connection(
                         :adapter => DB_ADAPTER,
                         :host => DB_HOST,
                         :database => '',
                         :username => DB_USERNAME,
                         :password => DB_PASSWORD
-                      )
+                        )
   end
 
+  class NewDummyDBConnection < ActiveRecord::Base
+    self.abstract_class = true
+    
+    establish_connection(
+                        :adapter => DB_ADAPTER,
+                        :host => DB_HOST,
+                        :database => '',
+                        :username => DB_USERNAME,
+                        :password => DB_PASSWORD,
+                        :port => 5306
+                        )
+  end
+
+  
   module Core
     # = DESCRIPTION
     # The Ensembl::Core::DBConnection is the actual connection established
@@ -46,17 +60,20 @@ module Ensembl
       # * ensembl_release:: the release of the database to connect to
       #  (default = 45)
       def self.connect(species, release = ENSEMBL_RELEASE)
-        db_name = Ensembl::DummyDBConnection.connection.select_values('show databases').select{|v| v =~ /#{species}_core_#{release.to_s}/}[0]
+        dummy_dbconnection = ( release > 47 ) ? Ensembl::NewDummyDBConnection.connection : Ensembl::OldDummyDBConnection.connection
+        db_name = dummy_dbconnection.select_values('show databases').select{|v| v =~ /#{species}_core_#{release.to_s}/}[0]
 
         if db_name.nil?
           warn "WARNING: No connection to database established. Check that the species is in snake_case (was: #{species})."
         else
+          port = ( release > 47 ) ? 5306 : nil
           establish_connection(
                               :adapter => DB_ADAPTER,
                               :host => DB_HOST,
                               :database => db_name,
                               :username => DB_USERNAME,
-                              :password => DB_PASSWORD
+                              :password => DB_PASSWORD,
+                              :port => port
                             )
         end
 
@@ -98,12 +115,14 @@ module Ensembl
         if db_name.nil?
           warn "WARNING: No connection to database established. Check that the species is in snake_case (was: #{species})."
         else
+          port = ( release > 47 ) ? 5306 : nil
           establish_connection(
                               :adapter => DB_ADAPTER,
                               :host => DB_HOST,
                               :database => db_name,
                               :username => DB_USERNAME,
-                              :password => DB_PASSWORD
+                              :password => DB_PASSWORD,
+                              :port => port
                             )
         end
 
