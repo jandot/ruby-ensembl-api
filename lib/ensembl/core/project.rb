@@ -67,19 +67,20 @@ module Ensembl
         if target_coord_system.rank < source_coord_system.rank
           # We're going from component to assembly, which is easy.
           assembly_links = self.seq_region.assembly_links_as_component(coord_system_name)
-      	  if assembly_links.length > 1
-            raise "ERROR: There are more than 1 assembled sequence region for this component."
-          elsif assembly_links.length == 0
+          
+          if assembly_links.length == 0
             return []
+          else
+      	    assembly_links.each do |assembly_link|
+              target_seq_region = assembly_link.asm_seq_region
+              target_start = self.start + assembly_link.asm_start - assembly_link.cmp_start
+              target_stop = self.stop + assembly_link.asm_start - assembly_link.cmp_start
+              target_strand = self.strand * assembly_link.ori # 1x1=>1, 1x-1=>-1, -1x-1=>1
+              
+              answer.push(Slice.new(target_seq_region, target_start, target_stop, target_strand))
+            end
           end
-
-          assembly_link = assembly_links[0]
-      	  target_seq_region = assembly_link.asm_seq_region
-          target_start = self.start + assembly_link.asm_start - assembly_link.cmp_start
-      	  target_stop = self.stop + assembly_link.asm_start - assembly_link.cmp_start
-          target_strand = self.strand * assembly_link.ori # 1x1=>1, 1x-1=>-1, -1x-1=>1
-
-          answer.push(Slice.new(target_seq_region, target_start, target_stop, target_strand))
+          
         else
           # If we're going from assembly to component, the answer of the target method
       	  # is an array consisting of Slices intermitted with Gaps.
