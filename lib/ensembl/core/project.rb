@@ -69,6 +69,8 @@ module Ensembl
           assembly_links = self.seq_region.assembly_links_as_component(coord_system_name)
       	  if assembly_links.length > 1
             raise "ERROR: There are more than 1 assembled sequence region for this component."
+          elsif assembly_links.length == 0
+            return []
           end
 
           assembly_link = assembly_links[0]
@@ -123,7 +125,7 @@ module Ensembl
                 # Find the exception record
                 exception = nil
                 assembly_exceptions.each do |ae|
-                  if ae.seq_region_end = b.start - 1
+                  if ae.seq_region_end == b.start - 1
                     exception = ae
                     break
                   end
