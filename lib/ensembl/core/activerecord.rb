@@ -1408,7 +1408,19 @@ module Ensembl
       alias :display_name :display_label
       alias :label :display_label
       alias :name :display_label
-      
+
+      # = DESCRIPTION
+      # The Translation#find_by_stable_id class method fetches a Translation
+      # object based on its stable ID (i.e. the "ENSP" accession number). If the 
+      # name is not found, it returns nil.
+      def self.find_by_stable_id(stable_id)
+        translation_stable_id = TranslationStableId.find_by_stable_id(stable_id)
+        if translation_stable_id.nil?
+          return nil
+        else
+          return translation_stable_id.translation
+        end
+      end
     end
 
     # = DESCRIPTION
