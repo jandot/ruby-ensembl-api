@@ -407,6 +407,10 @@ module Ensembl
       # As there should be 'getters' for a lot of classes, we'll implement
       # this with method_missing. For some of the original methods, see the end
       # of this file.
+      # 
+      # The optional argument is either 'true' or 'false' (default = false).
+      # False if the features have to be completely contained within the slice;
+      # true if just a partly overlap is sufficient.
       #++
       # Don't use this method yourself.
       def method_missing(method_name, *args)
