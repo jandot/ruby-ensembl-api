@@ -423,7 +423,11 @@ module Ensembl
 
         # If it exists, see if it implements Sliceable
         if ! target_class.nil? and target_class.include?(Sliceable)
-          return self.get_objects(target_class, table_name)
+          inclusive = false
+          if [TrueClass, FalseClass].include?(args[0].class)
+            inclusive = args[0]
+          end
+          return self.get_objects(target_class, table_name, inclusive)
         end
 
         raise NoMethodError
@@ -431,15 +435,34 @@ module Ensembl
       end
 
       # Don't use this method yourself.
-      def get_objects(target_class, table_name)
+      def get_objects(target_class, table_name, inclusive = false)
         answer = Array.new
 
+        
         # Get all the coord_systems with this type of features on them
         coord_system_ids_with_features = MetaCoord.find_all_by_table_name(table_name).collect{|mc| mc.coord_system_id}
 
         # Get the features of the original slice
         if coord_system_ids_with_features.include?(self.seq_region.coord_system_id)
-          answer.push(target_class.find_by_sql('SELECT * FROM ' + table_name + ' WHERE seq_region_id = ' + self.seq_region.id.to_s + ' AND seq_region_start >= ' + self.start.to_s + ' AND seq_region_end <= ' + self.stop.to_s))
+          sql = ''
+          if inclusive
+            sql = <<SQL
+SELECT * FROM #{table_name}
+WHERE seq_region_id = #{self.seq_region.id.to_s}
+AND (( seq_region_start BETWEEN #{self.start.to_s} AND #{self.stop.to_s} )
+OR   ( seq_region_end BETWEEN #{self.start.to_s} AND #{self.stop.to_s} )
+OR   ( seq_region_start <= #{self.start.to_s} AND seq_region_end >= #{self.stop.to_s} )
+    )
+SQL
+          else
+            sql = <<SQL
+SELECT * FROM #{table_name}
+WHERE seq_region_id = #{self.seq_region.id.to_s}
+AND seq_region_start >= #{self.start.to_s}
+AND seq_region_end <= #{self.stop.to_s}   
+SQL
+          end
+          answer.push(target_class.find_by_sql(sql))
           coord_system_ids_with_features.delete(self.seq_region.coord_system_id)
         end
 
@@ -452,7 +475,24 @@ module Ensembl
           target_slices = self.project(CoordSystem.find(target_coord_system_id).name)
           target_slices.each do |slice|
             if slice.class == Slice
-              answer.push(target_class.find_by_sql('SELECT * FROM ' + table_name + ' WHERE seq_region_id = ' + slice.seq_region.id.to_s + ' AND seq_region_start >= ' + slice.start.to_s + ' AND seq_region_end <= ' + slice.stop.to_s))
+              if inclusive
+                sql = <<SQL
+SELECT * FROM #{table_name}
+WHERE seq_region_id = #{slice.seq_region.id.to_s}
+AND (( seq_region_start BETWEEN #{slice.start.to_s} AND #{slice.stop.to_s} )
+OR   ( seq_region_end BETWEEN #{slice.start.to_s} AND #{slice.stop.to_s} )
+OR   ( seq_region_start <= #{slice.start.to_s} AND seq_region_end >= #{slice.stop.to_s} )
+    )
+SQL
+              else
+                sql = <<SQL
+SELECT * FROM #{table_name}
+WHERE seq_region_id = #{slice.seq_region.id.to_s}
+AND seq_region_start >= #{slice.start.to_s}
+AND seq_region_end <= #{slice.stop.to_s}   
+SQL
+              end 
+                answer.push(target_class.find_by_sql(sql))
             end
           end
         end

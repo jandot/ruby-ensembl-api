@@ -54,3 +54,17 @@ class SliceMethodMissing < Test::Unit::TestCase
     assert_equal(36, @slice.transcripts.length)
   end
 end
+
+class GetOverlappingObjects < Test::Unit::TestCase
+  def setup
+    @small_slice = Slice.fetch_by_region('chromosome','Un.004.10515',850,900)
+    @genes_inclusive = @small_slice.genes(true)
+    @genes_exclusive = @small_slice.genes
+  end
+  
+  def test_get_gene
+    assert_equal(1, @genes_inclusive.length)
+    assert_equal('ENSBTAG00000039669', @genes_inclusive[0].stable_id)
+    assert_equal(0, @genes_exclusive.length)
+  end
+end
