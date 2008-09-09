@@ -1,7 +1,7 @@
 require 'rubygems'
 
 spec = Gem::Specification.new do |s|
-  s.name = 'ensembl-api'
+  s.name = 'ruby-ensembl-api'
   s.version = "0.9"
 
   s.author = "Jan Aerts"
@@ -14,7 +14,7 @@ spec = Gem::Specification.new do |s|
   s.files = Dir.glob("{doc,lib,samples,test}/**/*")
   s.files.concat ["TUTORIAL"]
 
-  # s.rdoc_options << '--exclude' << '.'
+  s.rdoc_options << '--exclude' << '.'
   s.has_rdoc = true
 
   s.add_dependency('bio', '>=1')
