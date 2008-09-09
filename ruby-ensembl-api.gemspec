@@ -11,7 +11,7 @@ spec = Gem::Specification.new do |s|
   s.description = "ensembl-api provides a ruby API to the Ensembl databases (http://www.ensembl.org)"
 
   s.platform = Gem::Platform::RUBY
-  s.files = Dir.glob("{doc,lib,samples,test}/**/*").delete_if {|item| item.include?("SVN") || item.include?("rdoc")}
+  s.files = Dir.glob("{doc,lib,samples,test}/**/*")
   s.files.concat ["TUTORIAL"]
 
   # s.rdoc_options << '--exclude' << '.'
