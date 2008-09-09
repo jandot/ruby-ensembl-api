@@ -21,6 +21,11 @@ spec = Gem::Specification.new do |s|
   s.add_dependency('activerecord')
 
   s.require_path = 'lib'
+  s.autorequire = 'ensembl'
+  
+  s.bindir = "bin"
+  s.executables = ["ensembl"]
+  s.default_executable = "ensembl"
 end
 
 if $0 == __FILE__

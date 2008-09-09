@@ -1,0 +1,2 @@
+#!/usr/bin/ruby
+system("irb -r irb/completion -r rubygems -r bio -r ensembl")
