@@ -13,12 +13,11 @@ task :rebuild_gemspec do
   outfile.puts '  s.description = "ensembl-api provides a ruby API to the Ensembl databases (http://www.ensembl.org)"'
   outfile.puts ''
   outfile.puts '  s.has_rdoc = true'
-  outfile.puts '  s.rdoc_options = ["--exclude ."]'
   outfile.puts ''
   outfile.puts '  s.platform = Gem::Platform::RUBY'
   
   
-  outfile.puts '  s.files = ["' + FileList.new("bin/*", "doc/**/*", "lib/**/*.rb", "samples/**/*", "test/**/*.rb").join("\",\"") + '"]'
+  outfile.puts '  s.files = ["' + FileList.new("bin/*", "lib/**/*.rb", "samples/**/*", "test/**/*.rb", "doc/**/*.html").join("\",\"") + '"]'
   outfile.puts '  s.extra_rdoc_files = ["TUTORIAL"]'
   outfile.puts ''
   outfile.puts '  s.test_files = ["' + FileList.new("test/**/test_*.rb").join("\",\"") + '"]'
