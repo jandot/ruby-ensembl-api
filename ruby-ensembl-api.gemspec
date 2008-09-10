@@ -20,9 +20,10 @@ Gem::Specification.new do |s|
   s.add_dependency("bio", [">=1"])
   s.add_dependency("activerecord")
 
-  s.require_path = "lib"
+  s.require_paths = ["lib","bin"]
   s.autorequire = "ensembl"
 
+#  s.bindir = "bin"
   s.executables = ["ensembl"]
   s.default_executable = "ensembl"
 end
