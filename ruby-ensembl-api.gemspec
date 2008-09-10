@@ -23,7 +23,7 @@ Gem::Specification.new do |s|
   s.require_paths = ["lib","bin"]
   s.autorequire = "ensembl"
 
-#  s.bindir = "bin"
+  s.bindir = "bin"
   s.executables = ["ensembl"]
   s.default_executable = "ensembl"
 end
