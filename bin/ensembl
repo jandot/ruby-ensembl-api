@@ -1,2 +1,39 @@
 #!/usr/bin/ruby
-system("irb -r irb/completion -r rubygems -r bio -r ensembl")
+require 'irb'
+require 'ensembl'
+
+module IRB
+  def self.start_session(binding)
+    IRB.setup(nil)
+
+    workspace = WorkSpace.new(binding)
+
+    if @CONF[:SCRIPT]
+      irb = Irb.new(workspace, @CONF[:SCRIPT])
+    else
+      irb = Irb.new(workspace)
+    end
+
+    @CONF[:IRB_RC].call(irb.context) if @CONF[:IRB_RC]
+    @CONF[:MAIN_CONTEXT] = irb.context
+
+    trap("SIGINT") do
+      irb.signal_handle
+    end
+
+    catch(:IRB_EXIT) do
+      irb.eval_input
+    end
+  end
+end
+
+include Ensembl::Core
+if ARGV.length == 2
+  species = ARGV.shift
+  release = ARGV.shift.to_i
+  DBConnection.connect(species,release)
+  
+  IRB.start_session(Kernel.binding)
+else
+  raise "ERROR: Please provide snake_case species and Ensembl release number"
+end
