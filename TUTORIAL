@@ -2,7 +2,7 @@
 By Jan Aerts. Copy-paste-modified from the excellent perl API tutorial at
 http://www.ensembl.org/info/software/core/core_tutorial.html (with permission of the core Ensembl team).
 
-Based on release 45.
+Based on release 50.
 
 == Introduction
 This tutorial describes how to use the Ensembl Core Ruby API. It is intended to be an introduction and demonstration of the general API concepts. This tutorial is not comprehensive, but it will hopefully enable to reader to become quickly productive, and facilitate a rapid understanding of the core system. This tutorial assumes at least some familiarity with Ruby.
@@ -23,8 +23,10 @@ If you have your RUBYLIB environment variable set correctly, you can use the com
 For additional information you can contact Jan Aerts (jan.aerts@bbsrc.ac.uk) or preferably send an email to the bioruby mailing list (see http://www.bioruby.org).
 
 == Obtaining and installing the code
-The Ensembl Ruby API is made available through a public CVS server. The instructions for how to install the code is available at http://rubyforge.org/projects/bioruby-annex/. The easiest way is to install using rubygems: download the ensembl_api.gem file from the rubyforge website and run
-  gem install ensembl_api.gem
+The Ensembl Ruby API is made available as a gem. See the github site for more information (http://github.com/jandot/ruby-ensembl-api/wikis/home).
+
+Basically, it comes down to:
+  sudo gem install jandot-ruby-ensembl-api --source http://gems.github.com
 
 == Code conventions
 Several naming conventions are used throughout the API. Learning these conventions will aid in your understanding of the code.
