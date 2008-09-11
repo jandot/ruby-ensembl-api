@@ -1,4 +1,4 @@
-ENSEMBL_RELEASE = 45
+ENSEMBL_RELEASE = 50
 
 begin
   require 'bio'
