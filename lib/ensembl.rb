@@ -17,3 +17,6 @@ require File.dirname(__FILE__) + '/ensembl/core/transform.rb'
 
 # Variation modules
 require File.dirname(__FILE__) + '/ensembl/variation/activerecord.rb'
+
+# Compara modules
+require File.dirname(__FILE__) + '/ensembl/compara/activerecord.rb'

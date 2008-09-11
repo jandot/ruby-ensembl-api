@@ -131,4 +131,52 @@ module Ensembl
     end
 
   end
+  
+  module Compara
+    # = DESCRIPTION
+    # The Ensembl::Compara::DBConnection is the actual connection established
+    # with the Ensembl server.
+    class DBConnection < ActiveRecord::Base
+      self.abstract_class = true
+      self.pluralize_table_names = false
+
+      # = DESCRIPTION
+      # The Ensembl::Compara::DBConnection#connect method makes the connection
+      # to the Ensembl compara database. By default, it connects
+      # to release 45. You _could_ use a lower number, but
+      # some parts of the API might not work, or worse: give the wrong results.
+      #
+      # = USAGE
+      #  # Connect to release 45 of compara
+      #  Ensembl::Compara::DBConnection.connect
+      #
+      #  # Connect to release 42 of compara
+      #  Ensembl::Compara::DBConnection.connect(42)
+      #
+      # ---
+      # *Arguments*:
+      # * ensembl_release:: the release of the database to connect to
+      #  (default = 45)
+      def self.connect(release = ENSEMBL_RELEASE)
+        db_name = Ensembl::DummyDBConnection.connection.select_values('show databases').select{|v| v =~ /ensembl_compara_#{release.to_s}/}[0]
+
+        if db_name.nil?
+          warn "WARNING: No connection to database established."
+        else
+          port = ( release > 47 ) ? 5306 : nil
+          establish_connection(
+                              :adapter => DB_ADAPTER,
+                              :host => DB_HOST,
+                              :database => db_name,
+                              :username => DB_USERNAME,
+                              :password => DB_PASSWORD,
+                              :port => port
+                            )
+        end
+
+      end
+
+    end
+
+  end
 end
