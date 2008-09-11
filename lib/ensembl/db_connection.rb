@@ -44,11 +44,11 @@ module Ensembl
       # = DESCRIPTION
       # The Ensembl::Core::DBConnection#connect method makes the connection
       # to the Ensembl core database for a given species. By default, it connects
-      # to release 45 for that species. You _could_ use a lower number, but
+      # to release 50 for that species. You _could_ use a lower number, but
       # some parts of the API might not work, or worse: give the wrong results.
       #
       # = USAGE
-      #  # Connect to release 45 of human
+      #  # Connect to release 50 of human
       #  Ensembl::Core::DBConnection.connect('homo_sapiens')
       #
       #  # Connect to release 42 of chicken
@@ -58,7 +58,7 @@ module Ensembl
       # *Arguments*:
       # * species:: species to connect to. Arguments should be in snake_case
       # * ensembl_release:: the release of the database to connect to
-      #  (default = 45)
+      #  (default = 50)
       def self.connect(species, release = ENSEMBL_RELEASE)
         dummy_dbconnection = ( release > 47 ) ? Ensembl::NewDummyDBConnection.connection : Ensembl::OldDummyDBConnection.connection
         db_name = dummy_dbconnection.select_values('show databases').select{|v| v =~ /#{species}_core_#{release.to_s}/}[0]
@@ -94,11 +94,11 @@ module Ensembl
       # = DESCRIPTION
       # The Ensembl::Variation::DBConnection#connect method makes the connection
       # to the Ensembl variation database for a given species. By default, it connects
-      # to release 45 for that species. You _could_ use a lower number, but
+      # to release 50 for that species. You _could_ use a lower number, but
       # some parts of the API might not work, or worse: give the wrong results.
       #
       # = USAGE
-      #  # Connect to release 45 of human
+      #  # Connect to release 50 of human
       #  Ensembl::Variation::DBConnection.connect('homo_sapiens')
       #
       #  # Connect to release 42 of chicken
@@ -108,7 +108,7 @@ module Ensembl
       # *Arguments*:
       # * species:: species to connect to. Arguments should be in snake_case
       # * ensembl_release:: the release of the database to connect to
-      #  (default = 45)
+      #  (default = 50)
       def self.connect(species, release = ENSEMBL_RELEASE)
         db_name = Ensembl::DummyDBConnection.connection.select_values('show databases').select{|v| v =~ /#{species}_variation_#{release.to_s}/}[0]
 
