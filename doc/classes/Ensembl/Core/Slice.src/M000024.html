@@ -1,49 +1,0 @@
-<?xml version="1.0" encoding="iso-8859-1"?>
-<!DOCTYPE html 
-     PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-
-<html>
-<head>
-  <title>seq (Ensembl::Core::Slice)</title>
-  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
-  <link rel="stylesheet" href="../../../.././rdoc-style.css" type="text/css" media="screen" />
-</head>
-<body class="standalone-code">
-  <pre><span class="ruby-comment cmt"># File lib/ensembl/core/slice.rb, line 323</span>
-      <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">seq</span>
-        <span class="ruby-comment cmt"># If we already accessed the sequence, we can just</span>
-        <span class="ruby-comment cmt"># call the instance variable. Otherwise, we'll have</span>
-        <span class="ruby-comment cmt"># to get the sequence first and create a Bio::Sequence::NA</span>
-        <span class="ruby-comment cmt"># object.</span>
-        <span class="ruby-keyword kw">if</span> <span class="ruby-ivar">@seq</span>.<span class="ruby-identifier">nil?</span>
-          <span class="ruby-comment cmt"># First check if the slice is on the seqlevel coordinate</span>
-          <span class="ruby-comment cmt"># system, otherwise project coordinates.</span>
-          <span class="ruby-keyword kw">if</span> <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">seq_region</span>.<span class="ruby-identifier">coord_system</span>.<span class="ruby-identifier">seqlevel?</span>
-            <span class="ruby-ivar">@seq</span> = <span class="ruby-constant">Bio</span><span class="ruby-operator">::</span><span class="ruby-constant">Sequence</span><span class="ruby-operator">::</span><span class="ruby-constant">NA</span>.<span class="ruby-identifier">new</span>(<span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">seq_region</span>.<span class="ruby-identifier">subseq</span>(<span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">start</span>, <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">stop</span>))
-          <span class="ruby-keyword kw">else</span> <span class="ruby-comment cmt"># we have to project coordinates</span>
-            <span class="ruby-identifier">seq_string</span> = <span class="ruby-constant">String</span>.<span class="ruby-identifier">new</span>
-            <span class="ruby-ivar">@target_slices</span> = <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">project</span>(<span class="ruby-value str">'seqlevel'</span>)
-
-            <span class="ruby-ivar">@target_slices</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">component</span><span class="ruby-operator">|</span>
-              <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">component</span>.<span class="ruby-identifier">class</span> <span class="ruby-operator">==</span> <span class="ruby-constant">Slice</span>
-                <span class="ruby-identifier">seq_string</span> <span class="ruby-operator">+=</span> <span class="ruby-identifier">component</span>.<span class="ruby-identifier">seq</span> <span class="ruby-comment cmt"># This fetches the seq recursively (see 10 lines up)</span>
-              <span class="ruby-keyword kw">else</span> <span class="ruby-comment cmt"># it's a Gap</span>
-                <span class="ruby-identifier">seq_string</span> <span class="ruby-operator">+=</span> <span class="ruby-value str">'N'</span> <span class="ruby-operator">*</span> (<span class="ruby-identifier">component</span>.<span class="ruby-identifier">length</span>)
-              <span class="ruby-keyword kw">end</span>
-
-            <span class="ruby-keyword kw">end</span>
-            <span class="ruby-ivar">@seq</span> = <span class="ruby-constant">Bio</span><span class="ruby-operator">::</span><span class="ruby-constant">Sequence</span><span class="ruby-operator">::</span><span class="ruby-constant">NA</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">seq_string</span>)
-
-          <span class="ruby-keyword kw">end</span>
-
-          <span class="ruby-keyword kw">if</span> <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">strand</span> <span class="ruby-operator">==</span> <span class="ruby-value">-1</span>
-            <span class="ruby-ivar">@seq</span>.<span class="ruby-identifier">reverse_complement!</span>
-          <span class="ruby-keyword kw">end</span>
-
-        <span class="ruby-keyword kw">end</span>
-        <span class="ruby-keyword kw">return</span> <span class="ruby-ivar">@seq</span>
-
-      <span class="ruby-keyword kw">end</span></pre>
-</body>
-</html>

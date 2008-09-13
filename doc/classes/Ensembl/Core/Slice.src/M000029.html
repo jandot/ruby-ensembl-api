@@ -1,46 +1,0 @@
-<?xml version="1.0" encoding="iso-8859-1"?>
-<!DOCTYPE html 
-     PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-
-<html>
-<head>
-  <title>get_objects (Ensembl::Core::Slice)</title>
-  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
-  <link rel="stylesheet" href="../../../.././rdoc-style.css" type="text/css" media="screen" />
-</head>
-<body class="standalone-code">
-  <pre><span class="ruby-comment cmt"># File lib/ensembl/core/slice.rb, line 433</span>
-      <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">get_objects</span>(<span class="ruby-identifier">target_class</span>, <span class="ruby-identifier">table_name</span>)
-        <span class="ruby-identifier">answer</span> = <span class="ruby-constant">Array</span>.<span class="ruby-identifier">new</span>
-
-        <span class="ruby-comment cmt"># Get all the coord_systems with this type of features on them</span>
-        <span class="ruby-identifier">coord_system_ids_with_features</span> = <span class="ruby-constant">MetaCoord</span>.<span class="ruby-identifier">find_all_by_table_name</span>(<span class="ruby-identifier">table_name</span>).<span class="ruby-identifier">collect</span>{<span class="ruby-operator">|</span><span class="ruby-identifier">mc</span><span class="ruby-operator">|</span> <span class="ruby-identifier">mc</span>.<span class="ruby-identifier">coord_system_id</span>}
-
-        <span class="ruby-comment cmt"># Get the features of the original slice</span>
-        <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">coord_system_ids_with_features</span>.<span class="ruby-identifier">include?</span>(<span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">seq_region</span>.<span class="ruby-identifier">coord_system_id</span>)
-          <span class="ruby-identifier">answer</span>.<span class="ruby-identifier">push</span>(<span class="ruby-identifier">target_class</span>.<span class="ruby-identifier">find_by_sql</span>(<span class="ruby-value str">'SELECT * FROM '</span> <span class="ruby-operator">+</span> <span class="ruby-identifier">table_name</span> <span class="ruby-operator">+</span> <span class="ruby-value str">' WHERE seq_region_id = '</span> <span class="ruby-operator">+</span> <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">seq_region</span>.<span class="ruby-identifier">id</span>.<span class="ruby-identifier">to_s</span> <span class="ruby-operator">+</span> <span class="ruby-value str">' AND seq_region_start &gt;= '</span> <span class="ruby-operator">+</span> <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">start</span>.<span class="ruby-identifier">to_s</span> <span class="ruby-operator">+</span> <span class="ruby-value str">' AND seq_region_end &lt;= '</span> <span class="ruby-operator">+</span> <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">stop</span>.<span class="ruby-identifier">to_s</span>))
-          <span class="ruby-identifier">coord_system_ids_with_features</span>.<span class="ruby-identifier">delete</span>(<span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">seq_region</span>.<span class="ruby-identifier">coord_system_id</span>)
-        <span class="ruby-keyword kw">end</span>
-
-        <span class="ruby-comment cmt"># Transform the original slice to other coord systems and get those</span>
-        <span class="ruby-comment cmt"># features as well. At the moment, only 'direct' projections can be made.</span>
-        <span class="ruby-comment cmt"># Later, I'm hoping to add functionality for following a path from one</span>
-        <span class="ruby-comment cmt"># coord_system to another if they're not directly linked in the assembly</span>
-        <span class="ruby-comment cmt"># table.</span>
-        <span class="ruby-identifier">coord_system_ids_with_features</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">target_coord_system_id</span><span class="ruby-operator">|</span>
-          <span class="ruby-identifier">target_slices</span> = <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">project</span>(<span class="ruby-constant">CoordSystem</span>.<span class="ruby-identifier">find</span>(<span class="ruby-identifier">target_coord_system_id</span>).<span class="ruby-identifier">name</span>)
-          <span class="ruby-identifier">target_slices</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">slice</span><span class="ruby-operator">|</span>
-            <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">slice</span>.<span class="ruby-identifier">class</span> <span class="ruby-operator">==</span> <span class="ruby-constant">Slice</span>
-              <span class="ruby-identifier">answer</span>.<span class="ruby-identifier">push</span>(<span class="ruby-identifier">target_class</span>.<span class="ruby-identifier">find_by_sql</span>(<span class="ruby-value str">'SELECT * FROM '</span> <span class="ruby-operator">+</span> <span class="ruby-identifier">table_name</span> <span class="ruby-operator">+</span> <span class="ruby-value str">' WHERE seq_region_id = '</span> <span class="ruby-operator">+</span> <span class="ruby-identifier">slice</span>.<span class="ruby-identifier">seq_region</span>.<span class="ruby-identifier">id</span>.<span class="ruby-identifier">to_s</span> <span class="ruby-operator">+</span> <span class="ruby-value str">' AND seq_region_start &gt;= '</span> <span class="ruby-operator">+</span> <span class="ruby-identifier">slice</span>.<span class="ruby-identifier">start</span>.<span class="ruby-identifier">to_s</span> <span class="ruby-operator">+</span> <span class="ruby-value str">' AND seq_region_end &lt;= '</span> <span class="ruby-operator">+</span> <span class="ruby-identifier">slice</span>.<span class="ruby-identifier">stop</span>.<span class="ruby-identifier">to_s</span>))
-            <span class="ruby-keyword kw">end</span>
-          <span class="ruby-keyword kw">end</span>
-        <span class="ruby-keyword kw">end</span>
-
-        <span class="ruby-identifier">answer</span>.<span class="ruby-identifier">flatten!</span>
-        <span class="ruby-identifier">answer</span>.<span class="ruby-identifier">uniq!</span>
-
-        <span class="ruby-keyword kw">return</span> <span class="ruby-identifier">answer</span>
-      <span class="ruby-keyword kw">end</span></pre>
-</body>
-</html>
