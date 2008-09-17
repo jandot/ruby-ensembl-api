@@ -21,7 +21,7 @@ puts "CDS: " + transcript.cds_seq
 puts "peptide: " + transcript.protein_seq
 
 DBConnection.connection.disconnect!
-DBConnection.connect('bos_taurus')
+DBConnection.connect('bos_taurus',45)
 
 puts "== Transforming a cow gene from chromosome level to scaffold level =="
 gene = Gene.find(2408)
