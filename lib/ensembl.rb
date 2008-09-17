@@ -1,4 +1,6 @@
-ENSEMBL_RELEASE = 50
+module Ensembl
+  ENSEMBL_RELEASE = 50
+end
 
 begin
   require 'bio'
