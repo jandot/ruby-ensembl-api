@@ -58,4 +58,9 @@ class RelationshipsTest < Test::Unit::TestCase
     gene = Gene.find(34928)
     assert_equal(["GO:0005576", "GO:0042742"], gene.go_terms.sort)
   end
+  
+  def test_hgnc
+    gene = Gene.find_by_stable_id('ENSG00000169740')
+    assert_equal('ZNF32', gene.hgnc)
+  end
 end

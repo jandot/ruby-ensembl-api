@@ -1124,9 +1124,20 @@ module Ensembl
         return answer
       end
       
+      # = DESCRIPTION
+      # The Gene#go_terms method returns all GO terms associated with a gene.
       def go_terms
         go_db_id = ExternalDb.find_by_db_name('GO').id
         return self.all_xrefs.select{|x| x.external_db_id == go_db_id}.collect{|x| x.dbprimary_acc}.uniq
+      end
+      
+      # = DESCRIPTION
+      # The Gene#hgnc returns the HGNC symbol for the gene.
+      def hgnc
+        hgnc_db_id = ExternalDb.find_by_db_name('HGNC_curated_gene').id
+        xref = self.all_xrefs.select{|x| x.external_db_id == hgnc_db_id}[0]
+        return nil if xref.nil?
+        return xref.display_label
       end
 
     end
