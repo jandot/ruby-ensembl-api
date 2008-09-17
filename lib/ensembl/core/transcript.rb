@@ -112,7 +112,7 @@ module Ensembl
         if transcript_stable_id.nil?
           return nil
         else
-          return transcript_stable_id.gene
+          return transcript_stable_id.transcript
         end
       end
       
