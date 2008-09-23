@@ -3,8 +3,10 @@ module Ensembl
 end
 
 begin
+  require 'rubygems'
   require 'bio'
-  rescue nil
+  rescue LoadError
+    raise LoadError, "You must have bioruby installed"
 end
 
 # Database connection
