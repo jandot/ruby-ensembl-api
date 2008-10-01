@@ -59,24 +59,31 @@ module Ensembl
       # * species:: species to connect to. Arguments should be in snake_case
       # * ensembl_release:: the release of the database to connect to
       #  (default = 50)
-      def self.connect(species, release = Ensembl::ENSEMBL_RELEASE)
+      def self.connect(species, release = Ensembl::ENSEMBL_RELEASE, args = {})
         dummy_dbconnection = ( release > 47 ) ? Ensembl::NewDummyDBConnection.connection : Ensembl::OldDummyDBConnection.connection
-        db_name = dummy_dbconnection.select_values('show databases').select{|v| v =~ /#{species}_core_#{release.to_s}/}[0]
+        db_name = nil
+        
+        if args[:database]
+          db_name = args[:database]
+        else  
+          db_name = dummy_dbconnection.select_values('show databases').select{|v| v =~ /#{species}_core_#{release.to_s}/}[0]
+        end
 
         if db_name.nil?
           warn "WARNING: No connection to database established. Check that the species is in snake_case (was: #{species})."
         else
           port = ( release > 47 ) ? 5306 : nil
           establish_connection(
-                              :adapter => Ensembl::DB_ADAPTER,
-                              :host => Ensembl::DB_HOST,
-                              :database => db_name,
-                              :username => Ensembl::DB_USERNAME,
-                              :password => Ensembl::DB_PASSWORD,
-                              :port => port
-                            )
+                              :adapter => args[:adapter] || Ensembl::DB_ADAPTER,
+                              :host => args[:host] || Ensembl::DB_HOST,
+                              :database => args[:database] || db_name,
+                              :username => args[:username] || Ensembl::DB_USERNAME,
+                              :password => args[:password] || Ensembl::DB_PASSWORD,
+                              :port => args[:port] || port
+                            ) 
+                                                               
         end
-
+        
       end
 
     end
@@ -109,23 +116,30 @@ module Ensembl
       # * species:: species to connect to. Arguments should be in snake_case
       # * ensembl_release:: the release of the database to connect to
       #  (default = 50)
-      def self.connect(species, release = Ensembl::ENSEMBL_RELEASE)
-        db_name = Ensembl::DummyDBConnection.connection.select_values('show databases').select{|v| v =~ /#{species}_variation_#{release.to_s}/}[0]
-
+      def self.connect(species, release = Ensembl::ENSEMBL_RELEASE, args = {})
+        dummy_dbconnection = ( release > 47 ) ? Ensembl::NewDummyDBConnection.connection : Ensembl::OldDummyDBConnection.connection
+        db_name = nil
+        if args[:database]
+          db_name = args[:database]
+        else  
+          db_name = dummy_dbconnection.select_values('show databases').select{|v| v =~ /#{species}_variation_#{release.to_s}/}[0]
+        end
+        
         if db_name.nil?
           warn "WARNING: No connection to database established. Check that the species is in snake_case (was: #{species})."
         else
           port = ( release > 47 ) ? 5306 : nil
           establish_connection(
                               :adapter => Ensembl::DB_ADAPTER,
-                              :host => Ensembl::DB_HOST,
+                              :host => args[:host] || Ensembl::DB_HOST,
                               :database => db_name,
-                              :username => Ensembl::DB_USERNAME,
-                              :password => Ensembl::DB_PASSWORD,
-                              :port => port
+                              :username => args[:username] || Ensembl::DB_USERNAME,
+                              :password => args[:password] || Ensembl::DB_PASSWORD,
+                              :port => args[:port] || port
                             )
+                                                                                                                                     
         end
-
+        
       end
 
     end
