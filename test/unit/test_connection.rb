@@ -3,7 +3,8 @@ libpath = Pathname.new(File.join(File.dirname(__FILE__), ['..'] * 2, 'lib')).cle
 $:.unshift(libpath) unless $:.include?(libpath)
 
 require 'test/unit'
-require libpath+'/ensembl'
+
+require 'ensembl'
 
 
 class TestConnection < Test::Unit::TestCase
