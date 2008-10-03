@@ -196,7 +196,7 @@ Many classes can provide a set of features which overlap a slice. The slice itse
   slice_a = Slice.fetch_by_region('chromosome','X')
   genes = slice_a.genes
 
-*CAUTION*: The slice concept is a little bit different from that in the perl API. If you ask a gene for its slice using the perl API, you get a slice covering the _whole_ of the chromosome. In contrast, the slice created by the ruby API only contains that bit covered by the gene. The Ensembl::Core::SeqRegion class is used to refer to whole things.
+*CAUTION*: The slice concept is a little bit different from that in the perl API. If you ask a gene for its slice using the perl API, you get a slice covering the _whole_ of the chromosome. In contrast, the slice created by the ruby API only contains that bit covered by the gene. The Ensembl::Core::SeqRegion class is used to refer to whole things. I just found it much more intuitive like that...
 
 == Features
 
