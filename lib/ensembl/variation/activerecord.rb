@@ -57,7 +57,6 @@ module Ensembl
     # This class uses ActiveRecord to access data in the Ensembl database.
     # See the general documentation of the Ensembl module for
     # more information on what this means and what methods are available.    
-    
     class AlleleGroupAllele < DBConnection
       belongs_to :variation
       belongs_to :allele_group
@@ -69,7 +68,6 @@ module Ensembl
     # This class uses ActiveRecord to access data in the Ensembl database.
     # See the general documentation of the Ensembl module for
     # more information on what this means and what methods are available.
-    
     class Sample < DBConnection
       set_primary_key "sample_id"
       has_one :individual
@@ -88,7 +86,6 @@ module Ensembl
     # This class uses ActiveRecord to access data in the Ensembl database.
     # See the general documentation of the Ensembl module for
     # more information on what this means and what methods are available.    
-    
     class IndividualPopulation < DBConnection
       belongs_to :individual
       belongs_to :population
@@ -101,7 +98,6 @@ module Ensembl
     # This class uses ActiveRecord to access data in the Ensembl database.
     # See the general documentation of the Ensembl module for
     # more information on what this means and what methods are available.
-    
     class Individual < DBConnection
       belongs_to :sample
       # CAN'T FIGURE OUT SOME TABLE FIELDS
@@ -135,7 +131,6 @@ module Ensembl
     # This class uses ActiveRecord to access data in the Ensembl database.
     # See the general documentation of the Ensembl module for
     # more information on what this means and what methods are available.
-    
     class PopulationGenotype < DBConnection
       set_primary_key "population_genotype_id"
       belongs_to :variation
@@ -149,7 +144,6 @@ module Ensembl
     # This class uses ActiveRecord to access data in the Ensembl database.
     # See the general documentation of the Ensembl module for
     # more information on what this means and what methods are available.
-    
     class SampleSynonym < DBConnection
       set_primary_key "sample_synonym_id"
       belongs_to :source
@@ -164,7 +158,6 @@ module Ensembl
     # This class uses ActiveRecord to access data in the Ensembl database.
     # See the general documentation of the Ensembl module for
     # more information on what this means and what methods are available.
-    
     class Source < DBConnection
       set_primary_key "source_id"
       has_many :sample_synonyms
@@ -182,7 +175,6 @@ module Ensembl
     # This class uses ActiveRecord to access data in the Ensembl database.
     # See the general documentation of the Ensembl module for
     # more information on what this means and what methods are available.
-    
     class VariationSynonym < DBConnection
       set_primary_key "variation_synonym_id"
       belongs_to :variation
@@ -201,7 +193,6 @@ module Ensembl
     # This class uses ActiveRecord to access data in the Ensembl database.
     # See the general documentation of the Ensembl module for
     # more information on what this means and what methods are available.
-    
     class Variation < DBConnection
       set_primary_key "variation_id"
       belongs_to :source
@@ -224,7 +215,6 @@ module Ensembl
     # This class uses ActiveRecord to access data in the Ensembl database.
     # See the general documentation of the Ensembl module for
     # more information on what this means and what methods are available.
-    
     class VariationGroup < DBConnection
       set_primary_key "variation_group_id"
       belongs_to :source
@@ -241,7 +231,6 @@ module Ensembl
     # This class uses ActiveRecord to access data in the Ensembl database.
     # See the general documentation of the Ensembl module for
     # more information on what this means and what methods are available.
-    
     class VariationGroupVariation < DBConnection
       belongs_to :variation
       belongs_to :variation_group
@@ -254,7 +243,6 @@ module Ensembl
     # This class uses ActiveRecord to access data in the Ensembl database.
     # See the general documentation of the Ensembl module for
     # more information on what this means and what methods are available.
-    
     class VariationFeature < DBConnection
       set_primary_key "variation_feature_id"
       belongs_to :variation
@@ -270,7 +258,6 @@ module Ensembl
     # This class uses ActiveRecord to access data in the Ensembl database.
     # See the general documentation of the Ensembl module for
     # more information on what this means and what methods are available.    
-    
     class VariationGroupFeature < DBConnection
       set_primary_key "variation_group_feature_id"
       belongs_to :variation_group
@@ -283,7 +270,6 @@ module Ensembl
     # This class uses ActiveRecord to access data in the Ensembl database.
     # See the general documentation of the Ensembl module for
     # more information on what this means and what methods are available.    
-    
     class TranscriptVariation < DBConnection
       set_primary_key "transcript_variation_id"
       belongs_to :variation_feature
@@ -296,7 +282,6 @@ module Ensembl
     # This class uses ActiveRecord to access data in the Ensembl database.
     # See the general documentation of the Ensembl module for
     # more information on what this means and what methods are available.
-    
     class FlankingSequence < DBConnection
       belongs_to :variation
     end
@@ -308,7 +293,6 @@ module Ensembl
     # This class uses ActiveRecord to access data in the Ensembl database.
     # See the general documentation of the Ensembl module for
     # more information on what this means and what methods are available.
-    
     class TaggedVariationFeature < DBConnection
       belongs_to :variation_feature
       belongs_to :sample
