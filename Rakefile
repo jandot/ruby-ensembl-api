@@ -4,7 +4,7 @@ task :rebuild_gemspec do
 
   outfile.puts 'Gem::Specification.new do |s|'
   outfile.puts '  s.name = "ruby-ensembl-api"'
-  outfile.puts '  s.version = "0.9.1"'
+  outfile.puts '  s.version = "0.9.2"'
   outfile.puts ''
   outfile.puts '  s.authors = ["Jan Aerts"]'
   outfile.puts '  s.email = "jan.aerts@gmail.com"'
