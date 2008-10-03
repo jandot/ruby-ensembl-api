@@ -50,10 +50,25 @@ module Ensembl
       belongs_to :allele_group_allele
     end
     
+    # = DESCRIPTION
+    # The AlleleGroupAllele class represents a connection class between Allele and AlleleGroup. 
+    # Should not be used directly.
+    #
+    # This class uses ActiveRecord to access data in the Ensembl database.
+    # See the general documentation of the Ensembl module for
+    # more information on what this means and what methods are available.    
+    
     class AlleleGroupAllele < DBConnection
       belongs_to :variation
       belongs_to :allele_group
     end
+    
+    # = DESCRIPTION
+    # The Sample class gives information about the biological samples stored in the database. 
+    #
+    # This class uses ActiveRecord to access data in the Ensembl database.
+    # See the general documentation of the Ensembl module for
+    # more information on what this means and what methods are available.
     
     class Sample < DBConnection
       set_primary_key "sample_id"
@@ -65,15 +80,31 @@ module Ensembl
       has_one :population
       has_many :tagged_variation_features
     end
+
+    # = DESCRIPTION
+    # The IndividualPopulation class is used to connect Individual and Population classes. 
+    # Should not be used directly.
+    #
+    # This class uses ActiveRecord to access data in the Ensembl database.
+    # See the general documentation of the Ensembl module for
+    # more information on what this means and what methods are available.    
     
     class IndividualPopulation < DBConnection
       belongs_to :individual
       belongs_to :population
     end
     
+    # = DESCRIPTION
+    # The Individual class gives information on the single individuals used 
+    # to retrieve one or more biological samples.
+    #
+    # This class uses ActiveRecord to access data in the Ensembl database.
+    # See the general documentation of the Ensembl module for
+    # more information on what this means and what methods are available.
+    
     class Individual < DBConnection
       belongs_to :sample
-      #CAN'T FIGURE OUT SOME TABLE FIELDS
+      # CAN'T FIGURE OUT SOME TABLE FIELDS
     end
     
     class IndividualGenotypeMultipleBp < DBConnection
@@ -83,7 +114,7 @@ module Ensembl
     
     class CompressedGenotypeSingleBp < DBConnection
       belongs_to :sample
-    end
+    end  
     
     class ReadCoverage < DBConnection
       belongs_to :sample
@@ -94,8 +125,16 @@ module Ensembl
     end
     
     class PopulationStructure < DBConnection
-      #CAN'T FIGURE OUT SOME TABLE FIELDS
+      # CAN'T FIGURE OUT SOME TABLE FIELDS
     end
+    
+    # = DESCRIPTION
+    # The PopulationGenotype class gives information about alleles and allele 
+    # frequencies for a SNP observed within a population or a group of samples. 
+    #
+    # This class uses ActiveRecord to access data in the Ensembl database.
+    # See the general documentation of the Ensembl module for
+    # more information on what this means and what methods are available.
     
     class PopulationGenotype < DBConnection
       set_primary_key "population_genotype_id"
@@ -103,12 +142,28 @@ module Ensembl
       belongs_to :population
     end
     
+    # = DESCRIPTION
+    # The SampleSynonym class represents information about alternative names 
+    # for sample entries. 
+    #
+    # This class uses ActiveRecord to access data in the Ensembl database.
+    # See the general documentation of the Ensembl module for
+    # more information on what this means and what methods are available.
+    
     class SampleSynonym < DBConnection
       set_primary_key "sample_synonym_id"
       belongs_to :source
       belongs_to :sample
       belongs_to :population
     end
+    
+    # = DESCRIPTION
+    # The Source class gives information on the different databases and SNP 
+    # panels used to retrieve the data
+    #
+    # This class uses ActiveRecord to access data in the Ensembl database.
+    # See the general documentation of the Ensembl module for
+    # more information on what this means and what methods are available.
     
     class Source < DBConnection
       set_primary_key "source_id"
@@ -120,11 +175,32 @@ module Ensembl
       has_many :variation_synonyms
     end
     
+    # = DESCRIPTION
+    # The VariationSynonym class gives information on alterative names used 
+    # for Variation entries. 
+    #
+    # This class uses ActiveRecord to access data in the Ensembl database.
+    # See the general documentation of the Ensembl module for
+    # more information on what this means and what methods are available.
+    
     class VariationSynonym < DBConnection
       set_primary_key "variation_synonym_id"
       belongs_to :variation
       belongs_to :source
     end
+    
+    # = DESCRIPTION
+    # The Variation class represents single nucleotide polymorhisms (SNP) or variations 
+    # and provides information like the names (IDs), the validation status and 
+    # the allele information.
+    #
+    # *BUG*: fields like validation_status and consequence_type are created 
+    # using SET option directly in MySQL. These fields are bad interpreted by
+    # ActiveRecord, returning always 0.
+    #
+    # This class uses ActiveRecord to access data in the Ensembl database.
+    # See the general documentation of the Ensembl module for
+    # more information on what this means and what methods are available.
     
     class Variation < DBConnection
       set_primary_key "variation_id"
@@ -141,6 +217,14 @@ module Ensembl
       has_many :individual_genotype_multiple_bps
     end
     
+    # = DESCRIPTION
+    # The VariationGroup class represents a group of variations (SNPs) that are 
+    # linked and present toghether. 
+    #
+    # This class uses ActiveRecord to access data in the Ensembl database.
+    # See the general documentation of the Ensembl module for
+    # more information on what this means and what methods are available.
+    
     class VariationGroup < DBConnection
       set_primary_key "variation_group_id"
       belongs_to :source
@@ -150,10 +234,26 @@ module Ensembl
       has_one :allele_group
     end
     
+    # = DESCRIPTION
+    # The VariationGroupVariation class is a connection class. 
+    # Should not be used directly.
+    #
+    # This class uses ActiveRecord to access data in the Ensembl database.
+    # See the general documentation of the Ensembl module for
+    # more information on what this means and what methods are available.
+    
     class VariationGroupVariation < DBConnection
       belongs_to :variation
       belongs_to :variation_group
     end
+    
+    # = DESCRIPTION
+    # The VariationFeature class gives information about the genomic position of 
+    # each Variation, including also validation status and consequence type. 
+    #
+    # This class uses ActiveRecord to access data in the Ensembl database.
+    # See the general documentation of the Ensembl module for
+    # more information on what this means and what methods are available.
     
     class VariationFeature < DBConnection
       set_primary_key "variation_feature_id"
@@ -163,19 +263,51 @@ module Ensembl
       has_many :transcript_variations
     end
     
+    # = DESCRIPTION
+    # The VariationGroupFeature class gives information on the genomic position 
+    # of each VariationGroup.
+    #
+    # This class uses ActiveRecord to access data in the Ensembl database.
+    # See the general documentation of the Ensembl module for
+    # more information on what this means and what methods are available.    
+    
     class VariationGroupFeature < DBConnection
       set_primary_key "variation_group_feature_id"
       belongs_to :variation_group
     end
+    
+    # = DESCRIPTION
+    # The TranscriptVariation class gives information about the position of 
+    # a VariationFeature, mapped on an annotated transcript.
+    #
+    # This class uses ActiveRecord to access data in the Ensembl database.
+    # See the general documentation of the Ensembl module for
+    # more information on what this means and what methods are available.    
     
     class TranscriptVariation < DBConnection
       set_primary_key "transcript_variation_id"
       belongs_to :variation_feature
     end
     
+    # = DESCRIPTION
+    # The FlankingSequence class gives information about the genomic coordinates 
+    # of the flanking sequences, for a single VariationFeature. 
+    #
+    # This class uses ActiveRecord to access data in the Ensembl database.
+    # See the general documentation of the Ensembl module for
+    # more information on what this means and what methods are available.
+    
     class FlankingSequence < DBConnection
       belongs_to :variation
     end
+    
+    # = DESCRIPTION
+    # The TaggedVariationFeature class is a connection class. 
+    # Should not be used directly.
+    #
+    # This class uses ActiveRecord to access data in the Ensembl database.
+    # See the general documentation of the Ensembl module for
+    # more information on what this means and what methods are available.
     
     class TaggedVariationFeature < DBConnection
       belongs_to :variation_feature
