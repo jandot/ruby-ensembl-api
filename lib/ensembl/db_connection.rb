@@ -33,14 +33,29 @@ module Ensembl
   end
 
   
+  module DBRegistry 
+    # = DESCRIPTION
+    # The Ensembl::Registry::Base is a generic super class setting
+    # the get_info method, to read the connection parameters  
+    class Base < ActiveRecord::Base
+      self.abstract_class = true
+      self.pluralize_table_names = false
+      def self.get_info
+        host,user,password,db_name,port = self.retrieve_connection.instance_values["connection_options"]
+      end
+      
+    end
+    
+  end
+  
+  
   module Core
     # = DESCRIPTION
     # The Ensembl::Core::DBConnection is the actual connection established
     # with the Ensembl server.
-    class DBConnection < ActiveRecord::Base
+    class DBConnection < Ensembl::DBRegistry::Base
       self.abstract_class = true
       self.pluralize_table_names = false
-
       # = DESCRIPTION
       # The Ensembl::Core::DBConnection#connect method makes the connection
       # to the Ensembl core database for a given species. By default, it connects
@@ -72,32 +87,38 @@ module Ensembl
         if db_name.nil?
           warn "WARNING: No connection to database established. Check that the species is in snake_case (was: #{species})."
         else
-          port = ( release > 47 ) ? 5306 : nil
+          port = nil
+          if args[:port] then
+            port = args[:port]
+          else
+            port = ( release > 47 ) ? 5306 : nil
+          end
+          host = args[:host] || Ensembl::DB_HOST
+          user = args[:username] || Ensembl::DB_USERNAME
+          pass = args[:password] || Ensembl::DB_PASSWORD
           establish_connection(
                               :adapter => args[:adapter] || Ensembl::DB_ADAPTER,
-                              :host => args[:host] || Ensembl::DB_HOST,
-                              :database => args[:database] || db_name,
-                              :username => args[:username] || Ensembl::DB_USERNAME,
-                              :password => args[:password] || Ensembl::DB_PASSWORD,
-                              :port => args[:port] || port
+                              :host => host,
+                              :database => db_name,
+                              :username => user,
+                              :password => pass,
+                              :port => port
                             ) 
-          self.retrieve_connection                                                       
-        end
-        
+          self.retrieve_connection                  
+        end  
       end
+      
+    end # Core::DBConnection
 
-    end
-
-  end
+  end # Core
 
   module Variation
     # = DESCRIPTION
     # The Ensembl::Variation::DBConnection is the actual connection established
     # with the Ensembl server.
-    class DBConnection < ActiveRecord::Base
+    class DBConnection < Ensembl::DBRegistry::Base
       self.abstract_class = true
       self.pluralize_table_names = false
-
       # = DESCRIPTION
       # The Ensembl::Variation::DBConnection#connect method makes the connection
       # to the Ensembl variation database for a given species. By default, it connects
@@ -128,21 +149,30 @@ module Ensembl
         if db_name.nil?
           warn "WARNING: No connection to database established. Check that the species is in snake_case (was: #{species})."
         else
-          port = ( release > 47 ) ? 5306 : nil
+          port = nil
+          if args[:port] then
+            port = args[:port]
+          else
+            port = ( release > 47 ) ? 5306 : nil
+          end
+          host = args[:host] || Ensembl::DB_HOST
+          user = args[:username] || Ensembl::DB_USERNAME
+          pass = args[:password] || Ensembl::DB_PASSWORD
           establish_connection(
-                              :adapter => Ensembl::DB_ADAPTER,
-                              :host => args[:host] || Ensembl::DB_HOST,
+                              :adapter => args[:adapter] || Ensembl::DB_ADAPTER,
+                              :host => host,
                               :database => db_name,
-                              :username => args[:username] || Ensembl::DB_USERNAME,
-                              :password => args[:password] || Ensembl::DB_PASSWORD,
-                              :port => args[:port] || port
+                              :username => user,
+                              :password => pass,
+                              :port => port
                             )
-          self.retrieve_connection                                                                                                                             
+          self.retrieve_connection                                                                                                                 
         end
         
       end
 
-    end
-
-  end
-end
+    end # Variation::DBConnection
+    
+  end # Variation
+  
+end # Ensembl
