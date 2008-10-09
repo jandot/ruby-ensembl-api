@@ -28,11 +28,12 @@ module IRB
 end
 
 include Ensembl::Core
+include Ensembl::Variation
 if ARGV.length == 2
   species = ARGV.shift
   release = ARGV.shift.to_i
-  DBConnection.connect(species,release)
-  
+  Ensembl::Core::DBConnection.connect(species,release)
+  Ensembl::Variation::DBConnection.connect(species,release)
   IRB.start_session(Kernel.binding)
 else
   raise "ERROR: Please provide snake_case species and Ensembl release number"
