@@ -1,5 +1,5 @@
 #
-# = ensembl/variation/activerecord.rb - ActiveRecord mappings to Ensembl variation
+# = ensembl/variation/activerecord.rb - ActiveRecord mappings to Ensembl Variation
 #
 # Copyright::   Copyright (C) 2008 Jan Aerts <http://jandot.myopenid.com>
 # License::     The Ruby License
@@ -100,7 +100,7 @@ module Ensembl
     # more information on what this means and what methods are available.
     class Individual < DBConnection
       belongs_to :sample
-      # CAN'T FIGURE OUT SOME TABLE FIELDS
+      # FIXME
     end
     
     class IndividualGenotypeMultipleBp < DBConnection
@@ -121,7 +121,7 @@ module Ensembl
     end
     
     class PopulationStructure < DBConnection
-      # CAN'T FIGURE OUT SOME TABLE FIELDS
+      # FIXME
     end
     
     # = DESCRIPTION
@@ -180,34 +180,7 @@ module Ensembl
       belongs_to :variation
       belongs_to :source
     end
-    
-    # = DESCRIPTION
-    # The Variation class represents single nucleotide polymorhisms (SNP) or variations 
-    # and provides information like the names (IDs), the validation status and 
-    # the allele information.
-    #
-    # *BUG*: fields like validation_status and consequence_type are created 
-    # using SET option directly in MySQL. These fields are bad interpreted by
-    # ActiveRecord, returning always 0.
-    #
-    # This class uses ActiveRecord to access data in the Ensembl database.
-    # See the general documentation of the Ensembl module for
-    # more information on what this means and what methods are available.
-    class Variation < DBConnection
-      set_primary_key "variation_id"
-      belongs_to :source
-      has_one :variation_synonym
-      has_one :flanking_sequence
-      has_many :allele_group_alleles
-      has_many :allele_groups, :through => :allele_group_alleles
-      has_many :population_genotypes
-      has_many :alleles
-      has_one :variation_feature
-      has_many :variation_group_variations
-      has_many :variation_groups, :through => :variation_group_variations
-      has_many :individual_genotype_multiple_bps
-    end
-    
+        
     # = DESCRIPTION
     # The VariationGroup class represents a group of variations (SNPs) that are 
     # linked and present toghether. 
@@ -237,21 +210,6 @@ module Ensembl
     end
     
     # = DESCRIPTION
-    # The VariationFeature class gives information about the genomic position of 
-    # each Variation, including also validation status and consequence type. 
-    #
-    # This class uses ActiveRecord to access data in the Ensembl database.
-    # See the general documentation of the Ensembl module for
-    # more information on what this means and what methods are available.
-    class VariationFeature < DBConnection
-      set_primary_key "variation_feature_id"
-      belongs_to :variation
-      has_many :tagged_variation_features
-      has_many :samples, :through => :tagged_variation_features
-      has_many :transcript_variations
-    end
-    
-    # = DESCRIPTION
     # The VariationGroupFeature class gives information on the genomic position 
     # of each VariationGroup.
     #
@@ -261,18 +219,6 @@ module Ensembl
     class VariationGroupFeature < DBConnection
       set_primary_key "variation_group_feature_id"
       belongs_to :variation_group
-    end
-    
-    # = DESCRIPTION
-    # The TranscriptVariation class gives information about the position of 
-    # a VariationFeature, mapped on an annotated transcript.
-    #
-    # This class uses ActiveRecord to access data in the Ensembl database.
-    # See the general documentation of the Ensembl module for
-    # more information on what this means and what methods are available.    
-    class TranscriptVariation < DBConnection
-      set_primary_key "transcript_variation_id"
-      belongs_to :variation_feature
     end
     
     # = DESCRIPTION
@@ -303,6 +249,5 @@ module Ensembl
       belongs_to :variation_group
       belongs_to :source
     end
-    
   end
 end
