@@ -1,5 +1,5 @@
 #
-# = test/unit/test_seq.rb - Unit test for Ensembl::Core
+# = test/unit/release_50/variation/test_activerecord.rb - Unit test for Ensembl::Variation
 #
 # Copyright::   Copyright (C) 2008
 #               Jan Aerts <http://jandot.myopenid.com>
@@ -18,6 +18,7 @@ include Ensembl::Variation
 DBConnection.connect('homo_sapiens')
 
 class ActiveRecordVariation < Test::Unit::TestCase
+  
   def test_allele
     allele = Allele.find(1)
     assert_equal('T', allele.allele)
@@ -95,7 +96,7 @@ class ActiveRecordVariation < Test::Unit::TestCase
     assert_equal('C',a[0].allele)
     assert_equal(0.733,a[0].frequency)
     
-    vf = Variation.find(5345540).variation_feature
+    vf = Variation.find(5345540).variation_features[0]
     assert_equal('G/A',vf.allele_string)
     assert_equal('rs8175337',vf.variation_name)
     assert_equal(226028,vf.seq_region_id)
@@ -117,9 +118,16 @@ class ActiveRecordVariation < Test::Unit::TestCase
   end
   
   def test_variation_transcript
-    t = Variation.find(10958566).variation_feature.transcript_variations
+    t = Variation.find_by_name('rs35303525').variation_features[0].transcript_variations
     assert_equal(5,t.size)
     assert_equal(69644,t[0].transcript_id)
+    transcript = t[0].transcript
+    assert_equal('protein_coding',transcript.biotype) 
+    assert_equal(2050017,transcript.seq_region_start)
+    assert_equal(2148813,transcript.seq_region_end)
+    assert_equal('ENST00000382857',transcript.stable_id)
+    e = transcript.exons
+    assert_equal('ATGGCTGTGGGGAGCCAG',e[0].seq.upcase)
   end
   
   def test_source
