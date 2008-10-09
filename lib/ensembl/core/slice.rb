@@ -1,7 +1,6 @@
-#
 # = ensembl/core/slice.rb - Slice object for Ensembl core
 #
-# Copyright::   Copyright (C) 2007 Jan Aerts <http://jandot.myopenid.com>
+# Copyright::   Copyright (C) 2007 Jan Aerts <jan.aerts@bbsrc.ac.uk>
 # License::     The Ruby License
 #
 nil
@@ -327,7 +326,7 @@ module Ensembl
         if @seq.nil?
           # First check if the slice is on the seqlevel coordinate
       	  # system, otherwise project coordinates.
-          if ! Ensembl::SESSION.seqlevel_id.nil? and self.seq_region.coord_system_id == Ensembl::SESSION.seqlevel_id
+          if self.seq_region.coord_system.seqlevel?
             @seq = Bio::Sequence::NA.new(self.seq_region.subseq(self.start, self.stop))
           else # we have to project coordinates
             seq_string = String.new
@@ -591,8 +590,50 @@ SQL
           return ProteinAlignFeature.find_by_sql('SELECT * FROM protein_align_feature WHERE seq_region_id = ' + self.seq_region.id.to_s + ' AND seq_region_start >= ' + self.start.to_s + ' AND seq_region_end <= ' + self.stop.to_s + ' AND analysis_id = ' + analysis.id.to_s)
         end
       end
+      
+      ############################
+      ## VARIATION METHODS
+      ############################
+      
+      
+      #= DESCRIPTION
+      # Method to retrieve Variation features from Ensembl::Core::Slice objects
+      #= USAGE
+      # slice = Slice.fetch_by_region('chromosome',1,50000,51000)
+      # variations = slice.get_variation_features
+      # variations.each do |vf|
+      #  puts vf.variation_name, vf.allele_string
+      #  puts vf.variation.ancestral_allele
+      # end
+      def get_variation_features
+        variation_connection()
+        Ensembl::Variation::VariationFeature.find(:all,:conditions => ["seq_region_id = ? AND seq_region_start >= ? AND seq_region_end <= ?",self.seq_region.seq_region_id,self.start,self.stop])
+      end
+      
+      def get_genotyped_variation_features
+        variation_connection()
+        Ensembl::Variation::VariationFeature.find(:all,:conditions => ["flags = 'genotyped' AND seq_region_id = ? AND seq_region_start >= ? AND seq_region_end <= ?",self.seq_region.seq_region_id,self.start,self.stop])
+      end
+      
+      private 
+      
+      def variation_connection()
+        if !Ensembl::Variation::DBConnection.connected?  
+          host,user,password,db_name,port = Ensembl::Core::DBConnection.get_info
+          if db_name =~/(\w+_\w+)_\w+_(\d+)_\S+/ then
+            species,release = $1,$2
+            Ensembl::Variation::DBConnection.connect(species,release.to_i,:username => user, :password => password,:host => host, :port => port)
+          else
+            raise NameError, "Can't derive Variation database name from #{db_name}. Are you using non conventional names?"
+          end
+        end
+        
+      end
+      
+      
+      
+      
     end #Slice
-
 
     # = DESCRIPTION
     # The Gap class is similar to the Slice object, but describes a gap and
