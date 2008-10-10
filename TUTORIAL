@@ -279,6 +279,7 @@ The following is an example of the retrieval of a set of genes, transcripts and 
 
       transcript.exons.each do |exon|
         puts "\t\t\t" + exon.id.to_s
+      end
     end
   end
 
