@@ -87,13 +87,14 @@ module Ensembl
       # *Returns*:: Ensembl::Core::Slice object
       def slice
         start, stop, strand = nil, nil, nil
-      	if self.class.column_names.include?('seq_region_start')
+        
+      	if self.class == Ensembl::Core::Intron or self.class.column_names.include?('seq_region_start')
           start = self.seq_region_start
         end
-      	if self.class.column_names.include?('seq_region_end')
+      	if self.class == Ensembl::Core::Intron or self.class.column_names.include?('seq_region_end')
           stop = self.seq_region_end
         end
-      	if self.class.column_names.include?('seq_region_strand')
+      	if self.class == Ensembl::Core::Intron or self.class.column_names.include?('seq_region_strand')
           strand = self.seq_region_strand
       	else #FIXME: we shouldn't do this, but can't #project if no strand given
           strand = 1

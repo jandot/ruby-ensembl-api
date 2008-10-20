@@ -9,6 +9,53 @@ module Ensembl
   nil
   module Core
     # = DESCRIPTION
+    # The Intron class describes an intron.
+    # 
+    # This class does _not_ use ActiveRecord and is only defined within the API.
+    # There is no _introns_ table in the Ensembl database.
+    # 
+    # This class includes the mixin Sliceable, which means that it is mapped
+    # to a SeqRegion object and a Slice can be created for objects o this
+    # class. See Sliceable and Slice for more information.
+    # 
+    # = USAGE
+    #  exon1 = Ensembl::Core::Exon.find(292811)
+    #  exon2 = Ensembl::Core::Exon.find(292894)
+    #  intron = Ensembl::Core::Intron.new(exon1,exon2)
+    #  puts intron.to_yaml
+    #  
+    #  transcript = Ensembl::Core::Transcript.find(58972)
+    #  puts transcript.introns.to_yaml
+    class Intron
+      include Sliceable
+      attr_accessor :seq_region, :seq_region_start, :seq_region_end, :seq_region_strand
+      attr_accessor :previous_exon, :next_exon, :transcript
+      
+      def initialize(exon_1, exon_2)
+        # Check if these are actually two adjacent exons from the same transcript
+        ok = true
+
+        transcript = nil
+        exon_1.transcripts.each do |t|
+          transcript = t if exon_2.transcripts.include?(t)
+        end
+        raise ArgumentError, "Arguments should be adjacent exons of same transcript" if transcript.nil?
+        
+        rank_1 = ExonTranscript.find_by_transcript_id_and_exon_id(transcript.id, exon_1.id).rank
+        rank_2 = ExonTranscript.find_by_transcript_id_and_exon_id(transcript.id, exon_2.id).rank
+        raise ArgumentError, "Arguments should be adjacent exons of same transcript" if (rank_2 - rank_1).abs > 1
+        
+        @previous_exon, @next_exon = [exon_1, exon_2].sort_by{|e| e.seq_region_start}
+        @transcript = transcript
+        @seq_region = @previous_exon.seq_region
+        @seq_region_start = @previous_exon.seq_region_end + 1
+        @seq_region_end = @next_exon.seq_region_start - 1
+        @seq_region_strand = @previous_exon.seq_region_strand
+      end
+
+    end
+    
+    # = DESCRIPTION
     # The Transcript class provides an interface to the transcript
     # table. This table contains mappings of transcripts for a Gene to a
     # SeqRegion.
@@ -60,6 +107,23 @@ module Ensembl
         return @exons
       end
 
+      # The Transcript#introns methods returns the introns for this transcript
+      # ---
+      # *Arguments*:: none
+      # *Returns*:: sorted array of Intron objects
+      def introns
+        if @introns.nil?
+          @introns = Array.new
+          if self.exons.length > 1
+            self.exons.each_with_index do |exon, index|
+              next if index == 0
+              @introns.push(Intron.new(self.exons[index - 1], exon))
+            end
+          end
+        end
+        return @introns
+      end
+      
       # The Transcript#stable_id method returns the stable ID of the transcript.
       # ---
       # *Arguments*:: none

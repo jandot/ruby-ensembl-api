@@ -91,4 +91,18 @@ class GenomicVsCDna < Test::Unit::TestCase
   end
 end
 
+class TestIntron < Test::Unit::TestCase
+  def setup
+    @transcript = Transcript.find(58973)
+    @introns = @transcript.introns
+  end
+  
+  def test_get_introns
+    assert_equal(2, @introns.length)
+  end
+  
+  def test_intron_slices
+    assert_equal('chromosome:NCBI36:8:159418:172128:-1', @introns[0].slice.to_s)
+  end
+end
 
