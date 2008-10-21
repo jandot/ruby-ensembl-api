@@ -256,10 +256,8 @@ module Ensembl
       end
 
       # = DESCRIPTION
-      # The Slice#excise method removes a bit of the slice in the middle and
-      # returns the three result slices.
-      #
-      # CAUTION: this now only works if the ranges do not overlap
+      # The Slice#excise method removes a bit of a slice and returns the 
+      # remainder as separate slices.
       #
       # = USAGE
       #  original_slice = Slice.fetch_by_region('chromosome','X',1,10000)

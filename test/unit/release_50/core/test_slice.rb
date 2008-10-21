@@ -68,3 +68,40 @@ class GetOverlappingObjects < Test::Unit::TestCase
     assert_equal(0, @genes_exclusive.length)
   end
 end
+
+class ExcisingSlice < Test::Unit::TestCase
+  def setup
+    @original_slice = Slice.fetch_by_region('chromosome','1',1,1000)
+  end
+  
+  def test_excise_one_range
+    output = @original_slice.excise([20..50])
+    assert_equal(2, output.length)
+    assert_equal('chromosome:Btau_4.0:1:1:19:1', output[0].to_s)
+    assert_equal('chromosome:Btau_4.0:1:51:1000:1', output[1].to_s)
+  end
+  
+  def test_excise_two_nonoverlapping_ranges
+    output = @original_slice.excise([20..50,100..200])
+    assert_equal(3, output.length)
+    assert_equal('chromosome:Btau_4.0:1:1:19:1', output[0].to_s)
+    assert_equal('chromosome:Btau_4.0:1:51:99:1', output[1].to_s)
+    assert_equal('chromosome:Btau_4.0:1:201:1000:1', output[2].to_s)
+  end
+
+  def test_excise_two_overlapping_ranges
+    output = @original_slice.excise([20..150,100..200])
+    assert_equal(2, output.length)
+    assert_equal('chromosome:Btau_4.0:1:1:19:1', output[0].to_s)
+    assert_equal('chromosome:Btau_4.0:1:201:1000:1', output[1].to_s)
+  end
+
+  def test_excise_two_adjacent_ranges
+    output = @original_slice.excise([20..99,100..200])
+    assert_equal(2, output.length)
+    assert_equal('chromosome:Btau_4.0:1:1:19:1', output[0].to_s)
+    assert_equal('chromosome:Btau_4.0:1:201:1000:1', output[1].to_s)
+  end
+
+  
+end
