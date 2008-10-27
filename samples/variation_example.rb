@@ -27,11 +27,11 @@ id.each do |i|
                                                       # Automatically sets the connection with Core DB, if necessary.
     
     puts "== VARIATION FEATURE =="
-    print "#{vf.variation_name} #{vf.allele_string} #{vf.consequence_type} #{up_seq.seq} #{down_seq.seq} #{seq_region_name}\n"
+    print "NAME: #{vf.variation_name}\n ALLELE: #{vf.allele_string}\n UPSTREAM SEQ: #{up_seq.seq} \n DOWNSTREAM SEQ:  #{down_seq.seq}\n SEQ REGION NAME :#{seq_region_name}\n"
     vf.transcript_variations.each do |tv|
       t = tv.transcript # retrieve Ensembl::Core::Transcript from Core DB. Automatically sets the connection, if necessary. 
       puts "== TRANSCRIPT VARIATION =="
-      print "#{tv.peptide_allele_string} #{t.stable_id} #{t.gene.stable_id}\n"
+      print "ALLELE PEPTIDE STRING: #{tv.peptide_allele_string} \n TRANSCRIPT STABLE ID: #{t.stable_id}\n GENE STABLE ID: #{t.gene.stable_id}\n"
     end
   end
 end
@@ -45,12 +45,17 @@ puts "== SEARCHING FOR VARIATIONS ON CHR:1:50000:51000 =="
 s = Slice.fetch_by_region('chromosome',1,50000,51000) 
 variation_features = s.get_variation_features # automatically sets the connection with Variation DB, if necessary.
 variation_features.each do |vf|
-  print "#{vf.variation_name} #{vf.allele_string} #{vf.consequence_type} #{vf.fetch_region.seq_region.name}\n"
+  print "NAME: #{vf.variation_name}\n ALLELE: #{vf.allele_string}\n SEQ REGION NAME: #{vf.fetch_region.seq_region.name}\n"
 end
 
 puts "== GENOTYPED VARIATIONS =="
 
 genotyped_variation_features = s.get_genotyped_variation_features # automatically sets the connection with Variation DB, if necessary.
 genotyped_variation_features.each do |gvf|
-  print "#{gvf.variation_name} #{gvf.allele_string} #{gvf.consequence_type} #{gvf.fetch_region.seq_region.name}\n"
+  print "NAME: #{gvf.variation_name} \n ALLELE: #{gvf.allele_string} \n SEQ REGION NAME: #{gvf.fetch_region.seq_region.name}\n"
 end
+
+
+puts "== What things are related to a 'variation' object? =="
+puts 'Variation belong to: ' + Variation.reflect_on_all_associations(:belongs_to).collect{|a| a.name.to_s}.join(',')
+puts 'Variation have many: ' + Variation.reflect_on_all_associations(:has_many).collect{|a| a.name.to_s}.join(',')
