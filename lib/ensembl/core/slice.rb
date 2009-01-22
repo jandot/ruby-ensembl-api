@@ -1,7 +1,7 @@
 #
 # = ensembl/core/slice.rb - Slice object for Ensembl core
 #
-# Copyright::   Copyright (C) 2007 Jan Aerts <jan.aerts@bbsrc.ac.uk>
+# Copyright::   Copyright (C) 2007 Jan Aerts <jan.aerts@sanger.ac.uk>
 # License::     The Ruby License
 #
 nil

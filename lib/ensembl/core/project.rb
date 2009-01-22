@@ -1,7 +1,7 @@
 #
 # = ensembl/core/project.rb - project calculations for Ensembl Slice
 #
-# Copyright::   Copyright (C) 2007 Jan Aerts <jan.aerts@bbsrc.ac.uk>
+# Copyright::   Copyright (C) 2007 Jan Aerts <jan.aerts@sanger.ac.uk>
 # License::     The Ruby License
 #
 module Ensembl

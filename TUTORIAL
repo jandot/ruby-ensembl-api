@@ -20,7 +20,7 @@ If you have your RUBYLIB environment variable set correctly, you can use the com
 
   ri Ensembl::Core::Slice
 
-For additional information you can contact Jan Aerts (jan.aerts@bbsrc.ac.uk) or preferably send an email to the bioruby mailing list (see http://www.bioruby.org).
+For additional information you can contact Jan Aerts (jan.aerts@sanger.ac.uk) or preferably send an email to the bioruby mailing list (see http://www.bioruby.org).
 
 == Obtaining and installing the code
 The Ensembl Ruby API is made available as a gem. See the github site for more information (http://github.com/jandot/ruby-ensembl-api/wikis/home).

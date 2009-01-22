@@ -2,7 +2,7 @@
 # = test/unit/test_seq.rb - Unit test for Ensembl::Core
 #
 # Copyright::   Copyright (C) 2008
-#               Jan Aerts <jan.aerts@bbsrc.ac.uk>
+#               Jan Aerts <jan.aerts@sanger.ac.uk>
 # License::     Ruby's
 #
 # $Id:
