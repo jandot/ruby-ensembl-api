@@ -1,7 +1,7 @@
 #
 # = ensembl/core/transcript.rb - ActiveRecord mapping to Ensembl core for transcript
 #
-# Copyright::   Copyright (C) 2007 Jan Aerts <jan.aerts@sanger.ac.uk>
+# Copyright::   Copyright (C) 2007 Jan Aerts <http://jandot.myopenid.com>
 # License::     The Ruby License
 #
 nil

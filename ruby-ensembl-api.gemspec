@@ -3,7 +3,7 @@ Gem::Specification.new do |s|
   s.version = "0.9.2"
 
   s.authors = ["Jan Aerts"]
-  s.email = "jan.aerts@gmail.com"
+  s.email = "http://jandot.myopenid.com"
   s.homepage = "http://rubyforge.org/projects/bioruby-annex/"
   s.summary = "API to Ensembl databases"
   s.description = "ensembl-api provides a ruby API to the Ensembl databases (http://www.ensembl.org)"

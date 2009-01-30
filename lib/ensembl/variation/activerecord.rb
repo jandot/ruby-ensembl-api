@@ -1,7 +1,7 @@
 #
 # = ensembl/variation/activerecord.rb - ActiveRecord mappings to Ensembl variation
 #
-# Copyright::   Copyright (C) 2008 Jan Aerts <jan.aerts@sanger.ac.uk>
+# Copyright::   Copyright (C) 2008 Jan Aerts <http://jandot.myopenid.com>
 # License::     The Ruby License
 #
 
