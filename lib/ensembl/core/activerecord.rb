@@ -589,6 +589,7 @@ module Ensembl
     class Analysis < DBConnection
       set_primary_key 'analysis_id'
 
+      has_many :genes
       has_many :dna_align_features
       has_many :protein_align_features
       has_one :analysis_description
@@ -1045,6 +1046,8 @@ module Ensembl
 
       has_many :transcripts
 
+      belongs_to :analysis
+      
       has_many :object_xrefs, :foreign_key => 'ensembl_id', :conditions => "ensembl_object_type = 'Gene'"
       has_many :xrefs, :through => :object_xrefs
 
