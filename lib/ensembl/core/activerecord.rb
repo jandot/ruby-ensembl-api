@@ -235,9 +235,12 @@ module Ensembl
       # *Arguments*:: none
       # *Returns*:: TRUE or FALSE
       def seqlevel?
-        if self == CoordSystem.find_by_sql("SELECT * FROM coord_system WHERE attrib LIKE '%sequence_level%'")[0]
+        STDERR.puts "DEBUG: just before"
+        if self == CoordSystem.find_seqlevel
+          STDERR.puts "DEBUG: just after true"
           return true
         else
+          STDERR.puts "DEBUG: just after false"
           return false
         end
       end
@@ -249,7 +252,13 @@ module Ensembl
       # *Arguments*:: none
       # *Returns*:: CoordSystem object
       def self.find_toplevel
-        return CoordSystem.find_by_rank(1)
+        if Ensembl::SESSION.toplevel_coord_system.nil?
+          Ensembl::SESSION.toplevel_coord_system = CoordSystem.find_by_rank(1)
+          Ensembl::SESSION.toplevel_id = Ensembl::SESSION.toplevel_coord_system.id
+          Ensembl::SESSION.coord_system_ids[Ensembl::SESSION.toplevel_coord_system.name] = Ensembl::SESSION.toplevel_id
+          Ensembl::SESSION.coord_systems[Ensembl::SESSION.toplevel_id] = Ensembl::SESSION.toplevel_coord_system
+        end
+        return Ensembl::SESSION.toplevel_coord_system
       end
       
       # = DESCRIPTION
@@ -259,7 +268,13 @@ module Ensembl
       # *Arguments*:: none
       # *Returns*:: CoordSystem object
       def self.find_seqlevel
-        return CoordSystem.find_by_sql("SELECT * FROM coord_system WHERE attrib LIKE '%sequence_level%'")[0]
+        if Ensembl::SESSION.seqlevel_coord_system.nil?
+          Ensembl::SESSION.seqlevel_coord_system = CoordSystem.find_by_sql("SELECT * FROM coord_system WHERE attrib LIKE '%sequence_level%'")[0]
+          Ensembl::SESSION.seqlevel_id = Ensembl::SESSION.seqlevel_coord_system.id
+          Ensembl::SESSION.coord_system_ids[Ensembl::SESSION.seqlevel_coord_system.name] = Ensembl::SESSION.seqlevel_id
+          Ensembl::SESSION.coord_systems[Ensembl::SESSION.seqlevel_id] = Ensembl::SESSION.seqlevel_coord_system
+        end
+        return Ensembl::SESSION.seqlevel_coord_system
       end
       
       # = DESCRIPTION
@@ -443,7 +458,16 @@ module Ensembl
       	if coord_system_name.nil?
           return self.asm_links_as_asm
         else
-          coord_system = CoordSystem.find_by_name(coord_system_name)
+          coord_system_id = nil
+          if Ensembl::SESSION.coord_system_ids.has_key?(coord_system_name)
+            coord_system_id = Ensembl::SESSION.coord_system_ids[coord_system_name]
+          else
+            cs = CoordSystem.find_by_name(coord_system_name)
+            Ensembl::SESSION.coord_systems[cs.id] = cs
+            Ensembl::SESSION.coord_system_ids[coord_system_name] = cs.id
+            coord_system_id = cs.id
+          end
+          coord_system = Ensembl::SESSION.coord_systems[coord_system_id]
 #      	  return self.asm_links_as_asm.select{|alaa| alaa.cmp_seq_region.coord_system_id == coord_system.id}
           return AssemblyLink.find_by_sql("SELECT * FROM assembly a WHERE a.asm_seq_region_id = " + self.id.to_s + " AND a.cmp_seq_region_id IN (SELECT sr.seq_region_id FROM seq_region sr WHERE coord_system_id = " + coord_system.id.to_s + ")")
         end
@@ -673,7 +697,16 @@ module Ensembl
       # = DESCRIPTION
       # The Exon#seq method returns the sequence of the exon.
       def seq
-      	slice = Ensembl::Core::Slice.new(self.seq_region, seq_region_start, seq_region_end, seq_region_strand)
+        STDERR.puts "DEBUG: getting slice for exon"
+        seq_region = nil
+        if Ensembl::SESSION.seq_regions.has_key?(self.seq_region_id)
+          seq_region = Ensembl::SESSION.seq_regions[self.seq_region_id]
+        else
+          seq_region = self.seq_region
+          Ensembl::SESSION.seq_regions[seq_region.id] = seq_region
+        end
+      	slice = Ensembl::Core::Slice.new(seq_region, seq_region_start, seq_region_end, seq_region_strand)
+        STDERR.puts "DEBUG: Got slice; getting slice sequence"
         return slice.seq
       end
     end

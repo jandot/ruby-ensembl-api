@@ -52,7 +52,17 @@ module Ensembl
       # *Returns*:: an array consisting of Slices and, if necessary, Gaps
       def project(coord_system_name)
         answer = Array.new # an array of slices
-      	source_coord_system = self.seq_region.coord_system
+        STDERR.puts "DEBUG: before source_coord_system"
+
+        source_coord_system = nil
+        if Ensembl::SESSION.coord_systems.has_key?(self.seq_region.coord_system_id)
+          source_coord_system = Ensembl::SESSION.coord_systems[self.seq_region.coord_system_id]
+        else
+          source_coord_system = self.seq_region.coord_system
+          Ensembl::SESSION.coord_systems[source_coord_system.id] = source_coord_system
+          Ensembl::SESSION.coord_system_ids[source_coord_system.name] = source_coord_system.id
+        end
+        STDERR.puts "DEBUG: after source_coord_system"
         target_coord_system = nil
       	if coord_system_name == 'toplevel'
           target_coord_system = CoordSystem.find_toplevel
@@ -61,7 +71,12 @@ module Ensembl
           target_coord_system = CoordSystem.find_seqlevel
       	  coord_system_name = target_coord_system.name
         else
-          target_coord_system = CoordSystem.find_by_name(coord_system_name)
+          unless Ensembl::SESSION.coord_system_ids.has_key?(coord_system_name)
+            cs = CoordSystem.find_by_name(coord_system_name)
+            Ensembl::SESSION.coord_systems[cs.id] = cs
+            Ensembl::SESSION.coord_system_ids[cs.name] = cs.id
+          end
+          target_coord_system = Ensembl::SESSION.coord_systems[Ensembl::SESSION.coord_system_ids[coord_system_name]]
         end
 
         if target_coord_system.rank < source_coord_system.rank
@@ -96,13 +111,15 @@ module Ensembl
           # if a slice covers both the PAR and the allosomal region, we'll make
           # two subslices (let's call them blocks not to intercede with the
           # Slice#subslices method) and project these independently.
+          STDERR.puts "DEBUG: getting assembly exceptions"
           assembly_exceptions = AssemblyException.find_all_by_seq_region_id(self.seq_region.id)
           if assembly_exceptions.length > 0
             # Check if this bit of the original slice is covered in the
             # assembly_exception table.
             overlapping_exceptions = Array.new
             assembly_exceptions.each do |ae|
-              if Slice.new(self.seq_region, ae.seq_region_start, ae.seq_region_end).overlaps?(self)
+              seq_region = ( Ensembl::SESSION.seq_regions.has_key?(self.seq_region_id) ) ? Ensembl::SESSION.seq_regions[self.seq_region_id] : self.seq_region
+              if Slice.new(seq_region, ae.seq_region_start, ae.seq_region_end).overlaps?(self)
                 if ae.exc_type == 'HAP'
                   raise NotImplementedError, "The haplotype exceptions are not implemented (yet). You can't project this slice."
                 end
