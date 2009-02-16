@@ -112,7 +112,15 @@ module Ensembl
             raise NameError, "Can't derive Core database name from #{db_name}. Are you using non conventional names?"
           end
         end
-        Ensembl::Core::SeqRegion.find(seq_region_id)
+        # Check if SeqRegion already exists in Ensembl::SESSION
+        seq_region = nil
+        if Ensembl::SESSION.seq_regions.has_key?(seq_region_id)
+          seq_region = Ensembl::SESSION.seq_regions[seq_region_id]
+        else
+          seq_region = Ensembl::Core::SeqRegion.find(seq_region_id)
+          Ensembl::SESSION.seq_regions[seq_region.id] = seq_region
+        end
+        return seq_region
       end
       
     end # VariationFeature
@@ -142,7 +150,7 @@ module Ensembl
             species,release = $1,$2
             Ensembl::Core::DBConnection.connect(species,release.to_i,:username => user, :password => password,:host => host, :port => port)
           else
-            raise NameError, "Can't derive Core database name from #{db_name}. Are you using non conventional names?"
+            raise NameError, "Can't get Core database name from #{db_name}. Pheraps you are using non conventional names"
           end
         end
         Ensembl::Core::Transcript.find(self.transcript_id)
