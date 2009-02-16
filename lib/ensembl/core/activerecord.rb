@@ -235,12 +235,9 @@ module Ensembl
       # *Arguments*:: none
       # *Returns*:: TRUE or FALSE
       def seqlevel?
-        STDERR.puts "DEBUG: just before"
         if self == CoordSystem.find_seqlevel
-          STDERR.puts "DEBUG: just after true"
           return true
         else
-          STDERR.puts "DEBUG: just after false"
           return false
         end
       end
@@ -697,7 +694,6 @@ module Ensembl
       # = DESCRIPTION
       # The Exon#seq method returns the sequence of the exon.
       def seq
-        STDERR.puts "DEBUG: getting slice for exon"
         seq_region = nil
         if Ensembl::SESSION.seq_regions.has_key?(self.seq_region_id)
           seq_region = Ensembl::SESSION.seq_regions[self.seq_region_id]
@@ -706,7 +702,6 @@ module Ensembl
           Ensembl::SESSION.seq_regions[seq_region.id] = seq_region
         end
       	slice = Ensembl::Core::Slice.new(seq_region, seq_region_start, seq_region_end, seq_region_strand)
-        STDERR.puts "DEBUG: Got slice; getting slice sequence"
         return slice.seq
       end
     end

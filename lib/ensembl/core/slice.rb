@@ -327,12 +327,9 @@ module Ensembl
         if @seq.nil?
           # First check if the slice is on the seqlevel coordinate
       	  # system, otherwise project coordinates.
-          STDERR.puts "DEBUG: Going to check if seqlevel"
           if ! Ensembl::SESSION.seqlevel_id.nil? and self.seq_region.coord_system_id == Ensembl::SESSION.seqlevel_id
-            STDERR.puts "DEBUG: now at the seqlevel coord_system"
             @seq = Bio::Sequence::NA.new(self.seq_region.subseq(self.start, self.stop))
           else # we have to project coordinates
-            STDERR.puts "DEBUG: not yet at seqlevel coord_system"
             seq_string = String.new
       	    @target_slices = self.project('seqlevel')
 
