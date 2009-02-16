@@ -53,14 +53,12 @@ module Ensembl
       def project(coord_system_name)
         answer = Array.new # an array of slices
 
-        source_coord_system = nil
-        if Ensembl::SESSION.coord_systems.has_key?(self.seq_region.coord_system_id)
-          source_coord_system = Ensembl::SESSION.coord_systems[self.seq_region.coord_system_id]
-        else
-          source_coord_system = self.seq_region.coord_system
-          Ensembl::SESSION.coord_systems[source_coord_system.id] = source_coord_system
-          Ensembl::SESSION.coord_system_ids[source_coord_system.name] = source_coord_system.id
+        unless Ensembl::SESSION.coord_systems.has_key?(self.seq_region.coord_system_id)
+          Ensembl::SESSION.coord_systems[self.seq_region.coord_system_id] = self.seq_region.coord_system
+          Ensembl::SESSION.coord_system_ids[Ensembl::SESSION.coord_systems[self.seq_region.coord_system_id].name] = self.seq_region.coord_system_id
         end
+        source_coord_system = Ensembl::SESSION.coord_systems[self.seq_region.coord_system_id]
+
         target_coord_system = nil
       	if coord_system_name == 'toplevel'
           target_coord_system = CoordSystem.find_toplevel
