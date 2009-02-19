@@ -208,7 +208,14 @@ module Ensembl
           sorted_overlapping_assembly_links.each_index do |i|
             this_link = sorted_overlapping_assembly_links[i]
       	    if i == 0
-              answer.push(Slice.new(this_link.cmp_seq_region, this_link.cmp_start, this_link.cmp_end, this_link.ori))
+              cmp_seq_region = nil
+              if Ensembl::SESSION.seq_regions.has_key?(this_link.cmp_seq_region_id)
+                cmp_seq_region = Ensembl::SESSION.seq_regions[this_link.cmp_seq_region_id]
+              else
+                cmp_seq_region = this_link.cmp_seq_region
+                Ensembl::SESSION.seq_regions[cmp_seq_region.id] = cmp_seq_region
+              end
+              answer.push(Slice.new(cmp_seq_region, this_link.cmp_start, this_link.cmp_end, this_link.ori))
             	next
             end
             previous_link = sorted_overlapping_assembly_links[i-1]
