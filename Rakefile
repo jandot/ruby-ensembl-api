@@ -1,5 +1,6 @@
-desc "Rebuild gemspec"
-task :rebuild_gemspec do
+namespace :gem do
+ desc "Rebuild gemspec"
+ task :rebuild_gemspec do
   outfile = File.open('ruby-ensembl-api.gemspec','w')
 
   outfile.puts 'Gem::Specification.new do |s|'
@@ -33,6 +34,16 @@ task :rebuild_gemspec do
   outfile.puts '  s.executables = ["ensembl"]'
   outfile.puts '  s.default_executable = "ensembl"'
   outfile.puts 'end'
-
   outfile.close
+ end
+end 
+
+namespace :test do
+ desc "Run tests"
+ task :run do
+    list = File.join("test/**","*.rb")
+    Dir.glob(list).each do |name|
+      ruby name
+    end
+ end
 end

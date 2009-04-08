@@ -9,7 +9,6 @@
 require 'pathname'
 libpath = Pathname.new(File.join(File.dirname(__FILE__), ['..'] * 4, 'lib')).cleanpath.to_s
 $:.unshift(libpath) unless $:.include?(libpath)
-
 require 'test/unit'
 require 'ensembl'
 
@@ -32,7 +31,7 @@ class AssemblyExceptions < Test::Unit::TestCase
 
   def test_seq_slice_overlapping_PAR
     seq = ''
-    File.open('../../data/seq_y.fa').reject{|l| l=~/^>/}.each do |line|
+    File.open("test/unit/data/seq_y.fa").reject{|l| l=~/^>/}.each do |line|
       line.chomp!
       seq += line
     end
@@ -46,7 +45,7 @@ class AssemblyExceptions < Test::Unit::TestCase
   # in the code.
   def test_seq_slice_overlapping_HAP
     seq = ''
-    File.open('../../data/seq_c6qbl.fa').reject{|l| l=~/^>/}.each do |line|
+    File.open('test/unit/data/seq_c6qbl.fa').reject{|l| l=~/^>/}.each do |line|
       line.chomp!
       seq += line
     end

@@ -12,7 +12,7 @@ $:.unshift(libpath) unless $:.include?(libpath)
 
 require 'test/unit'
 require 'yaml'
-require 'ensembl'
+require 'lib/ensembl'
 
 include Ensembl::Core
 
@@ -98,7 +98,7 @@ class SequenceForSlicedFeature < Test::Unit::TestCase
   def test_transcript_foward
     transcript = Transcript.find(73491) # UB2R1 = CDC34
     ub2r1_transcript_seq = ''
-    File.open('../../data/seq_ub2r1_transcript.fa').reject{|l| l=~/^>/}.each do |line|
+    File.open('test/unit/data/seq_ub2r1_transcript.fa').reject{|l| l=~/^>/}.each do |line|
       line.chomp!
       ub2r1_transcript_seq += line
     end
@@ -110,7 +110,7 @@ class SequenceForSlicedFeature < Test::Unit::TestCase
   def test_transcript_reverse
     transcript = Transcript.find(107548)
     rnd3_transcript_seq = ''
-    File.open('../../data/seq_rnd3_transcript.fa').reject{|l| l=~/^>/}.each do |line|
+    File.open('test/unit/data/seq_rnd3_transcript.fa').reject{|l| l=~/^>/}.each do |line|
       line.chomp!
       rnd3_transcript_seq += line
     end
@@ -130,7 +130,7 @@ class SequenceForCDS < Test::Unit::TestCase
 
   def test_cds_fw
     ub2r1_coding_seq = ''
-    File.open('../../data/seq_ub2r1_coding.fa').reject{|l| l=~/^>/}.each do |line|
+    File.open('test/unit/data/seq_ub2r1_coding.fa').reject{|l| l=~/^>/}.each do |line|
       line.chomp!
       ub2r1_coding_seq += line
     end
@@ -140,7 +140,7 @@ class SequenceForCDS < Test::Unit::TestCase
 
   def test_cds_rev
     cso19_coding_seq = ''
-    File.open('../../data/seq_cso19_coding.fa').reject{|l| l=~/^>/}.each do |line|
+    File.open('test/unit/data/seq_cso19_coding.fa').reject{|l| l=~/^>/}.each do |line|
       line.chomp!
       cso19_coding_seq += line
     end
