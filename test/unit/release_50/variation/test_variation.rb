@@ -14,7 +14,7 @@ require 'ensembl'
 
 include Ensembl::Variation
 
-DBConnection.connect('homo_sapiens')
+DBConnection.connect('homo_sapiens',50)
 
 class TestVariation < Test::Unit::TestCase
   

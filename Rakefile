@@ -46,4 +46,18 @@ namespace :test do
       ruby name
     end
  end
+ desc "Run Core tests"
+ task :core do
+   list = File.join("test/unit/release_50/core","*.rb")
+   Dir.glob(list).each do |name|
+     ruby name
+   end
+ end
+ desc "Run Variation tests"
+ task :variation do
+   list = File.join("test/unit/release_50/variation","*.rb")
+   Dir.glob(list).each do |name|
+     ruby name
+   end
+ end
 end

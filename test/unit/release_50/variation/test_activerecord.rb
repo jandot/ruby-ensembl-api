@@ -14,7 +14,7 @@ require 'test/unit'
 require 'ensembl'
 
 include Ensembl::Variation
-DBConnection.connect('homo_sapiens')
+DBConnection.connect('homo_sapiens',50)
 
 class ActiveRecordVariation < Test::Unit::TestCase
   
