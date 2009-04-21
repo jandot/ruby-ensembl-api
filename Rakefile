@@ -1,14 +1,18 @@
 namespace :gem do
  desc "Rebuild gemspec"
- task :rebuild_gemspec do
+ task :rebuild do
+  unless ENV.include?("version")
+    raise "usage: rake gem:rebuild version= [number]" 
+  end
+  version = ENV['version'] 
   outfile = File.open('ruby-ensembl-api.gemspec','w')
 
   outfile.puts 'Gem::Specification.new do |s|'
   outfile.puts '  s.name = "ruby-ensembl-api"'
-  outfile.puts '  s.version = "0.9.2"'
+  outfile.puts '  s.version ='+"'#{version}'"
   outfile.puts ''
-  outfile.puts '  s.authors = ["Jan Aerts"]'
-  outfile.puts '  s.email = "jan.aerts@gmail.com"'
+  outfile.puts '  s.authors = ["Jan Aerts", "Francesco Strozzi"]'
+  outfile.puts '  s.email = ["jan.aerts@gmail.com","francesco.strozzi@gmail.com"]'
   outfile.puts '  s.homepage = "http://rubyforge.org/projects/bioruby-annex/"'
   outfile.puts '  s.summary = "API to Ensembl databases"'
   outfile.puts '  s.description = "ensembl-api provides a ruby API to the Ensembl databases (http://www.ensembl.org)"'

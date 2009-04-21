@@ -7,32 +7,10 @@ module Ensembl
   DB_USERNAME = 'anonymous'
   DB_PASSWORD = ''
 
-  class OldDummyDBConnection < ActiveRecord::Base
+  class DummyDBConnection < ActiveRecord::Base
     self.abstract_class = true
-    
-    establish_connection(
-                        :adapter => Ensembl::DB_ADAPTER,
-                        :host => Ensembl::DB_HOST,
-                        :database => '',
-                        :username => Ensembl::DB_USERNAME,
-                        :password => Ensembl::DB_PASSWORD
-                        )
   end
 
-  class NewDummyDBConnection < ActiveRecord::Base
-    self.abstract_class = true
-    
-    establish_connection(
-                        :adapter => Ensembl::DB_ADAPTER,
-                        :host => Ensembl::DB_HOST,
-                        :database => '',
-                        :username => Ensembl::DB_USERNAME,
-                        :password => Ensembl::DB_PASSWORD,
-                        :port => 5306
-                        )
-  end
-
-  
   module DBRegistry 
     # = DESCRIPTION
     # The Ensembl::Registry::Base is a generic super class setting
@@ -75,33 +53,37 @@ module Ensembl
       # * ensembl_release:: the release of the database to connect to
       #  (default = 50)
       def self.connect(species, release = Ensembl::ENSEMBL_RELEASE, args = {})
-        dummy_dbconnection = ( release > 47 ) ? Ensembl::NewDummyDBConnection.connection : Ensembl::OldDummyDBConnection.connection
+        #dummy_dbconnection = ( release > 47 ) ? Ensembl::NewDummyDBConnection.connection : Ensembl::OldDummyDBConnection.connection
         db_name = nil
-        
+        port = nil
+        if args[:port] then
+          port = args[:port]
+        else
+          port = ( release > 47 ) ? 5306 : 3306
+        end
+        dummy_db = DummyDBConnection.establish_connection(
+                            :adapter => args[:adapter] ||= Ensembl::DB_ADAPTER,
+                            :host => args[:host] ||= Ensembl::DB_HOST,
+                            :username => args[:username] ||= Ensembl::DB_USERNAME,
+                            :password => args[:password] ||= Ensembl::DB_PASSWORD,
+                            :port => port,
+                            :database => ''
+                          )
+        dummy_connection = dummy_db.connection                  
         if args[:database]
           db_name = args[:database]
         else  
-          db_name = dummy_dbconnection.select_values('show databases').select{|v| v =~ /#{species}_core_#{release.to_s}/}[0]
+          db_name = dummy_connection.select_values('show databases').select{|v| v =~ /#{species}_core_#{release.to_s}/}[0]
         end
-
         if db_name.nil?
           warn "WARNING: No connection to database established. Check that the species is in snake_case (was: #{species})."
         else
-          port = nil
-          if args[:port] then
-            port = args[:port]
-          else
-            port = ( release > 47 ) ? 5306 : nil
-          end
-          host = args[:host] || Ensembl::DB_HOST
-          user = args[:username] || Ensembl::DB_USERNAME
-          pass = args[:password] || Ensembl::DB_PASSWORD
           establish_connection(
                               :adapter => args[:adapter] || Ensembl::DB_ADAPTER,
-                              :host => host,
+                              :host => args[:host] || Ensembl::DB_HOST,
                               :database => db_name,
-                              :username => user,
-                              :password => pass,
+                              :username => args[:username] || Ensembl::DB_USERNAME,
+                              :password => args[:password] || Ensembl::DB_PASSWORD,
                               :port => port
                             ) 
           self.retrieve_connection                  
@@ -138,7 +120,21 @@ module Ensembl
       # * ensembl_release:: the release of the database to connect to
       #  (default = 50)
       def self.connect(species, release = Ensembl::ENSEMBL_RELEASE, args = {})
-        dummy_dbconnection = ( release > 47 ) ? Ensembl::NewDummyDBConnection.connection : Ensembl::OldDummyDBConnection.connection
+        dummy_db = DummyDBConnection.establish_connection(
+                            :adapter => args[:adapter] ||= Ensembl::DB_ADAPTER,
+                            :host => args[:host] ||= Ensembl::DB_HOST,
+                            :username => args[:username] ||= Ensembl::DB_USERNAME,
+                            :password => args[:password] ||= Ensembl::DB_PASSWORD,
+                            :port => port,
+                            :database => ''
+                          )
+        dummy_connection = dummy_db.connection
+        port = nil
+        if args[:port] then
+          port = args[:port]
+        else
+          port = ( release > 47 ) ? 5306 : 3306
+        end
         db_name = nil
         if args[:database]
           db_name = args[:database]
@@ -149,21 +145,12 @@ module Ensembl
         if db_name.nil?
           warn "WARNING: No connection to database established. Check that the species is in snake_case (was: #{species})."
         else
-          port = nil
-          if args[:port] then
-            port = args[:port]
-          else
-            port = ( release > 47 ) ? 5306 : nil
-          end
-          host = args[:host] || Ensembl::DB_HOST
-          user = args[:username] || Ensembl::DB_USERNAME
-          pass = args[:password] || Ensembl::DB_PASSWORD
           establish_connection(
                               :adapter => args[:adapter] || Ensembl::DB_ADAPTER,
-                              :host => host,
+                              :host => args[:host] || Ensembl::DB_HOST,
                               :database => db_name,
-                              :username => user,
-                              :password => pass,
+                              :username => args[:username] || Ensembl::DB_USERNAME,
+                              :password => args[:password] || Ensembl::DB_PASSWORD,
                               :port => port
                             )
           self.retrieve_connection                                                                                                                 
