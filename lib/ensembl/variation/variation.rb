@@ -37,7 +37,7 @@ module Ensembl
     class Variation < DBConnection
       set_primary_key "variation_id"
       belongs_to :source
-      has_one :variation_synonym
+      has_many :variation_synonyms
       has_one :flanking_sequence
       has_many :allele_group_alleles
       has_many :allele_groups, :through => :allele_group_alleles
