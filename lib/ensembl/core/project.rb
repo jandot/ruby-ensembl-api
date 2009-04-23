@@ -1,7 +1,7 @@
 #
 # = ensembl/core/project.rb - project calculations for Ensembl Slice
 #
-# Copyright::   Copyright (C) 2007 Jan Aerts <http://jandot.myopenid.com>
+# Copyright::   Copyright (C) 2007 Jan Aerts <jan.aerts@bbsrc.ac.uk>
 # License::     The Ruby License
 #
 module Ensembl
@@ -52,32 +52,21 @@ module Ensembl
       # *Returns*:: an array consisting of Slices and, if necessary, Gaps
       def project(coord_system_name)
         answer = Array.new # an array of slices
-
-        unless Ensembl::SESSION.coord_systems.has_key?(self.seq_region.coord_system_id)
-          Ensembl::SESSION.coord_systems[self.seq_region.coord_system_id] = self.seq_region.coord_system
-          Ensembl::SESSION.coord_system_ids[Ensembl::SESSION.coord_systems[self.seq_region.coord_system_id].name] = self.seq_region.coord_system_id
-        end
-        source_coord_system = Ensembl::SESSION.coord_systems[self.seq_region.coord_system_id]
-
+      	source_coord_system = self.seq_region.coord_system
         target_coord_system = nil
       	if coord_system_name == 'toplevel'
-          target_coord_system = CoordSystem.find_toplevel
-      	  coord_system_name = target_coord_system.name
+          target_coord_system = source_coord_system.find_toplevel
+      	  #coord_system_name = target_coord_system.name
         elsif coord_system_name == 'seqlevel'
-          target_coord_system = CoordSystem.find_seqlevel
-      	  coord_system_name = target_coord_system.name
+          target_coord_system = source_coord_system.find_seqlevel
+      	  #coord_system_name = target_coord_system.name
         else
-          unless Ensembl::SESSION.coord_system_ids.has_key?(coord_system_name)
-            cs = CoordSystem.find_by_name(coord_system_name)
-            Ensembl::SESSION.coord_systems[cs.id] = cs
-            Ensembl::SESSION.coord_system_ids[cs.name] = cs.id
-          end
-          target_coord_system = Ensembl::SESSION.coord_systems[Ensembl::SESSION.coord_system_ids[coord_system_name]]
+          target_coord_system = source_coord_system
         end
 
         if target_coord_system.rank < source_coord_system.rank
           # We're going from component to assembly, which is easy.
-          assembly_links = self.seq_region.assembly_links_as_component(coord_system_name)
+          assembly_links = self.seq_region.assembly_links_as_component(source_coord_system)
           
           if assembly_links.length == 0
             return []
@@ -113,8 +102,7 @@ module Ensembl
             # assembly_exception table.
             overlapping_exceptions = Array.new
             assembly_exceptions.each do |ae|
-              seq_region = self.seq_region
-              if Slice.new(seq_region, ae.seq_region_start, ae.seq_region_end).overlaps?(self)
+              if Slice.new(self.seq_region, ae.seq_region_start, ae.seq_region_end).overlaps?(self)
                 if ae.exc_type == 'HAP'
                   raise NotImplementedError, "The haplotype exceptions are not implemented (yet). You can't project this slice."
                 end
@@ -191,7 +179,7 @@ module Ensembl
 
           # Get all AssemblyLinks starting from this assembly and for which
       	  # the cmp_seq_region.coord_system is what we want.
-      	  assembly_links = self.seq_region.assembly_links_as_assembly(coord_system_name)
+      	  assembly_links = self.seq_region.assembly_links_as_assembly(target_coord_system)
 
           # Now reject all the components that lie _before_ the source, then
       	  # reject all the components that lie _after_ the source.
@@ -208,14 +196,7 @@ module Ensembl
           sorted_overlapping_assembly_links.each_index do |i|
             this_link = sorted_overlapping_assembly_links[i]
       	    if i == 0
-              cmp_seq_region = nil
-              if Ensembl::SESSION.seq_regions.has_key?(this_link.cmp_seq_region_id)
-                cmp_seq_region = Ensembl::SESSION.seq_regions[this_link.cmp_seq_region_id]
-              else
-                cmp_seq_region = this_link.cmp_seq_region
-                Ensembl::SESSION.seq_regions[cmp_seq_region.id] = cmp_seq_region
-              end
-              answer.push(Slice.new(cmp_seq_region, this_link.cmp_start, this_link.cmp_end, this_link.ori))
+              answer.push(Slice.new(this_link.cmp_seq_region, this_link.cmp_start, this_link.cmp_end, this_link.ori))
             	next
             end
             previous_link = sorted_overlapping_assembly_links[i-1]
@@ -223,7 +204,7 @@ module Ensembl
             # If there is a gap with the previous link: add a gap
       	    if this_link.asm_start > ( previous_link.asm_end + 1 )
               gap_size = this_link.asm_start - previous_link.asm_end - 1
-              answer.push(Gap.new(CoordSystem.find_by_name(coord_system_name), gap_size))
+              answer.push(Gap.new(target_coord_system, gap_size))
             end
 
             # And add the component itself as a Slice
@@ -252,11 +233,11 @@ module Ensembl
           # And check if we have to add Ns at the front and/or back
           if self.start < first_link.asm_start
             gap_size = first_link.asm_start - self.start
-            answer.unshift(Gap.new(CoordSystem.find_by_name(coord_system_name), gap_size))
+            answer.unshift(Gap.new(target_coord_system, gap_size))
           end
           if self.stop > last_link.asm_end
             gap_size = self.stop - last_link.asm_end
-            answer.push(Gap.new(CoordSystem.find_by_name(coord_system_name), gap_size))
+            answer.push(Gap.new(target_coord_system, gap_size))
           end
         end
         return answer

@@ -221,7 +221,7 @@ module Ensembl
       # *Arguments*:: none
       # *Returns*:: TRUE or FALSE
       def toplevel?
-        if self == CoordSystem.find_by_rank(1)
+        if self == CoordSystem.find_by_sql("SELECT * FROM coord_system WHERE species_id = #{self.species_id} ORDER BY RANK")[0]
           return true
         else
           return false
@@ -235,7 +235,7 @@ module Ensembl
       # *Arguments*:: none
       # *Returns*:: TRUE or FALSE
       def seqlevel?
-        if self == CoordSystem.find_seqlevel
+        if self == CoordSystem.find_by_sql("SELECT * FROM coord_system WHERE attrib LIKE '%sequence_level%' AND species_id = #{self.species_id}")[0]
           return true
         else
           return false
@@ -248,14 +248,8 @@ module Ensembl
       # ---
       # *Arguments*:: none
       # *Returns*:: CoordSystem object
-      def self.find_toplevel
-        if Ensembl::SESSION.toplevel_coord_system.nil?
-          Ensembl::SESSION.toplevel_coord_system = CoordSystem.find_by_rank(1)
-          Ensembl::SESSION.toplevel_id = Ensembl::SESSION.toplevel_coord_system.id
-          Ensembl::SESSION.coord_system_ids[Ensembl::SESSION.toplevel_coord_system.name] = Ensembl::SESSION.toplevel_id
-          Ensembl::SESSION.coord_systems[Ensembl::SESSION.toplevel_id] = Ensembl::SESSION.toplevel_coord_system
-        end
-        return Ensembl::SESSION.toplevel_coord_system
+      def find_toplevel
+        return CoordSystem.find_by_sql("SELECT * FROM coord_system WHERE species_id = #{self.species_id} ORDER BY RANK")[0]
       end
       
       # = DESCRIPTION
@@ -264,14 +258,8 @@ module Ensembl
       # ---
       # *Arguments*:: none
       # *Returns*:: CoordSystem object
-      def self.find_seqlevel
-        if Ensembl::SESSION.seqlevel_coord_system.nil?
-          Ensembl::SESSION.seqlevel_coord_system = CoordSystem.find_by_sql("SELECT * FROM coord_system WHERE attrib LIKE '%sequence_level%'")[0]
-          Ensembl::SESSION.seqlevel_id = Ensembl::SESSION.seqlevel_coord_system.id
-          Ensembl::SESSION.coord_system_ids[Ensembl::SESSION.seqlevel_coord_system.name] = Ensembl::SESSION.seqlevel_id
-          Ensembl::SESSION.coord_systems[Ensembl::SESSION.seqlevel_id] = Ensembl::SESSION.seqlevel_coord_system
-        end
-        return Ensembl::SESSION.seqlevel_coord_system
+      def find_seqlevel
+        return CoordSystem.find_by_sql("SELECT * FROM coord_system WHERE attrib LIKE '%sequence_level%' AND species_id = #{self.species_id}")[0]
       end
       
       # = DESCRIPTION
@@ -451,22 +439,12 @@ module Ensembl
       # * coord_system_name: name of coordinate system that the components
       #   should belong to (default = nil)
       # *Returns*:: array of AssemblyLink objects
-      def assembly_links_as_assembly(coord_system_name = nil)
-      	if coord_system_name.nil?
+      def assembly_links_as_assembly(coord_system = nil)
+      	if coord_system.nil?
           return self.asm_links_as_asm
         else
-          coord_system_id = nil
-          if Ensembl::SESSION.coord_system_ids.has_key?(coord_system_name)
-            coord_system_id = Ensembl::SESSION.coord_system_ids[coord_system_name]
-          else
-            cs = CoordSystem.find_by_name(coord_system_name)
-            Ensembl::SESSION.coord_systems[cs.id] = cs
-            Ensembl::SESSION.coord_system_ids[coord_system_name] = cs.id
-            coord_system_id = cs.id
-          end
-          coord_system = Ensembl::SESSION.coord_systems[coord_system_id]
 #      	  return self.asm_links_as_asm.select{|alaa| alaa.cmp_seq_region.coord_system_id == coord_system.id}
-          return AssemblyLink.find_by_sql("SELECT * FROM assembly a WHERE a.asm_seq_region_id = " + self.id.to_s + " AND a.cmp_seq_region_id IN (SELECT sr.seq_region_id FROM seq_region sr WHERE coord_system_id = " + coord_system.id.to_s + ")")
+          return AssemblyLink.find_by_sql("SELECT * FROM assembly a WHERE a.asm_seq_region_id = #{self.id} AND a.cmp_seq_region_id IN (SELECT sr.seq_region_id FROM seq_region sr WHERE coord_system_id = #{coord_system.id} )")
         end
       end
 
@@ -485,11 +463,10 @@ module Ensembl
       # * coord_system_name: name of coordinate system that the assembly
       #   should belong to (default = nil)
       # *Returns*:: array of AssemblyLink objects
-      def assembly_links_as_component(coord_system_name = nil)
-        if coord_system_name.nil?
+      def assembly_links_as_component(coord_system = nil)
+        if coord_system.nil?
           return self.asm_links_as_cmp
         else
-          coord_system = CoordSystem.find_by_name(coord_system_name)
       	  return self.asm_links_as_cmp.select{|alac| alac.asm_seq_region.coord_system_id == coord_system.id}
         end
       end

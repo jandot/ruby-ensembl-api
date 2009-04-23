@@ -60,19 +60,19 @@ module Ensembl
           port = args[:port]
         else
           port = ( release > 47 ) ? 5306 : 3306
-        end
-        dummy_db = DummyDBConnection.establish_connection(
-                            :adapter => args[:adapter] ||= Ensembl::DB_ADAPTER,
-                            :host => args[:host] ||= Ensembl::DB_HOST,
-                            :username => args[:username] ||= Ensembl::DB_USERNAME,
-                            :password => args[:password] ||= Ensembl::DB_PASSWORD,
-                            :port => port,
-                            :database => ''
-                          )
-        dummy_connection = dummy_db.connection                  
+        end                
         if args[:database]
           db_name = args[:database]
-        else  
+        else
+          dummy_db = DummyDBConnection.establish_connection(
+                              :adapter => args[:adapter] ||= Ensembl::DB_ADAPTER,
+                              :host => args[:host] ||= Ensembl::DB_HOST,
+                              :username => args[:username] ||= Ensembl::DB_USERNAME,
+                              :password => args[:password] ||= Ensembl::DB_PASSWORD,
+                              :port => port,
+                              :database => ''
+                            )
+          dummy_connection = dummy_db.connection
           db_name = dummy_connection.select_values('show databases').select{|v| v =~ /#{species}_core_#{release.to_s}/}[0]
         end
         if db_name.nil?
@@ -86,7 +86,7 @@ module Ensembl
                               :password => args[:password] || Ensembl::DB_PASSWORD,
                               :port => port
                             ) 
-          self.retrieve_connection                  
+          self.retrieve_connection               
         end  
       end
       
@@ -120,15 +120,6 @@ module Ensembl
       # * ensembl_release:: the release of the database to connect to
       #  (default = 50)
       def self.connect(species, release = Ensembl::ENSEMBL_RELEASE, args = {})
-        dummy_db = DummyDBConnection.establish_connection(
-                            :adapter => args[:adapter] ||= Ensembl::DB_ADAPTER,
-                            :host => args[:host] ||= Ensembl::DB_HOST,
-                            :username => args[:username] ||= Ensembl::DB_USERNAME,
-                            :password => args[:password] ||= Ensembl::DB_PASSWORD,
-                            :port => port,
-                            :database => ''
-                          )
-        dummy_connection = dummy_db.connection
         port = nil
         if args[:port] then
           port = args[:port]
@@ -138,8 +129,17 @@ module Ensembl
         db_name = nil
         if args[:database]
           db_name = args[:database]
-        else  
-          db_name = dummy_dbconnection.select_values('show databases').select{|v| v =~ /#{species}_variation_#{release.to_s}/}[0]
+        else
+          dummy_db = DummyDBConnection.establish_connection(
+                              :adapter => args[:adapter] ||= Ensembl::DB_ADAPTER,
+                              :host => args[:host] ||= Ensembl::DB_HOST,
+                              :username => args[:username] ||= Ensembl::DB_USERNAME,
+                              :password => args[:password] ||= Ensembl::DB_PASSWORD,
+                              :port => port,
+                              :database => ''
+                            )
+          dummy_connection = dummy_db.connection
+          db_name = dummy_connection.select_values('show databases').select{|v| v =~ /#{species}_variation_#{release.to_s}/}[0]
         end
         
         if db_name.nil?
