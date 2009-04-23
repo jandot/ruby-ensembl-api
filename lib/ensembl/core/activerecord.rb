@@ -263,6 +263,16 @@ module Ensembl
       end
       
       # = DESCRIPTION
+      # The CoordSystem#find_level class method returns the seqlevel coordinate
+      # system corresponding to the name passed.
+      # ---
+      # *Arguments*:: Coordinate system name
+      # *Returns*:: CoordSystem object
+      def find_level(coord_system_name)
+        return CoordSystem.find_by_sql("SELECT * FROM coord_system WHERE name = '#{coord_system_name}' AND species_id = #{self.species_id}")[0]
+      end
+      
+      # = DESCRIPTION
       # The CoordSystem#find_default_by_name class method returns the
       # coordinate system by that name with the lowest rank. Normally, a lower
       # rank means a 'bigger' coordinate system. The 'chromosome' typically has

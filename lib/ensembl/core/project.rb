@@ -61,7 +61,7 @@ module Ensembl
           target_coord_system = source_coord_system.find_seqlevel
       	  #coord_system_name = target_coord_system.name
         else
-          target_coord_system = source_coord_system
+          target_coord_system = source_coord_system.find_level(coord_system_name)
         end
 
         if target_coord_system.rank < source_coord_system.rank
