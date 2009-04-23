@@ -45,38 +45,19 @@ class TestVariation < Test::Unit::TestCase
   end
   
   def test_slice_variation
-    slice = Ensembl::Core::Slice.fetch_by_region('chromosome',1,50000,51000)
+    slice = Ensembl::Core::Slice.fetch_by_region('chromosome',1,50000,50300)
     variations = slice.get_variation_features
-    assert_equal(9,variations.size)
-    assert_equal('ENSSNP4691381',variations[0].variation_name)
-    assert_equal('ENSSNP9996411',variations[1].variation_name)
-    assert_equal('rs2691281',variations[2].variation_name)
-    assert_equal('ENSSNP4068519',variations[3].variation_name)
-    assert_equal('ENSSNP230814',variations[4].variation_name)
-    assert_equal('ENSSNP4010737',variations[5].variation_name)
-    assert_equal('rs2531295',variations[6].variation_name)
-    assert_equal('ENSSNP5092147',variations[7].variation_name)
-    assert_equal('ENSSNP5346602',variations[8].variation_name)
+    assert_equal(8,variations.size)
     
-    genotyped = slice.get_genotyped_variation_features
-    assert_equal(7,genotyped.size)
-    assert_equal('ENSSNP4691381',genotyped[0].variation_name)
-    assert_equal('genotyped',genotyped[0].flags)
-    assert_equal('ENSSNP9996411',genotyped[1].variation_name)
-    assert_equal('genotyped',genotyped[1].flags)
-    assert_equal('ENSSNP4068519',genotyped[2].variation_name)
-    assert_equal('genotyped',genotyped[2].flags)
-    assert_equal('ENSSNP230814',genotyped[3].variation_name)
-    assert_equal('genotyped',genotyped[3].flags)
-    assert_equal('ENSSNP4010737',genotyped[4].variation_name)
-    assert_equal('genotyped',genotyped[4].flags)
-    assert_equal('ENSSNP5092147',genotyped[5].variation_name)
-    assert_equal('genotyped',genotyped[5].flags)
-    assert_equal('ENSSNP5346602',genotyped[6].variation_name)
-    assert_equal('genotyped',genotyped[6].flags)
-    
-    v = variations[0].variation
-    assert_equal(16366812,v.variation_id)
+    assert_equal('rs987669',variations[0].variation_name)
+    assert_equal('ENSSNP4691381',variations[1].variation_name)
+    assert_equal('rs2854665',variations[2].variation_name)
+    assert_equal('rs62637816',variations[3].variation_name)
+    assert_equal('ENSSNP9996411',variations[4].variation_name)
+    assert_equal('rs62637817',variations[5].variation_name)
+    assert_equal('rs2691281',variations[6].variation_name)
+    assert_equal('ENSSNP4068519',variations[7].variation_name)
+
   end
   
   

@@ -52,14 +52,14 @@ namespace :test do
  end
  desc "Run Core tests"
  task :core do
-   list = File.join("test/unit/release_50/core","*.rb")
+   list = File.join("test/unit/release_53/core","*.rb")
    Dir.glob(list).each do |name|
      ruby name
    end
  end
  desc "Run Variation tests"
  task :variation do
-   list = File.join("test/unit/release_50/variation","*.rb")
+   list = File.join("test/unit/release_53/variation","*.rb")
    Dir.glob(list).each do |name|
      ruby name
    end
