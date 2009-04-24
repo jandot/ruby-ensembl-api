@@ -40,5 +40,11 @@ class TestConnection < Test::Unit::TestCase
     end
   end
   
+  def test_connection_ensembl_genomes
+    assert_nothing_raised do
+      Ensembl::Core::DBConnection.connect("bacillus_collection",1,:host => "mysql.ebi.ac.uk", :port => 4157)
+    end
+  end
+  
 end
 
