@@ -7,6 +7,7 @@ nil
 module Ensembl
   nil
   module Core
+        
     # = DESCRIPTION
     # From the perl API tutorial
     # (http://www.ensembl.org/info/software/core/core_tutorial.html): "A
@@ -70,8 +71,17 @@ module Ensembl
       # * stop: stop of Slice on SeqRegion (default = end of SeqRegion)
       # * strand: strand of Slice on SeqRegion
       # *Returns*:: Ensembl::Core::Slice object
-      def self.fetch_by_region(coord_system_name, seq_region_name, start = nil, stop = nil, strand = 1, version = nil)
-        all_coord_systems = Ensembl::Core::CoordSystem.find_all_by_name(coord_system_name)
+      def self.fetch_by_region(coord_system_name, seq_region_name, start = nil, stop = nil, strand = 1, specie = nil ,version = nil)
+        all_coord_systems = nil
+        if Collection.check
+          if specie.nil?
+            raise ArgumentError, "When using multi-species db, you must pass a specie name to get the correct Slice"
+          else
+            all_coord_systems = Ensembl::Core::CoordSystem.find_all_by_name_and_species_id(coord_system_name,Collection.get_species_id(specie))
+          end
+        else
+          all_coord_systems = Ensembl::Core::CoordSystem.find_all_by_name(coord_system_name)
+        end
       	coord_system = nil
         if version.nil? # Take the version with the lowest rank
           coord_system = all_coord_systems.sort_by{|cs| cs.version}.reverse.shift
@@ -142,12 +152,23 @@ module Ensembl
       # * coord_system_name:: name of coordinate system (default = chromosome)
       # * coord_system_version:: version of coordinate system (default = nil)
       # *Returns*:: an array of Ensembl::Core::Slice objects
-      def self.fetch_all(coord_system_name = 'chromosome', version = nil)
+      def self.fetch_all(coord_system_name = 'chromosome',specie = nil ,version = nil)
         answer = Array.new
+        coord_system = nil
       	if version.nil?
-          coord_system = Ensembl::Core::CoordSystem.find_by_name(coord_system_name)
+      	  if Collection.check
+      	      species_id = Collection.get_species_id(specie)
+      	      raise ArgumentError, "Specie '#{specie}' not found! You must provide a valid specie name when using multi-species db" if species_id.nil?
+              coord_systems = Ensembl::Core::CoordSystem.find_all_by_name_and_species_id(coord_system_name,species_id)
+            end
         else
-          coord_system = Ensembl::Core::CoordSystem.find_by_name_and_version(coord_system_name, version)
+          if Collection.check
+            species_id = Collection.get_species_id(specie)
+      	    raise ArgumentError, "Specie '#{specie}' not found! You must provide a valid specie name when using multi-species db" if species_id.nil?            
+            coord_system = Ensembl::Core::CoordSystem.find_by_name_and_species_id_and_version(coord_system_name, species_id, version)
+          else
+            coord_system = Ensembl::Core::CoordSystem.find_by_name_and_version(coord_system_name, version)  
+          end    
         end
 
       	coord_system.seq_regions.each do |seq_region|
@@ -441,7 +462,7 @@ module Ensembl
 
         
         # Get all the coord_systems with this type of features on them
-        coord_system_ids_with_features = MetaCoord.find_all_by_table_name(table_name).collect{|mc| mc.coord_system_id}
+        coord_system_ids_with_features = Collection.find_all_coord_by_table_name(table_name,self.seq_region.coord_system.species_id).collect{|mc| mc.coord_system_id}
 
         # Get the features of the original slice
         if coord_system_ids_with_features.include?(self.seq_region.coord_system_id)
@@ -624,13 +645,11 @@ SQL
             species,release = $1,$2
             Ensembl::Variation::DBConnection.connect(species,release.to_i,:username => user, :password => password,:host => host, :port => port)
           else
-            raise NameError, "Can't derive Variation database name from #{db_name}. Are you using non conventional names?"
+            raise NameError, "Can't get Variation Database name from #{db_name}. Are you using non conventional names?"
           end
         end
         
-      end
-      
-      
+      end  
       
       
     end #Slice
