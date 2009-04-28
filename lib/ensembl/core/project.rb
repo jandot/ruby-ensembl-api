@@ -58,10 +58,8 @@ module Ensembl
         target_coord_system = nil
       	if coord_system_name == 'toplevel'
           target_coord_system = source_coord_system.find_toplevel
-      	  #coord_system_name = target_coord_system.name
         elsif coord_system_name == 'seqlevel'
           target_coord_system = source_coord_system.find_seqlevel
-      	  #coord_system_name = target_coord_system.name
         else
           target_coord_system = source_coord_system.find_level(coord_system_name)
         end
