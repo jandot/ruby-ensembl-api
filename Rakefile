@@ -64,4 +64,12 @@ namespace :test do
      ruby name
    end
  end
+ desc "Run Ensembl Genomes tests"
+ task :genomes do
+   list = File.join("test/unit/release_53/ensembl_genomes","*.rb")
+   Dir.glob(list).each do |name|
+     ruby name
+   end
+ end
+ 
 end
