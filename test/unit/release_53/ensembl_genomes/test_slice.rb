@@ -22,8 +22,12 @@ class TestSlice < Test::Unit::TestCase
   def test_fetch_by_region
     slice = Slice.fetch_by_region('chromosome',"Chromosome",183617,183716,1,"Mycobacterium tuberculosis H37Rv")
     assert_equal("GCGCCATGACAGATCCGCAGACGCAGAGCACCAGGGTCGGGGTGGTTGCCGAGTCGGGGCCCGACGAACGACGGGTCGCGCTGGTTCCCAAGGCGGTCGC",slice.seq.upcase)
+    
     slice = Slice.fetch_by_region('chromosome',"Chromosome",4285422,4285521,1,"Mycobacterium paratuberculosis")
     assert_equal("GGTGTTAACGGCCGAAAGGTGGTTGAAAGATCGGCGGAATCGGGCGCACCCGGGTGGTCGTCGACGCCGCGCTGGTGGTGCTCGGCTGCGCCGTCGTGGT",slice.seq.upcase)
+    
+    slice = Slice.fetch_by_region('chromosome',"Chromosome",2667164,2667263,1,"Mycobacterium paratuberculosis")
+    assert_equal("GTTCCACCTGCCGATCGTCTTCCTCGCCGATAACCCGGGCATGCTGCCCGGCAGCCGGTCCGAACGCAGCGGTGTGCTGCGCGCCGGCGCGCGGATGTTC",slice.seq.upcase)
   end
   
   def test_fetch_genes_from_slice
