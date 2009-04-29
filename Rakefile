@@ -43,21 +43,22 @@ namespace :gem do
 end 
 
 namespace :test do
- desc "Run tests"
+ desc "Run tests (release 53)"
  task :run do
     list = File.join("test/**","*.rb")
     Dir.glob(list).each do |name|
       ruby name
+      system("gem build ruby-ensembl-api.gemspec")
     end
  end
- desc "Run Core tests"
+ desc "Run Core tests (release 53)"
  task :core do
    list = File.join("test/unit/release_53/core","*.rb")
    Dir.glob(list).each do |name|
      ruby name
    end
  end
- desc "Run Variation tests"
+ desc "Run Variation tests (release 53)"
  task :variation do
    list = File.join("test/unit/release_53/variation","*.rb")
    Dir.glob(list).each do |name|
@@ -71,5 +72,14 @@ namespace :test do
      ruby name
    end
  end
+ 
+ desc "Run tests for release 50"
+ task :release50 do
+   list = File.join("test/unit/release_50/**","*.rb")
+   Dir.glob(list).each do |name|
+     ruby name
+   end
+ end
+ 
  
 end
