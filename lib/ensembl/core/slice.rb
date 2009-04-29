@@ -77,7 +77,9 @@ module Ensembl
           if specie.nil?
             raise ArgumentError, "When using multi-species db, you must pass a specie name to get the correct Slice"
           else
-            all_coord_systems = Ensembl::Core::CoordSystem.find_all_by_name_and_species_id(coord_system_name,Collection.get_species_id(specie))
+            species_id = Collection.get_species_id(specie)
+            raise ArgumentError, "No specie found in the database with this name: #{specie}" if species_id.nil? 
+            all_coord_systems = Ensembl::Core::CoordSystem.find_all_by_name_and_species_id(coord_system_name,species_id)
           end
         else
           all_coord_systems = Ensembl::Core::CoordSystem.find_all_by_name(coord_system_name)
@@ -155,26 +157,24 @@ module Ensembl
       def self.fetch_all(coord_system_name = 'chromosome',specie = nil ,version = nil)
         answer = Array.new
         coord_system = nil
-      	if version.nil?
-      	  if Collection.check
-      	      species_id = Collection.get_species_id(specie)
-      	      raise ArgumentError, "Specie '#{specie}' not found! You must provide a valid specie name when using multi-species db" if species_id.nil?
-              coord_systems = Ensembl::Core::CoordSystem.find_all_by_name_and_species_id(coord_system_name,species_id)
-            end
+      	if Collection.check
+      	   species_id = Collection.get_species_id(specie)
+      	   raise ArgumentError, "No specie found in the database with this name: #{specie}" if species_id.nil?
+      	   if version.nil?
+              coord_system = Ensembl::Core::CoordSystem.find_by_name_and_species_id(coord_system_name,species_id)
+           else
+              coord_system = Ensembl::Core::CoordSystem.find_by_name_and_species_id_and_version(coord_system_name, species_id, version)
+           end  
         else
-          if Collection.check
-            species_id = Collection.get_species_id(specie)
-      	    raise ArgumentError, "Specie '#{specie}' not found! You must provide a valid specie name when using multi-species db" if species_id.nil?            
-            coord_system = Ensembl::Core::CoordSystem.find_by_name_and_species_id_and_version(coord_system_name, species_id, version)
-          else
-            coord_system = Ensembl::Core::CoordSystem.find_by_name_and_version(coord_system_name, version)  
-          end    
+           if version.nil?
+              coord_system = Ensembl::Core::CoordSystem.find_by_name(coord_system_name)
+           else
+              coord_system = Ensembl::Core::CoordSystem.find_by_name_and_version(coord_system_name, version) 
+           end
         end
-
       	coord_system.seq_regions.each do |seq_region|
       	  answer.push(Ensembl::Core::Slice.new(seq_region))
       	end
-
         return answer
       end
 
