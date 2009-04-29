@@ -2,6 +2,7 @@
 # = test/unit/release_53/core/test_transform.rb - Unit test for Ensembl::Core
 #
 # Copyright::   Copyright (C) 2009
+#               Jan Aerts <http://jandot.myopenid.com>
 #               Francesco Strozzi <francesco.strozzi@gmail.com>
 # License::     Ruby's
 #

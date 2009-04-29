@@ -2,7 +2,7 @@
 # = test/unit/test_project.rb - Unit test for Ensembl::Core
 #
 # Copyright::   Copyright (C) 2009
-#               Jan Aerts <jan.aerts@bbsrc.ac.uk>
+#               Jan Aerts <http://jandot.myopenid.com>
 #               Francesco Strozzi <francesco.strozzi@gmail.com>
 # License::     Ruby's
 #

@@ -1,3 +1,10 @@
+#
+# = ensembl/core/project.rb - project calculations for Ensembl Slice
+#
+# Copyright::   Copyright (C) 2009 Francesco Strozzi <francesco.strozzi@gmail.com>
+#                           
+# License::     The Ruby License
+
 module Ensembl
   nil
   module Core

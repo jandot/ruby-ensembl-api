@@ -1,7 +1,8 @@
 #
 # = ensembl/core/activerecord.rb - ActiveRecord mappings to Ensembl core
 #
-# Copyright::   Copyright (C) 2007 Jan Aerts <http://jandot.myopenid.com>
+# Copyright::   Copyright (C) 2007-2009 Jan Aerts <http://jandot.myopenid.com>
+#                                       Francesco Strozzi <francesco.strozzi@gmail.com>                                        
 # License::     The Ruby License
 #
 

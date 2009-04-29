@@ -1,8 +1,8 @@
 #
 # = test/unit/release_53/core/test_gene.rb - Unit test for Ensembl::Core
 #
-# Copyright::   Copyright (C) 2009
-#               Francesco Strozzi <francesco.strozzi@gmail.com>
+# Copyright::   Copyright (C) 2009 Francesco Strozzi <francesco.strozzi@gmail.com>
+#
 # License::     Ruby's
 #
 # $Id:

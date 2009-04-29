@@ -1,8 +1,8 @@
 #
 # = test/unit/release_50/variation/test_variation.tb - Unit test for Ensembl::Variation
 #
-# Copyright::   Copyright (C) 2008
-#               Francesco Strozzi <francesco.strozzi@gmail.com>
+# Copyright::   Copyright (C) 2008 Francesco Strozzi <francesco.strozzi@gmail.com>
+#
 # License::     Ruby's
 #
 require 'pathname'

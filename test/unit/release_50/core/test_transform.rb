@@ -12,7 +12,7 @@ $:.unshift(libpath) unless $:.include?(libpath)
 
 require 'test/unit'
 
-require 'ensembl'
+require 'lib/ensembl'
 
 include Ensembl::Core
 DBConnection.connect('bos_taurus', 50)

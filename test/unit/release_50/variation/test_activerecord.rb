@@ -1,8 +1,8 @@
 #
 # = test/unit/release_50/variation/test_activerecord.rb - Unit test for Ensembl::Variation
 #
-# Copyright::   Copyright (C) 2008
-#               Jan Aerts <jan.aerts@bbsrc.ac.uk>
+# Copyright::   Copyright (C) 2008 Francesco Strozzi <francesco.strozzi@gmail.com>
+#
 # License::     Ruby's
 #
 # $Id:

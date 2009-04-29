@@ -1,6 +1,9 @@
-# = ensembl/core/slice.rb - Slice object for Ensembl core
 #
-# Copyright::   Copyright (C) 2007 Jan Aerts <jan.aerts@bbsrc.ac.uk>
+# = ensembl/core/project.rb - project calculations for Ensembl Slice
+#
+# Copyright::   Copyright (C) 2009 Jan Aerts <http://jandot.myopenid.com>
+#               Francesco Strozzi <francesco.strozzi@gmail.com>
+#                           
 # License::     The Ruby License
 #
 nil
