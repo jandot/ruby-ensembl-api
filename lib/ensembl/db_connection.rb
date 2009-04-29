@@ -86,7 +86,9 @@ module Ensembl
                               :password => args[:password] || Ensembl::DB_PASSWORD,
                               :port => port
                             ) 
-          self.retrieve_connection               
+          Ensembl::SESSION.reset
+          self.retrieve_connection
+          
         end  
       end
       
@@ -153,7 +155,9 @@ module Ensembl
                               :password => args[:password] || Ensembl::DB_PASSWORD,
                               :port => port
                             )
-          self.retrieve_connection                                                                                                                 
+          Ensembl::SESSION.reset
+          self.retrieve_connection
+                                                                                                                        
         end
         
       end
