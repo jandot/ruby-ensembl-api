@@ -44,9 +44,9 @@ namespace :gem do
 end 
 
 namespace :test do
- desc "Run tests (release 53)"
+ desc "Run all tests (release 53)"
  task :run do
-    list = File.join("test/**","*.rb")
+    list = File.join("test/unit/release_53/**","*.rb")
     Dir.glob(list).each do |name|
       ruby name
     end
