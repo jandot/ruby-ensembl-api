@@ -1,5 +1,5 @@
 namespace :gem do
- desc "Rebuild gemspec"
+ desc "Rebuild GEM and gemspec"
  task :rebuild do
   unless ENV.include?("version")
     raise "usage: rake gem:rebuild version= [number]" 
