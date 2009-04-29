@@ -221,11 +221,12 @@ module Ensembl
       # *Arguments*:: none
       # *Returns*:: TRUE or FALSE
       def toplevel?
-        if self == CoordSystem.find_by_sql("SELECT * FROM coord_system WHERE species_id = #{self.species_id} ORDER BY RANK")[0]
-          return true
+        if Collection.check
+          return true if self == CoordSystem.find_by_rank_and_species_id(1,self.species_id)
         else
-          return false
+          return true if self == CoordSystem.find_by_rank(1)  
         end
+        return false
       end
 
       # = DESCRIPTION
@@ -235,11 +236,12 @@ module Ensembl
       # *Arguments*:: none
       # *Returns*:: TRUE or FALSE
       def seqlevel?
-        if self == CoordSystem.find_by_sql("SELECT * FROM coord_system WHERE attrib LIKE '%sequence_level%' AND species_id = #{self.species_id}")[0]
-          return true
+        if Collection.check
+           return true if self == CoordSystem.find_by_sql("SELECT * FROM coord_system WHERE attrib LIKE '%sequence_level%' AND species_id = #{self.species_id}")[0]
         else
-          return false
+           return true if self == CoordSystem.find_seqlevel
         end
+        return false
       end
       
       # = DESCRIPTION
@@ -249,7 +251,23 @@ module Ensembl
       # *Arguments*:: none
       # *Returns*:: CoordSystem object
       def find_toplevel
-        return CoordSystem.find_by_sql("SELECT * FROM coord_system WHERE species_id = #{self.species_id} ORDER BY RANK")[0]
+        not_cached = false
+        if Ensembl::SESSION.toplevel_coord_system.nil? 
+          not_cached = true
+        elsif Collection.check
+          not_cached = true if Ensembl::SESSION.toplevel_coord_system.species_id != self.species_id
+        end
+        if not_cached
+          if Collection.check
+            Ensembl::SESSION.toplevel_coord_system = CoordSystem.find_by_rank_and_species_id(1,self.species_id)
+          else
+            Ensembl::SESSION.toplevel_coord_system = CoordSystem.find_by_rank(1)
+          end
+          Ensembl::SESSION.toplevel_id = Ensembl::SESSION.toplevel_coord_system.id
+          Ensembl::SESSION.coord_system_ids[Ensembl::SESSION.toplevel_coord_system.name] = Ensembl::SESSION.toplevel_id
+          Ensembl::SESSION.coord_systems[Ensembl::SESSION.toplevel_id] = Ensembl::SESSION.toplevel_coord_system
+        end
+        return Ensembl::SESSION.toplevel_coord_system
       end
       
       # = DESCRIPTION
@@ -259,7 +277,23 @@ module Ensembl
       # *Arguments*:: none
       # *Returns*:: CoordSystem object
       def find_seqlevel
-        return CoordSystem.find_by_sql("SELECT * FROM coord_system WHERE attrib LIKE '%sequence_level%' AND species_id = #{self.species_id}")[0]
+        not_cached = false
+        if Ensembl::SESSION.toplevel_coord_system.nil? 
+          not_cached = true
+        elsif Collection.check
+          not_cached = true if Ensembl::SESSION.toplevel_coord_system.species_id != self.species_id
+        end
+        if not_cached
+          if Collection.check
+            Ensembl::SESSION.seqlevel_coord_system = CoordSystem.find_by_sql("SELECT * FROM coord_system WHERE attrib LIKE '%sequence_level%' AND species_id = #{self.species_id}")[0]
+          else
+            Ensembl::SESSION.seqlevel_coord_system = CoordSystem.find_by_sql("SELECT * FROM coord_system WHERE attrib LIKE '%sequence_level%'")[0]
+          end  
+          Ensembl::SESSION.seqlevel_id = Ensembl::SESSION.seqlevel_coord_system.id
+          Ensembl::SESSION.coord_system_ids[Ensembl::SESSION.seqlevel_coord_system.name] = Ensembl::SESSION.seqlevel_id
+          Ensembl::SESSION.coord_systems[Ensembl::SESSION.seqlevel_id] = Ensembl::SESSION.seqlevel_coord_system
+        end
+        return Ensembl::SESSION.seqlevel_coord_system
       end
       
       # = DESCRIPTION
@@ -269,7 +303,11 @@ module Ensembl
       # *Arguments*:: Coordinate system name
       # *Returns*:: CoordSystem object
       def find_level(coord_system_name)
-        return CoordSystem.find_by_sql("SELECT * FROM coord_system WHERE name = '#{coord_system_name}' AND species_id = #{self.species_id}")[0]
+        if Collection.check
+          return CoordSystem.find_by_sql("SELECT * FROM coord_system WHERE name = '#{coord_system_name}' AND species_id = #{self.species_id}")[0]
+        else
+          return CoordSystem.find_by_name(coord_system_name)
+        end
       end
       
       # = DESCRIPTION
@@ -453,7 +491,6 @@ module Ensembl
       	if coord_system.nil?
           return self.asm_links_as_asm
         else
-#      	  return self.asm_links_as_asm.select{|alaa| alaa.cmp_seq_region.coord_system_id == coord_system.id}
           return AssemblyLink.find_by_sql("SELECT * FROM assembly a WHERE a.asm_seq_region_id = #{self.id} AND a.cmp_seq_region_id IN (SELECT sr.seq_region_id FROM seq_region sr WHERE coord_system_id = #{coord_system.id} )")
         end
       end

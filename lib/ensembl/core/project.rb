@@ -54,14 +54,23 @@ module Ensembl
       # *Returns*:: an array consisting of Slices and, if necessary, Gaps
       def project(coord_system_name)
         answer = Array.new # an array of slices
-      	source_coord_system = self.seq_region.coord_system
+        unless Ensembl::SESSION.coord_systems.has_key?(self.seq_region.coord_system_id)
+          Ensembl::SESSION.coord_systems[self.seq_region.coord_system_id] = self.seq_region.coord_system
+          Ensembl::SESSION.coord_system_ids[Ensembl::SESSION.coord_systems[self.seq_region.coord_system_id].name] = self.seq_region.coord_system_id
+        end
+        source_coord_system = Ensembl::SESSION.coord_systems[self.seq_region.coord_system_id]
         target_coord_system = nil
       	if coord_system_name == 'toplevel'
           target_coord_system = source_coord_system.find_toplevel
         elsif coord_system_name == 'seqlevel'
           target_coord_system = source_coord_system.find_seqlevel
         else
-          target_coord_system = source_coord_system.find_level(coord_system_name)
+          unless Ensembl::SESSION.coord_system_ids.has_key?(coord_system_name)
+            cs = source_coord_system.find_level(coord_system_name)
+            Ensembl::SESSION.coord_systems[cs.id] = cs
+            Ensembl::SESSION.coord_system_ids[cs.name] = cs.id
+          end
+          target_coord_system = Ensembl::SESSION.coord_systems[Ensembl::SESSION.coord_system_ids[coord_system_name]]
         end
 
         if target_coord_system.rank < source_coord_system.rank
@@ -196,7 +205,14 @@ module Ensembl
           sorted_overlapping_assembly_links.each_index do |i|
             this_link = sorted_overlapping_assembly_links[i]
       	    if i == 0
-              answer.push(Slice.new(this_link.cmp_seq_region, this_link.cmp_start, this_link.cmp_end, this_link.ori))
+              cmp_seq_region = nil
+              if Ensembl::SESSION.seq_regions.has_key?(this_link.cmp_seq_region_id)
+                cmp_seq_region = Ensembl::SESSION.seq_regions[this_link.cmp_seq_region_id]
+              else
+                cmp_seq_region = this_link.cmp_seq_region
+                Ensembl::SESSION.seq_regions[cmp_seq_region.id] = cmp_seq_region
+              end
+              answer.push(Slice.new(cmp_seq_region, this_link.cmp_start, this_link.cmp_end, this_link.ori))
             	next
             end
             previous_link = sorted_overlapping_assembly_links[i-1]

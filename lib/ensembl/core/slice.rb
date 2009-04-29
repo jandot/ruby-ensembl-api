@@ -347,7 +347,7 @@ module Ensembl
         if @seq.nil?
           # First check if the slice is on the seqlevel coordinate
       	  # system, otherwise project coordinates.
-          if self.seq_region.coord_system.seqlevel?
+          if ! Ensembl::SESSION.seqlevel_id.nil? and self.seq_region.coord_system_id == Ensembl::SESSION.seqlevel_id
             @seq = Bio::Sequence::NA.new(self.seq_region.subseq(self.start, self.stop))
           else # we have to project coordinates
             seq_string = String.new
@@ -460,10 +460,13 @@ module Ensembl
       def get_objects(target_class, table_name, inclusive = false)
         answer = Array.new
 
-        
+        coord_system_ids_with_features = nil
         # Get all the coord_systems with this type of features on them
-        coord_system_ids_with_features = Collection.find_all_coord_by_table_name(table_name,self.seq_region.coord_system.species_id).collect{|mc| mc.coord_system_id}
-
+        if Collection.check
+          coord_system_ids_with_features = Collection.find_all_coord_by_table_name(table_name,self.seq_region.coord_system.species_id).collect{|mc| mc.coord_system_id}
+        else
+          coord_system_ids_with_features = MetaCoord.find_all_by_table_name(table_name).collect{|mc| mc.coord_system_id}
+        end  
         # Get the features of the original slice
         if coord_system_ids_with_features.include?(self.seq_region.coord_system_id)
           sql = ''
