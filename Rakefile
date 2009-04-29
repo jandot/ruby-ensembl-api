@@ -39,6 +39,7 @@ namespace :gem do
   outfile.puts '  s.default_executable = "ensembl"'
   outfile.puts 'end'
   outfile.close
+  system("gem build ruby-ensembl-api.gemspec")
  end
 end 
 
@@ -48,7 +49,6 @@ namespace :test do
     list = File.join("test/**","*.rb")
     Dir.glob(list).each do |name|
       ruby name
-      system("gem build ruby-ensembl-api.gemspec")
     end
  end
  desc "Run Core tests (release 53)"
