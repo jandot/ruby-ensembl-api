@@ -13,6 +13,16 @@ module Ensembl
       @coord_system_ids = Hash.new # key = id; value = name
       @seq_regions = Hash.new
     end
+    
+    def reset
+      @coord_systems = Hash.new
+      @coord_system_ids = Hash.new
+      @seq_regions = Hash.new
+      @seqlevel_id = nil
+      @toplevel_id = nil
+      @seqlevel_coord_system = nil
+      @toplevel_coord_system = nil
+    end
   end
 
   SESSION = Ensembl::Session.new
