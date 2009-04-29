@@ -11,7 +11,7 @@ libpath = Pathname.new(File.join(File.dirname(__FILE__), ['..'] * 4, 'lib')).cle
 $:.unshift(libpath) unless $:.include?(libpath)
 
 require 'test/unit'
-require 'ensembl'
+require 'lib/ensembl'
 
 include Ensembl::Variation
 DBConnection.connect('homo_sapiens',50)
@@ -70,8 +70,8 @@ class ActiveRecordVariation < Test::Unit::TestCase
     n = Variation.count(:all)
     assert_equal(13383219,n)
     
-    syn = Variation.find(27).variation_synonym
-    assert_equal('SNP001745772',syn.name)
+    syn = Variation.find(27).variation_synonyms
+    assert_equal('SNP001745772',syn[0].name)
     
     flanking = Variation.find(130).flanking_sequence
     assert_equal(24910767,flanking.up_seq_region_start)
