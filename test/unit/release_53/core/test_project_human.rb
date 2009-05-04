@@ -15,9 +15,16 @@ require 'lib/ensembl'
 
 include Ensembl::Core
 
-DBConnection.connect('homo_sapiens', 53)
-
 class AssemblyExceptions < Test::Unit::TestCase
+  
+  def setup
+    DBConnection.connect('homo_sapiens', 53)
+  end
+  
+  def teardown
+    DBConnection.remove_connection
+  end
+  
   def test_chr_x
     source_slice = Slice.fetch_by_region('chromosome','X', 2709497, 2709520)
     assert_equal('tagttatagattaaaagaagttaa', source_slice.seq)

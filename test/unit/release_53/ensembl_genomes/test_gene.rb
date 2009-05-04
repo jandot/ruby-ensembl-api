@@ -15,10 +15,16 @@ require 'test/unit'
 require 'lib/ensembl'
 
 include Ensembl::Core
-DBConnection.connect('pyrococcus_collection',1,:host => "mysql.ebi.ac.uk",:port => 4157)
-
 
 class TestGene < Test::Unit::TestCase
+  
+  def setup
+    DBConnection.ensemblgenomes_connect('pyrococcus_collection',1) 
+  end
+  
+  def teardown
+    DBConnection.remove_connection
+  end
   
   def test_find_gene
     g = Gene.find_by_stable_id("EBPYRG00000005609")

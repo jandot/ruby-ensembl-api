@@ -15,9 +15,16 @@ require 'test/unit'
 require 'lib/ensembl'
 
 include Ensembl::Core
-DBConnection.connect('homo_sapiens', 53)
 
 class TestSlice < Test::Unit::TestCase
+  
+  def setup
+    DBConnection.connect('homo_sapiens', 53)
+  end
+  
+  def teardown
+    DBConnection.remove_connection
+  end
   
   def test_forward
     seq1 = "AGAACCAACGAATTCGGAGATGAAGTCAGGTCTTCCAGTTCAGCCTGCGAGGAAGACAGGTGATCCGAATCCTAAGAATGCAAAAGATGGGCCGGGTGTGGTGGCTCATGCCTGTAATCCCAGCGCTTTGGGAGGCCGAGGCAGGCAGATCACCTGAGGTCGGGAGGTTGAGACCAGACTGACCAACAACGGAGAAACCC"

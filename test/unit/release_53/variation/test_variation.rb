@@ -14,9 +14,15 @@ require 'lib/ensembl'
 
 include Ensembl::Variation
 
-DBConnection.connect('homo_sapiens',53)
-
 class TestVariation < Test::Unit::TestCase
+  
+  def setup
+    DBConnection.connect('homo_sapiens',53)
+  end
+  
+  def teardown
+    DBConnection.remove_connection
+  end
   
   def test_fetch_region
     vf = Variation.find_by_name('rs2076175').variation_features[0]

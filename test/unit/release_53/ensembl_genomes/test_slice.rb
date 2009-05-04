@@ -18,8 +18,12 @@ include Ensembl::Core
 
 class TestSlice < Test::Unit::TestCase
   
+  def teardown
+    DBConnection.remove_connection
+  end
+  
   def test_fetch_by_region
-    DBConnection.connect('mycobacterium_collection',1,:host => "mysql.ebi.ac.uk",:port => 4157)
+    DBConnection.ensemblgenomes_connect('mycobacterium_collection',1)
     slice = Slice.fetch_by_region('chromosome',"Chromosome",183617,183716,1,"Mycobacterium tuberculosis H37Rv")
     assert_equal("GCGCCATGACAGATCCGCAGACGCAGAGCACCAGGGTCGGGGTGGTTGCCGAGTCGGGGCCCGACGAACGACGGGTCGCGCTGGTTCCCAAGGCGGTCGC",slice.seq.upcase)
     
@@ -31,7 +35,7 @@ class TestSlice < Test::Unit::TestCase
   end
   
   def test_fetch_genes_from_slice
-    DBConnection.connect('mycobacterium_collection',1,:host => "mysql.ebi.ac.uk",:port => 4157)
+    DBConnection.ensemblgenomes_connect('mycobacterium_collection',1)
     slice = Slice.fetch_by_region('chromosome',"Chromosome",620900,622130 ,1,"Mycobacterium tuberculosis H37Rv")
     genes = slice.genes
     assert_equal("EBMYCG00000001929",genes[0].stable_id)
@@ -42,23 +46,23 @@ class TestSlice < Test::Unit::TestCase
   end
   
   def test_new_db_and_reverse_slice
-    DBConnection.connect('escherichia_shigella_collection',1,:host => "mysql.ebi.ac.uk",:port => 4157)
-    slice = Slice.fetch_by_region('chromosome',"Chromosome",831691,831790,-1,"Escherichia coli K12")
+    DBConnection.ensemblgenomes_connect('escherichia_coli_K12',1)
+    slice = Slice.fetch_by_region('chromosome',"Chromosome",831691,831790,-1)
     assert_equal("AAACGATGCTTACTGGGGAGACGGTGGTCATGGTAAGGGCAAGAATCGACTGGGCTACCTTTTAATGGAGTTGCGCGAACAATTGGCTATAGAGAAGTAA",slice.seq.upcase)
     
-    slice = Slice.fetch_by_region('chromosome',"Chromosome",831690,832175,-1,"Escherichia coli K12")
+    slice = Slice.fetch_by_region('chromosome',"Chromosome",831690,832175,-1)
     genes = slice.genes
     assert_equal("EBESCG00000001341",genes[0].stable_id)
   end
   
   def test_fetch_all
-    DBConnection.connect('bacillus_collection',1,:host => "mysql.ebi.ac.uk", :port => 4157)
-    slices = Slice.fetch_all('chromosome',"Bacillus anthracis Sterne")
+    DBConnection.ensemblgenomes_connect('bacillus_anthracis_Sterne',1)
+    slices = Slice.fetch_all('chromosome')
     assert_equal(5228663,slices[0].length)
   end
   
   def test_error_species
-    DBConnection.connect('bacillus_collection',1,:host => "mysql.ebi.ac.uk", :port => 4157)
+    DBConnection.ensemblgenomes_connect('bacillus_collection',1)
     assert_raise ArgumentError do 
       Slice.fetch_by_region('chromosome',"Chromosome",831690,832175,1,"Wrong specie name")
     end

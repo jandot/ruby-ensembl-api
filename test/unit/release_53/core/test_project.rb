@@ -17,11 +17,9 @@ require 'lib/ensembl'
 
 include Ensembl::Core
 
-DBConnection.connect('bos_taurus', 53)
-
-
 class SliceProjectFromAssemblyToComponentForwardStrands < Test::Unit::TestCase
   def setup
+    DBConnection.connect('bos_taurus', 53)
     @source_slice_single_contig = Slice.fetch_by_region('chromosome', '20', 175000, 180000)
     @target_slices_single_contig = @source_slice_single_contig.project('contig')
 
@@ -33,6 +31,10 @@ class SliceProjectFromAssemblyToComponentForwardStrands < Test::Unit::TestCase
 
     @source_slice_contigs_with_strand_ends_in_gaps = Slice.fetch_by_region('chromosome', '20', 170950, 196000)
     @target_slices_contigs_with_strand_ends_in_gaps = @source_slice_contigs_with_strand_ends_in_gaps.project('contig')
+  end
+  
+  def teardown
+    DBConnection.remove_connection
   end
 
   #     |-----------------> contig

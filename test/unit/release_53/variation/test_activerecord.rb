@@ -15,9 +15,16 @@ require 'test/unit'
 require 'lib/ensembl'
 
 include Ensembl::Variation
-DBConnection.connect('homo_sapiens',53)
 
 class ActiveRecordVariation < Test::Unit::TestCase
+  
+  def setup
+    DBConnection.connect('homo_sapiens',53)
+  end
+  
+  def teardown
+    DBConnection.remove_connection
+  end
   
   def test_allele
     allele = Allele.find(1)

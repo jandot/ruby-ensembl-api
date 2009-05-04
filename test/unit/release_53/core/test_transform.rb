@@ -17,13 +17,21 @@ require 'test/unit'
 require 'lib/ensembl'
 
 include Ensembl::Core
-DBConnection.connect('homo_sapiens', 53)
+
 
 # For all tests, the source (i.e. the seq_region that the feature is annotated
 # on initially) remains forward.
 #
 # Same coordinate system: test names refer to direction of gene vs chromosome
 class TransformOntoSameCoordinateSystem < Test::Unit::TestCase
+
+  def setup
+    DBConnection.connect('homo_sapiens', 53)
+  end
+  
+  def teardown
+    DBConnection.remove_connection
+  end
 
   def test_rev
     source_gene = Gene.find(102634)

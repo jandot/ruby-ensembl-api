@@ -19,22 +19,33 @@ include Ensembl::Core
 
 class TestCollection < Test::Unit::TestCase
   
+  def teardown
+    DBConnection.remove_connection
+  end
+  
   def test_check_collection
-    DBConnection.connect('bacillus_collection',1,:host => "mysql.ebi.ac.uk",:port => 4157)
+    DBConnection.ensemblgenomes_connect('bacillus_collection',1)
     assert_equal(true,Collection.check)
     DBConnection.connect('homo_sapiens',53)
     assert_equal(false,Collection.check)
   end
   
   def test_check_species
-    DBConnection.connect('bacillus_collection',1,:host => "mysql.ebi.ac.uk",:port => 4157)
+    DBConnection.ensemblgenomes_connect('bacillus_collection',1)
     assert_equal(["Bacillus subtilis","Bacillus amyloliquefaciens","Bacillus anthracis Ames","Bacillus anthracis Ames ancestor","Bacillus anthracis Sterne","Bacillus cereus ATCC 10987","Bacillus cereus ATCC 14579","Bacillus cereus NVH 391-98","Bacillus cereus ZK","Bacillus clausii","Bacillus halodurans","Bacillus licheniformis Goettingen","Bacillus licheniformis Novozymes","Bacillus pumilus","Bacillus thuringiensis Al Hakam","Bacillus thuringiensis konkukian 97-27","Bacillus weihenstephanensis"],Collection.species)
   end
   
   def test_get_species_id
-    DBConnection.connect('bacillus_collection',1,:host => "mysql.ebi.ac.uk",:port => 4157)
+    DBConnection.ensemblgenomes_connect('bacillus_collection',1)
     assert_equal(9,Collection.get_species_id("Bacillus cereus ZK"))
     assert_nil(Collection.get_species_id("Dummy specie"))  
+  end
+  
+  def test_connection_with_a_species
+    assert_nothing_raised do 
+      DBConnection.ensemblgenomes_connect('Bacillus_licheniformis_Goettingen',1)
+    end
+    assert_equal('bacillus licheniformis goettingen', Ensembl::SESSION.collection_specie)
   end
   
 end
