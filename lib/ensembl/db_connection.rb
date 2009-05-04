@@ -11,6 +11,16 @@ module Ensembl
 
   class DummyDBConnection < ActiveRecord::Base
     self.abstract_class = true
+    def self.connect(args)
+      self.establish_connection(
+                :adapter => args[:adapter] ||= Ensembl::DB_ADAPTER,
+                :host => args[:host] ||= Ensembl::DB_HOST,
+                :username => args[:username] ||= Ensembl::DB_USERNAME,
+                :password => args[:password] ||= Ensembl::DB_PASSWORD,
+                :port => args[:port],
+                :database => args[:database] ||= ''
+               )
+    end           
   end
 
   module DBRegistry 
@@ -26,25 +36,28 @@ module Ensembl
       end
             
       def self.get_name_from_db(match,species,release,args)
-        dummy_db = DummyDBConnection.establish_connection(
-                            :adapter => args[:adapter] ||= Ensembl::DB_ADAPTER,
-                            :host => args[:host] ||= Ensembl::DB_HOST,
-                            :username => args[:username] ||= Ensembl::DB_USERNAME,
-                            :password => args[:password] ||= Ensembl::DB_PASSWORD,
-                            :port => args[:port],
-                            :database => ''
-                          )
+        species = species.underscore
+        dummy_db = DummyDBConnection.connect(args) 
         dummy_connection = dummy_db.connection
+        
         db_name = dummy_connection.select_values("SHOW DATABASES LIKE '%#{species}_#{match}_#{release.to_s}%'")[0]
         if db_name.nil? and args[:ensembl_genomes] then
           words = species.split(/_/)
           first = words.shift
-          db_name = dummy_connection.select_values("SHOW DATABASES LIKE '%#{first}_collection_#{match}_#{release.to_s}%'")[0]
+          db_name = dummy_connection.select_values("SHOW DATABASES").select {|d| d=~/#{first}.*_collection_#{match}_#{release.to_s}/}[0]
+          
+          dummy_db.disconnect!
+          args[:database] = db_name
+          dummy_db = DummyDBConnection.connect(args)
+             
           others = ''
           words.each do |w|
             others << " #{w}"
           end
-          Ensembl::SESSION.collection_specie = "#{first.capitalize}#{others}"
+          specie_name = "#{first}#{others}"
+          Ensembl::SESSION.collection_specie = specie_name
+          exists = dummy_db.connection.select_values("SELECT species_id FROM meta WHERE LOWER(meta_value) = '#{specie_name}' AND meta_key = 'species.db_name'")[0]
+          warn "WARNING: No species '#{species}' found in the database. Please check that the name is correct." if !exists
         end
         warn "WARNING: No connection to database established. Check that the species is in snake_case (was: #{species})." if db_name.nil?
         return db_name

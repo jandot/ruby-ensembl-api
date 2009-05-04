@@ -77,6 +77,7 @@ module Ensembl
       def self.fetch_by_region(coord_system_name, seq_region_name, start = nil, stop = nil, strand = 1, specie = Ensembl::SESSION.collection_specie ,version = nil)
         all_coord_systems = nil
         if Collection.check
+          specie = specie.downcase
           if specie.nil?
             raise ArgumentError, "When using multi-species db, you must pass a specie name to get the correct Slice"
           else
@@ -161,6 +162,7 @@ module Ensembl
         answer = Array.new
         coord_system = nil
       	if Collection.check
+      	   specie = specie.downcase  
       	   species_id = Collection.get_species_id(specie)
       	   raise ArgumentError, "No specie found in the database with this name: #{specie}" if species_id.nil?
       	   if version.nil?
