@@ -1,5 +1,5 @@
 module Ensembl
-  ENSEMBL_RELEASE = 50
+  ENSEMBL_RELEASE = 53
 
   class Session
     attr_accessor :coord_systems
@@ -7,6 +7,7 @@ module Ensembl
     attr_accessor :toplevel_id, :toplevel_coord_system
     attr_accessor :coord_system_ids #map CS id to CS name
     attr_accessor :seq_regions
+    attr_accessor :collection_specie
 
     def initialize
       @coord_systems = Hash.new # key = id; value = CoordSystem object
@@ -22,6 +23,7 @@ module Ensembl
       @toplevel_id = nil
       @seqlevel_coord_system = nil
       @toplevel_coord_system = nil
+      @collection_specie = nil
     end
   end
 

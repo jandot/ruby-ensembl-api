@@ -74,7 +74,7 @@ module Ensembl
       # * stop: stop of Slice on SeqRegion (default = end of SeqRegion)
       # * strand: strand of Slice on SeqRegion
       # *Returns*:: Ensembl::Core::Slice object
-      def self.fetch_by_region(coord_system_name, seq_region_name, start = nil, stop = nil, strand = 1, specie = nil ,version = nil)
+      def self.fetch_by_region(coord_system_name, seq_region_name, start = nil, stop = nil, strand = 1, specie = Ensembl::SESSION.collection_specie ,version = nil)
         all_coord_systems = nil
         if Collection.check
           if specie.nil?
@@ -157,7 +157,7 @@ module Ensembl
       # * coord_system_name:: name of coordinate system (default = chromosome)
       # * coord_system_version:: version of coordinate system (default = nil)
       # *Returns*:: an array of Ensembl::Core::Slice objects
-      def self.fetch_all(coord_system_name = 'chromosome',specie = nil ,version = nil)
+      def self.fetch_all(coord_system_name = 'chromosome',specie = Ensembl::SESSION.collection_specie ,version = nil)
         answer = Array.new
         coord_system = nil
       	if Collection.check

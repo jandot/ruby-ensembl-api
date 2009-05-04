@@ -6,6 +6,8 @@ module Ensembl
   DB_HOST = 'ensembldb.ensembl.org'
   DB_USERNAME = 'anonymous'
   DB_PASSWORD = ''
+  EG_HOST = 'mysql.ebi.ac.uk'
+  EG_PORT = 4157
 
   class DummyDBConnection < ActiveRecord::Base
     self.abstract_class = true
@@ -13,13 +15,39 @@ module Ensembl
 
   module DBRegistry 
     # = DESCRIPTION
-    # The Ensembl::Registry::Base is a generic super class setting
-    # the get_info method, to read the connection parameters  
+    # The Ensembl::Registry::Base is a generic super class providing general methods 
+    # to get database and connection info.
+    #
     class Base < ActiveRecord::Base
       self.abstract_class = true
       self.pluralize_table_names = false
       def self.get_info
         host,user,password,db_name,port = self.retrieve_connection.instance_values["connection_options"]
+      end
+            
+      def self.get_name_from_db(match,species,release,args)
+        dummy_db = DummyDBConnection.establish_connection(
+                            :adapter => args[:adapter] ||= Ensembl::DB_ADAPTER,
+                            :host => args[:host] ||= Ensembl::DB_HOST,
+                            :username => args[:username] ||= Ensembl::DB_USERNAME,
+                            :password => args[:password] ||= Ensembl::DB_PASSWORD,
+                            :port => args[:port],
+                            :database => ''
+                          )
+        dummy_connection = dummy_db.connection
+        db_name = dummy_connection.select_values("SHOW DATABASES LIKE '%#{species}_#{match}_#{release.to_s}%'")[0]
+        if db_name.nil? and args[:ensembl_genomes] then
+          words = species.split(/_/)
+          first = words.shift
+          db_name = dummy_connection.select_values("SHOW DATABASES LIKE '%#{first}_collection_#{match}_#{release.to_s}%'")[0]
+          others = ''
+          words.each do |w|
+            others << " #{w}"
+          end
+          Ensembl::SESSION.collection_specie = "#{first.capitalize}#{others}"
+        end
+        warn "WARNING: No connection to database established. Check that the species is in snake_case (was: #{species})." if db_name.nil?
+        return db_name
       end
       
     end
@@ -53,43 +81,35 @@ module Ensembl
       # * ensembl_release:: the release of the database to connect to
       #  (default = 50)
       def self.connect(species, release = Ensembl::ENSEMBL_RELEASE, args = {})
-        #dummy_dbconnection = ( release > 47 ) ? Ensembl::NewDummyDBConnection.connection : Ensembl::OldDummyDBConnection.connection
+        Ensembl::SESSION.reset
         db_name = nil
-        port = nil
-        if args[:port] then
-          port = args[:port]
-        else
-          port = ( release > 47 ) ? 5306 : 3306
-        end                
+        if args[:ensembl_genomes]
+          args[:port] = EG_PORT
+          args[:host] = EG_HOST
+        end    
+        if args[:port].nil? then
+          args[:port] = ( release > 47 ) ? 5306 : 3306
+        end
         if args[:database]
           db_name = args[:database]
-        else
-          dummy_db = DummyDBConnection.establish_connection(
-                              :adapter => args[:adapter] ||= Ensembl::DB_ADAPTER,
-                              :host => args[:host] ||= Ensembl::DB_HOST,
-                              :username => args[:username] ||= Ensembl::DB_USERNAME,
-                              :password => args[:password] ||= Ensembl::DB_PASSWORD,
-                              :port => port,
-                              :database => ''
-                            )
-          dummy_connection = dummy_db.connection
-          db_name = dummy_connection.select_values('show databases').select{|v| v =~ /#{species}_core_#{release.to_s}/}[0]
-        end
-        if db_name.nil?
-          warn "WARNING: No connection to database established. Check that the species is in snake_case (was: #{species})."
-        else
-          establish_connection(
-                              :adapter => args[:adapter] || Ensembl::DB_ADAPTER,
-                              :host => args[:host] || Ensembl::DB_HOST,
-                              :database => db_name,
-                              :username => args[:username] || Ensembl::DB_USERNAME,
-                              :password => args[:password] || Ensembl::DB_PASSWORD,
-                              :port => port
-                            ) 
-          Ensembl::SESSION.reset
-          self.retrieve_connection
-          
-        end  
+        else 
+          db_name = self.get_name_from_db('core',species,release,args)
+        end 
+        establish_connection(
+                            :adapter => args[:adapter] || Ensembl::DB_ADAPTER,
+                            :host => args[:host] || Ensembl::DB_HOST,
+                            :database => db_name,
+                            :username => args[:username] || Ensembl::DB_USERNAME,
+                            :password => args[:password] || Ensembl::DB_PASSWORD,
+                            :port => args[:port]
+                          )
+        
+        self.retrieve_connection          
+      end
+      
+      def self.ensemblgenomes_connect(species, release = Ensembl::ENSEMBL_RELEASE, args = {})
+        args[:ensembl_genomes] = true
+        self.connect(species,release,args)
       end
       
     end # Core::DBConnection
@@ -122,43 +142,27 @@ module Ensembl
       # * ensembl_release:: the release of the database to connect to
       #  (default = 50)
       def self.connect(species, release = Ensembl::ENSEMBL_RELEASE, args = {})
-        port = nil
-        if args[:port] then
-          port = args[:port]
-        else
-          port = ( release > 47 ) ? 5306 : 3306
+        Ensembl::SESSION.reset
+        args[:species] = species
+        if args[:port].nil? then
+          args[:port] = ( release > 47 ) ? 5306 : 3306
         end
         db_name = nil
         if args[:database]
           db_name = args[:database]
         else
-          dummy_db = DummyDBConnection.establish_connection(
-                              :adapter => args[:adapter] ||= Ensembl::DB_ADAPTER,
-                              :host => args[:host] ||= Ensembl::DB_HOST,
-                              :username => args[:username] ||= Ensembl::DB_USERNAME,
-                              :password => args[:password] ||= Ensembl::DB_PASSWORD,
-                              :port => port,
-                              :database => ''
-                            )
-          dummy_connection = dummy_db.connection
-          db_name = dummy_connection.select_values('show databases').select{|v| v =~ /#{species}_variation_#{release.to_s}/}[0]
+          db_name = self.get_name_from_db('variation',species,release,args)
         end
-        
-        if db_name.nil?
-          warn "WARNING: No connection to database established. Check that the species is in snake_case (was: #{species})."
-        else
-          establish_connection(
-                              :adapter => args[:adapter] || Ensembl::DB_ADAPTER,
-                              :host => args[:host] || Ensembl::DB_HOST,
-                              :database => db_name,
-                              :username => args[:username] || Ensembl::DB_USERNAME,
-                              :password => args[:password] || Ensembl::DB_PASSWORD,
-                              :port => port
-                            )
-          Ensembl::SESSION.reset
-          self.retrieve_connection
-                                                                                                                        
-        end
+        establish_connection(
+                            :adapter => args[:adapter] || Ensembl::DB_ADAPTER,
+                            :host => args[:host] || Ensembl::DB_HOST,
+                            :database => db_name,
+                            :username => args[:username] || Ensembl::DB_USERNAME,
+                            :password => args[:password] || Ensembl::DB_PASSWORD,
+                            :port => args[:port]
+                          )
+          
+        self.retrieve_connection
         
       end
 
