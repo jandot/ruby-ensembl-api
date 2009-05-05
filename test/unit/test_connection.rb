@@ -1,3 +1,13 @@
+#
+# = test/unit/test_connection.rb - Unit test for Ensembl::Core
+#
+# Copyright::   Copyright (C) 2009
+#               Jan Aerts <http://jandot.myopenid.com>
+#               Francesco Strozzi <francesco.strozzi@gmail.com>
+# License::     Ruby's
+#
+# $Id:
+
 require 'pathname'
 libpath = Pathname.new(File.join(File.dirname(__FILE__), ['..'] * 2, 'lib')).cleanpath.to_s
 $:.unshift(libpath) unless $:.include?(libpath)
