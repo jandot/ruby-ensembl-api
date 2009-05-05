@@ -1,3 +1,13 @@
+#
+# = ensembl/db_connection.rb - Connection classes for Ensembl databases
+#
+# Copyright::   Copyright (C) 2009 Jan Aerts <http://jandot.myopenid.com>
+#               Francesco Strozzi <francesco.strozzi@gmail.com>
+#                           
+# License::     The Ruby License
+#
+
+
 require 'rubygems'
 require 'activerecord'
 

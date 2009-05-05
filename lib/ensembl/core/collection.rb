@@ -1,5 +1,5 @@
 #
-# = ensembl/core/project.rb - project calculations for Ensembl Slice
+# = ensembl/core/collection.rb
 #
 # Copyright::   Copyright (C) 2009 Francesco Strozzi <francesco.strozzi@gmail.com>
 #                           

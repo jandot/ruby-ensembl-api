@@ -1,3 +1,12 @@
+#
+# = ensembl.rb
+#
+# Copyright::   Copyright (C) 2009 Jan Aerts <http://jandot.myopenid.com>
+#               Francesco Strozzi <francesco.strozzi@gmail.com>
+#                           
+# License::     The Ruby License
+#
+
 module Ensembl
   ENSEMBL_RELEASE = 53
 
