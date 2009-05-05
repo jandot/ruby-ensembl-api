@@ -16,7 +16,7 @@ module Ensembl
     attr_accessor :toplevel_id, :toplevel_coord_system
     attr_accessor :coord_system_ids #map CS id to CS name
     attr_accessor :seq_regions
-    attr_accessor :collection_specie
+    attr_accessor :collection_species
 
     def initialize
       @coord_systems = Hash.new # key = id; value = CoordSystem object
@@ -32,7 +32,7 @@ module Ensembl
       @toplevel_id = nil
       @seqlevel_coord_system = nil
       @toplevel_coord_system = nil
-      @collection_specie = nil
+      @collection_species = nil
     end
   end
 

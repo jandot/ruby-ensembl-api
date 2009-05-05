@@ -34,9 +34,9 @@ module Ensembl
       # = DESCRIPTION
       # Returns the species_id of a particular specie present in the database.
       #      
-      def self.get_species_id(specie)
-        specie = specie.downcase
-        meta = Meta.find_by_sql("SELECT * FROM meta WHERE LOWER(meta_value) = '#{specie}'")[0]
+      def self.get_species_id(species)
+        species = species.downcase
+        meta = Meta.find_by_sql("SELECT * FROM meta WHERE LOWER(meta_value) = '#{species}'")[0]
         if meta.nil?
           return nil
         else

@@ -74,15 +74,15 @@ module Ensembl
       # * stop: stop of Slice on SeqRegion (default = end of SeqRegion)
       # * strand: strand of Slice on SeqRegion
       # *Returns*:: Ensembl::Core::Slice object
-      def self.fetch_by_region(coord_system_name, seq_region_name, start = nil, stop = nil, strand = 1, specie = Ensembl::SESSION.collection_specie ,version = nil)
+      def self.fetch_by_region(coord_system_name, seq_region_name, start = nil, stop = nil, strand = 1, species = Ensembl::SESSION.collection_species ,version = nil)
         all_coord_systems = nil
         if Collection.check
-          specie = specie.downcase
-          if specie.nil?
+          species = species.downcase
+          if species.nil?
             raise ArgumentError, "When using multi-species db, you must pass a specie name to get the correct Slice"
           else
-            species_id = Collection.get_species_id(specie)
-            raise ArgumentError, "No specie found in the database with this name: #{specie}" if species_id.nil? 
+            species_id = Collection.get_species_id(species)
+            raise ArgumentError, "No specie found in the database with this name: #{species}" if species_id.nil? 
             all_coord_systems = Ensembl::Core::CoordSystem.find_all_by_name_and_species_id(coord_system_name,species_id)
           end
         else
@@ -158,13 +158,13 @@ module Ensembl
       # * coord_system_name:: name of coordinate system (default = chromosome)
       # * coord_system_version:: version of coordinate system (default = nil)
       # *Returns*:: an array of Ensembl::Core::Slice objects
-      def self.fetch_all(coord_system_name = 'chromosome',specie = Ensembl::SESSION.collection_specie ,version = nil)
+      def self.fetch_all(coord_system_name = 'chromosome',species = Ensembl::SESSION.collection_species ,version = nil)
         answer = Array.new
         coord_system = nil
       	if Collection.check
-      	   specie = specie.downcase  
-      	   species_id = Collection.get_species_id(specie)
-      	   raise ArgumentError, "No specie found in the database with this name: #{specie}" if species_id.nil?
+      	   species = species.downcase  
+      	   species_id = Collection.get_species_id(species)
+      	   raise ArgumentError, "No specie found in the database with this name: #{species}" if species_id.nil?
       	   if version.nil?
               coord_system = Ensembl::Core::CoordSystem.find_by_name_and_species_id(coord_system_name,species_id)
            else

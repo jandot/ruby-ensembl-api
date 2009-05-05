@@ -45,7 +45,7 @@ class TestCollection < Test::Unit::TestCase
     assert_nothing_raised do 
       DBConnection.ensemblgenomes_connect('Bacillus_licheniformis_Goettingen',1)
     end
-    assert_equal('bacillus licheniformis goettingen', Ensembl::SESSION.collection_specie)
+    assert_equal('bacillus licheniformis goettingen', Ensembl::SESSION.collection_species)
   end
   
 end

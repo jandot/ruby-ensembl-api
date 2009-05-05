@@ -222,7 +222,7 @@ module Ensembl
       # *Arguments*:: none
       # *Returns*:: TRUE or FALSE
       def toplevel?
-        if Collection.check
+        if Collection.check # When usign multi-species databases
           return true if self == CoordSystem.find_by_rank_and_species_id(1,self.species_id)
         else
           return true if self == CoordSystem.find_by_rank(1)  
@@ -237,7 +237,7 @@ module Ensembl
       # *Arguments*:: none
       # *Returns*:: TRUE or FALSE
       def seqlevel?
-        if Collection.check
+        if Collection.check # When usign multi-species databases
            return true if self == CoordSystem.find_by_sql("SELECT * FROM coord_system WHERE attrib LIKE '%sequence_level%' AND species_id = #{self.species_id}")[0]
         else
            return true if self == CoordSystem.find_seqlevel
@@ -259,7 +259,7 @@ module Ensembl
           not_cached = true if Ensembl::SESSION.toplevel_coord_system.species_id != self.species_id
         end
         if not_cached
-          if Collection.check
+          if Collection.check # When usign multi-species databases
             Ensembl::SESSION.toplevel_coord_system = CoordSystem.find_by_rank_and_species_id(1,self.species_id)
           else
             Ensembl::SESSION.toplevel_coord_system = CoordSystem.find_by_rank(1)
@@ -281,7 +281,7 @@ module Ensembl
         not_cached = false
         if Ensembl::SESSION.toplevel_coord_system.nil? 
           not_cached = true
-        elsif Collection.check
+        elsif Collection.check # When usign multi-species databases
           not_cached = true if Ensembl::SESSION.toplevel_coord_system.species_id != self.species_id
         end
         if not_cached
@@ -304,7 +304,7 @@ module Ensembl
       # *Arguments*:: Coordinate system name
       # *Returns*:: CoordSystem object
       def find_level(coord_system_name)
-        if Collection.check
+        if Collection.check # When usign multi-species databases
           return CoordSystem.find_by_sql("SELECT * FROM coord_system WHERE name = '#{coord_system_name}' AND species_id = #{self.species_id}")[0]
         else
           return CoordSystem.find_by_name(coord_system_name)
