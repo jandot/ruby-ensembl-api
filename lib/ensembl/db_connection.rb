@@ -194,7 +194,7 @@ module Ensembl
         if args[:database]
           db_name = args[:database]
         else
-          db_name = self.get_name_from_db('variation',species,release,args)  # try to find the corresponding core database
+          db_name = self.get_name_from_db('variation',species,release,args)  # try to find the corresponding variation database
         end
         establish_connection(
                             :adapter => args[:adapter] || Ensembl::DB_ADAPTER,
