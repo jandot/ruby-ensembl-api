@@ -489,11 +489,14 @@ module Ensembl
       #   should belong to (default = nil)
       # *Returns*:: array of AssemblyLink objects
       def assembly_links_as_assembly(coord_system = nil)
-      	if coord_system.nil?
-          return self.asm_links_as_asm
+        if Ensembl::SESSION.coord_system_ids.has_key?(coord_system.name)
+          coord_system_id = Ensembl::SESSION.coord_system_ids[coord_system.name]
         else
-          return AssemblyLink.find_by_sql("SELECT * FROM assembly a WHERE a.asm_seq_region_id = #{self.id} AND a.cmp_seq_region_id IN (SELECT sr.seq_region_id FROM seq_region sr WHERE coord_system_id = #{coord_system.id} )")
+          Ensembl::SESSION.coord_systems[cs.id] = coord_system.id
+          Ensembl::SESSION.coord_system_ids[coord_system.name] = coord_system.id
         end
+        coord_system = Ensembl::SESSION.coord_systems[coord_system.id]
+        return AssemblyLink.find_by_sql("SELECT * FROM assembly a WHERE a.asm_seq_region_id = #{self.id} AND a.cmp_seq_region_id IN (SELECT sr.seq_region_id FROM seq_region sr WHERE coord_system_id = #{coord_system.id} )")
       end
 
       # = DESCRIPTION
