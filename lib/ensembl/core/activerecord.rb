@@ -279,10 +279,10 @@ module Ensembl
       # *Returns*:: CoordSystem object
       def find_seqlevel
         not_cached = false
-        if Ensembl::SESSION.toplevel_coord_system.nil? 
+        if Ensembl::SESSION.seqlevel_coord_system.nil? 
           not_cached = true
         elsif Collection.check # When usign multi-species databases
-          not_cached = true if Ensembl::SESSION.toplevel_coord_system.species_id != self.species_id
+          not_cached = true if Ensembl::SESSION.seqlevel_coord_system.species_id != self.species_id
         end
         if not_cached
           if Collection.check
