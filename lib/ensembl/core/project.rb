@@ -61,10 +61,10 @@ module Ensembl
 
         target_coord_system = nil
       	if coord_system_name == 'toplevel'
-          target_coord_system = CoordSystem.find_toplevel
+          target_coord_system = CoordSystem.find(Ensembl::SESSION.toplevel_id)
       	  coord_system_name = target_coord_system.name
         elsif coord_system_name == 'seqlevel'
-          target_coord_system = CoordSystem.find_seqlevel
+          target_coord_system = CoordSystem.find(Ensembl::SESSION.seqlevel_id)
       	  coord_system_name = target_coord_system.name
         else
           unless Ensembl::SESSION.coord_system_ids.has_key?(coord_system_name)
@@ -203,7 +203,7 @@ module Ensembl
 
           # What we'll do, is create slices for all the underlying components,
           # including the first and the last one. At first, the first and last
-          # components are added in their entirity and will only be cropped afterwards.
+          # components are added in their entirety and will only be cropped afterwards.
       	  previous_stop = nil
           sorted_overlapping_assembly_links.each_index do |i|
             this_link = sorted_overlapping_assembly_links[i]

@@ -146,7 +146,7 @@ module Ensembl
       def self.fetch_all(coord_system_name = 'chromosome', version = nil)
         answer = Array.new
       	if version.nil?
-          coord_system = Ensembl::Core::CoordSystem.find_by_name(coord_system_name)
+          coord_system = Ensembl::Core::CoordSystem.find_all_by_name(coord_system_name).select{|c| c.attrib =~ /default/}[0]
         else
           coord_system = Ensembl::Core::CoordSystem.find_by_name_and_version(coord_system_name, version)
         end
@@ -332,14 +332,12 @@ module Ensembl
           else # we have to project coordinates
             seq_string = String.new
       	    @target_slices = self.project('seqlevel')
-
             @target_slices.each do |component|
               if component.class == Slice
-                seq_string += component.seq # This fetches the seq recursively (see 10 lines up)
+                seq_string += component.seq # This fetches the seq recursively
               else # it's a Gap
                 seq_string += 'N' * (component.length)
               end
-
             end
       	    @seq = Bio::Sequence::NA.new(seq_string)
 

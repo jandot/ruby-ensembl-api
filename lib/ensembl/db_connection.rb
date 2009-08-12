@@ -81,7 +81,9 @@ module Ensembl
                               :password => args[:password] || Ensembl::DB_PASSWORD,
                               :port => args[:port] || port
                             ) 
-          self.retrieve_connection                                                       
+          self.retrieve_connection
+          Ensembl::SESSION.seqlevel_id = Ensembl::Core::CoordSystem.find_seqlevel.id
+          Ensembl::SESSION.toplevel_id = Ensembl::Core::CoordSystem.find_toplevel.id
         end
         
       end
