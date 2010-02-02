@@ -8,7 +8,7 @@
 #
 
 module Ensembl
-  ENSEMBL_RELEASE = 53
+  ENSEMBL_RELEASE = 56
 
   class Session
     attr_accessor :coord_systems

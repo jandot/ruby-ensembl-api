@@ -21,7 +21,7 @@ class TestConnection < Test::Unit::TestCase
 
   def test_remote_core_connection
     assert_nothing_raised do 
-      Ensembl::Core::DBConnection.connect('homo_sapiens',53)
+      Ensembl::Core::DBConnection.connect('homo_sapiens',56)
     end
   end
 
@@ -32,13 +32,13 @@ class TestConnection < Test::Unit::TestCase
     
     # Change username, password, host and port in order to test the connection with a different Ensembl db server
     assert_nothing_raised do 
-      Ensembl::Core::DBConnection.connect('homo_sapiens',53,:username => "anonymous",:host => "ensembldb.ensembl.org", :port => 5306)
+      Ensembl::Core::DBConnection.connect('homo_sapiens',56,:username => "anonymous",:host => "ensembldb.ensembl.org", :port => 5306)
     end
   end
   
   def test_remote_variation_connection
     assert_nothing_raised do 
-      Ensembl::Variation::DBConnection.connect('homo_sapiens',53)
+      Ensembl::Variation::DBConnection.connect('homo_sapiens',56)
     end
   end
   
@@ -46,19 +46,19 @@ class TestConnection < Test::Unit::TestCase
     
     # Change username, password, host and port in order to test the connection with a different Ensembl db server
     assert_nothing_raised do 
-      Ensembl::Variation::DBConnection.connect('bos_taurus',53,:username => "anonymous",:host => "ensembldb.ensembl.org", :port => 5306)
+      Ensembl::Variation::DBConnection.connect('bos_taurus',56,:username => "anonymous",:host => "ensembldb.ensembl.org", :port => 5306)
     end
   end
   
   def test_connection_ensembl_genomes
     assert_nothing_raised do 
-      Ensembl::Core::DBConnection.ensemblgenomes_connect('Staphylococcus_aureus_MRSA252',1)
+      Ensembl::Core::DBConnection.ensemblgenomes_connect('Staphylococcus_aureus_MRSA252',3)
     end
   end
   
   def test_manual_connection_ensembl_genomes
     assert_nothing_raised do
-      Ensembl::Core::DBConnection.connect("bacillus_collection",1,:host => "mysql.ebi.ac.uk", :port => 4157)
+      Ensembl::Core::DBConnection.connect("bacillus_collection",3,:host => "mysql.ebi.ac.uk", :port => 4157)
     end
   end
   
