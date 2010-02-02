@@ -89,8 +89,8 @@ module Ensembl
           all_coord_systems = Ensembl::Core::CoordSystem.find_all_by_name(coord_system_name)
         end
       	coord_system = nil
-        if version.nil? # Take the version with the lowest rank
-          coord_system = all_coord_systems.sort_by{|cs| cs.version}.reverse.shift
+        if version.nil? # Take the version with the lower rank
+          coord_system = all_coord_systems.sort_by{|cs| cs.rank}.shift
         else
           coord_system = all_coord_systems.select{|cs| cs.version == version}[0]
         end
