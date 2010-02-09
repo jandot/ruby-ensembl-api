@@ -357,14 +357,12 @@ module Ensembl
           else # we have to project coordinates
             seq_string = String.new
       	    @target_slices = self.project('seqlevel')
-
             @target_slices.each do |component|
               if component.class == Slice
-                seq_string += component.seq # This fetches the seq recursively (see 10 lines up)
+                seq_string += component.seq # This fetches the seq recursively
               else # it's a Gap
                 seq_string += 'N' * (component.length)
               end
-
             end
       	    @seq = Bio::Sequence::NA.new(seq_string)
 

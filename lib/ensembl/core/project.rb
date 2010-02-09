@@ -200,7 +200,7 @@ module Ensembl
 
           # What we'll do, is create slices for all the underlying components,
           # including the first and the last one. At first, the first and last
-          # components are added in their entirity and will only be cropped afterwards.
+          # components are added in their entirety and will only be cropped afterwards.
       	  previous_stop = nil
           sorted_overlapping_assembly_links.each_index do |i|
             this_link = sorted_overlapping_assembly_links[i]
