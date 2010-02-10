@@ -1,6 +1,6 @@
 #!/usr/bin/ruby
 require 'irb'
-require 'lib/ensembl'
+require 'ensembl'
 
 module IRB
   def self.start_session(binding)
