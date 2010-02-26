@@ -62,13 +62,13 @@ namespace :test do
  
  desc "Run Core tests (only release 56)"
  task :core do
-   Dir.glob("test/unit/release_53/core/*.rb").each do |name|
+   Dir.glob("test/unit/release_56/core/*.rb").each do |name|
      ruby name
    end
  end
  desc "Run Variation tests (only release 56)"
  task :variation do
-   Dir.glob("test/unit/release_53/variation/*.rb").each do |name|
+   Dir.glob("test/unit/release_56/variation/*.rb").each do |name|
      ruby name
    end
  end
