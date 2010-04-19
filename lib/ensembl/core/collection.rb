@@ -4,18 +4,19 @@
 # Copyright::   Copyright (C) 2009 Francesco Strozzi <francesco.strozzi@gmail.com>
 #                           
 # License::     The Ruby License
+#
+# @author Francesco Strozzi
 
 module Ensembl
   nil
   module Core
-    # = DESCRIPTION
     # Class to describe and handle multi-species databases
     #
     class Collection
-      # = DESCRIPTION
       # Method to check if the current core database is a multi-species db.
       # Returns a boolean value.
       #
+      # @return [Boolean] True if current db is multi-species db; otherwise false.
       def self.check()
         host,user,password,db_name,port = Ensembl::Core::DBConnection.get_info
         if db_name =~/(\w+)_collection_core_.*/ 
@@ -24,16 +25,17 @@ module Ensembl
         return false
       end
 
-      # = DESCRIPTION
       # Returns an array with all the Species present in a collection database.
-      #  
+      # 
+      # @return [Array<String>] Array containing species names in colleciton
       def self.species()
         return Meta.find_all_by_meta_key("species.db_name").collect {|m| m.meta_value}
       end
       
-      # = DESCRIPTION
-      # Returns the species_id of a particular specie present in the database.
-      #      
+      # Returns the species_id of a particular species present in the database.
+      # 
+      # @param [String] species Name of species
+      # @return [Integer] Species ID in the database.
       def self.get_species_id(species)
         species = species.downcase
         meta = Meta.find_by_sql("SELECT * FROM meta WHERE LOWER(meta_value) = '#{species}'")[0]
@@ -44,10 +46,12 @@ module Ensembl
         end
       end
       
-      # = DESCRIPTION
-      # Returns an array with all the coord_system_id associated with a particular specie and a table_name.
+      # Returns an array with all the coord_system_id associated with a particular species and a table_name.
       # Used inside Slice#method_missing to filter the coord_system_id using a particular species_id.
       #
+      # @param [String] table_name Table name
+      # @param [Integer] species_id ID of species in the database
+      # @return [Array<Integer>] Array containing coord_system IDs.
       def self.find_all_coord_by_table_name(table_name,species_id)
         all_ids = CoordSystem.find_all_by_species_id(species_id)
         return MetaCoord.find_all_by_coord_system_id_and_table_name(all_ids,table_name)

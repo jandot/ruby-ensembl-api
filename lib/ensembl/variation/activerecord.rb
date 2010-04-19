@@ -4,14 +4,13 @@
 # Copyright::   Copyright (C) 2008 Francesco Strozzi <francesco.strozzi@gmail.com>
 # License::     The Ruby License
 #
+# @author Francesco Strozzi
 
 nil
 module Ensembl
-  # = DESCRIPTION
   # The Ensembl::Variation module covers the variation databases from
   # ensembldb.ensembl.org.
   module Variation
-    # = DESCRIPTION
     # The Allele class describes a single allele of a variation. In addition to
     # the nucleotide(s) (or absence of) that representing the allele frequency
     # and population information may be present.
@@ -20,7 +19,7 @@ module Ensembl
     # See the general documentation of the Ensembl module for
     # more information on what this means and what methods are available.
     #
-    # = USAGE
+    # @example
     #  allele = Allele.find(1)
     #  puts allele.to_yaml
     class Allele < DBConnection
@@ -30,7 +29,6 @@ module Ensembl
       belongs_to :population
     end
 
-    # = DESCRIPTION
     # The AlleleGroup class represents a grouping of alleles that have tight 
     # linkage and are usually present together. This is commonly known as a 
     # Haplotype or Haplotype Block. 
@@ -39,7 +37,7 @@ module Ensembl
     # See the general documentation of the Ensembl module for
     # more information on what this means and what methods are available.
     #
-    # = USAGE
+    # @example
     #  allele_group = AlleleGroup.find(1)
     #  puts allele_group.to_yaml
     class AlleleGroup < DBConnection
@@ -50,7 +48,6 @@ module Ensembl
       belongs_to :allele_group_allele
     end
     
-    # = DESCRIPTION
     # The AlleleGroupAllele class represents a connection class between Allele and AlleleGroup. 
     # Should not be used directly.
     #
@@ -62,7 +59,6 @@ module Ensembl
       belongs_to :allele_group
     end
     
-    # = DESCRIPTION
     # The Sample class gives information about the biological samples stored in the database. 
     #
     # This class uses ActiveRecord to access data in the Ensembl database.
@@ -79,7 +75,6 @@ module Ensembl
       has_many :tagged_variation_features
     end
 
-    # = DESCRIPTION
     # The IndividualPopulation class is used to connect Individual and Population classes. 
     # Should not be used directly.
     #
@@ -91,7 +86,6 @@ module Ensembl
       belongs_to :population
     end
     
-    # = DESCRIPTION
     # The Individual class gives information on the single individuals used 
     # to retrieve one or more biological samples.
     #
@@ -124,7 +118,6 @@ module Ensembl
       # FIXME
     end
     
-    # = DESCRIPTION
     # The PopulationGenotype class gives information about alleles and allele 
     # frequencies for a SNP observed within a population or a group of samples. 
     #
@@ -137,7 +130,6 @@ module Ensembl
       belongs_to :population
     end
     
-    # = DESCRIPTION
     # The SampleSynonym class represents information about alternative names 
     # for sample entries. 
     #
@@ -151,7 +143,6 @@ module Ensembl
       belongs_to :population
     end
     
-    # = DESCRIPTION
     # The Source class gives information on the different databases and SNP 
     # panels used to retrieve the data
     #
@@ -168,7 +159,6 @@ module Ensembl
       has_many :variation_synonyms
     end
     
-    # = DESCRIPTION
     # The VariationSynonym class gives information on alterative names used 
     # for Variation entries. 
     #
@@ -181,7 +171,6 @@ module Ensembl
       belongs_to :source
     end
         
-    # = DESCRIPTION
     # The VariationGroup class represents a group of variations (SNPs) that are 
     # linked and present toghether. 
     #
@@ -197,7 +186,6 @@ module Ensembl
       has_one :allele_group
     end
     
-    # = DESCRIPTION
     # The VariationGroupVariation class is a connection class. 
     # Should not be used directly.
     #
@@ -209,7 +197,6 @@ module Ensembl
       belongs_to :variation_group
     end
     
-    # = DESCRIPTION
     # The VariationGroupFeature class gives information on the genomic position 
     # of each VariationGroup.
     #
@@ -221,7 +208,6 @@ module Ensembl
       belongs_to :variation_group
     end
     
-    # = DESCRIPTION
     # The FlankingSequence class gives information about the genomic coordinates 
     # of the flanking sequences, for a single VariationFeature. 
     #
@@ -232,7 +218,6 @@ module Ensembl
       belongs_to :variation
     end
     
-    # = DESCRIPTION
     # The TaggedVariationFeature class is a connection class. 
     # Should not be used directly.
     #

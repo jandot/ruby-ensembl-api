@@ -6,12 +6,13 @@
 #                           
 # License::     The Ruby License
 #
+# @author Jan Aerts
+# @author Francesco Strozzi
 nil
 module Ensembl
   nil
   module Core
         
-    # = DESCRIPTION
     # From the perl API tutorial
     # (http://www.ensembl.org/info/software/core/core_tutorial.html): "A
     # Slice object represents a continuous region of a genome. Slices can be
@@ -21,7 +22,7 @@ module Ensembl
     # In contrast to almost all other classes of Ensembl::Core,
     # the Slice class is not based on ActiveRecord.
     #
-    # = USAGE
+    # @example
     #  chr4 = SeqRegion.find_by_name('4')
     #  my_slice = Slice.new(chr4, 95000, 98000, -1)
     #  puts my_slice.display_name    #--> 'chromosome:4:Btau_3.1:95000:98000:1'
@@ -32,20 +33,17 @@ module Ensembl
       ## CREATE A SLICE
       #################
 
-      # = DESCRIPTION
       # Create a new Slice object from scratch.
       #
-      # = USAGE
+      # @example
       #  chr4 = SeqRegion.find_by_name('4')
       #  my_slice = Slice.new(chr4, 95000, 98000, -1)
-      # ---
-      # *Arguments*:
-      # * seq_region: SeqRegion object
-      # * start: start position of the Slice on the SeqRegion (default = 1)
-      # * stop: stop position of the Slice on the SeqRegion (default: end of
-      #   SeqRegion)
-      # * strand: strand of the Slice relative to the SeqRegion (default = 1)
-      # *Returns*:: Slice object
+      # 
+      # @param [SeqRegion] seq_region SeqRegion object
+      # @param [Integer] start Start position of the slice on the seq_region
+      # @param [Integer] stop Stop position of the slice on the seq_region
+      # @param [Integer] strand Strand that the slice should be
+      # @return [Slice] Slice object
       def initialize(seq_region, start = 1, stop = seq_region.length, strand = 1)
         if start.nil?
           start = 1
@@ -60,29 +58,28 @@ module Ensembl
         @seq = nil
       end
 
-      # = DESCRIPTION
       # Create a Slice without first creating the SeqRegion object.
       #
-      # = USAGE
+      # @example
       #  my_slice_1 = Slice.fetch_by_region('chromosome','4',95000,98000,1)
       #
-      # ---
-      # *Arguments*:
-      # * coord_system: name of CoordSystem (required)
-      # * seq_region: name of SeqRegion (required)
-      # * start: start of Slice on SeqRegion (default = 1)
-      # * stop: stop of Slice on SeqRegion (default = end of SeqRegion)
-      # * strand: strand of Slice on SeqRegion
-      # *Returns*:: Ensembl::Core::Slice object
+      # @param [String] coord_system_name Name of coordinate system
+      # @param [String] seq_region_name name of the seq_region
+      # @param [Integer] start Start position of the slice on the seq_region
+      # @param [Integer] stop Stop position of the slice on the seq_region
+      # @param [Integer] strand Strand that the slice should be
+      # @param [String] species Name of species in case of multi-species database
+      # @param [Integer] version Version number of the coordinate system
+      # @return [Slice] Slice object
       def self.fetch_by_region(coord_system_name, seq_region_name, start = nil, stop = nil, strand = 1, species = Ensembl::SESSION.collection_species ,version = nil)
         all_coord_systems = nil
         if Collection.check
           species = species.downcase
           if species.nil?
-            raise ArgumentError, "When using multi-species db, you must pass a specie name to get the correct Slice"
+            raise ArgumentError, "When using multi-species db, you must pass a species name to get the correct Slice"
           else
             species_id = Collection.get_species_id(species)
-            raise ArgumentError, "No specie found in the database with this name: #{species}" if species_id.nil? 
+            raise ArgumentError, "No species found in the database with this name: #{species}" if species_id.nil? 
             all_coord_systems = Ensembl::Core::CoordSystem.find_all_by_name_and_species_id(coord_system_name,species_id)
           end
         else
@@ -111,16 +108,14 @@ module Ensembl
         return Ensembl::Core::Slice.new(seq_region, start, stop, strand)
       end
 
-      # = DESCRIPTION
       # Create a Slice based on a Gene
       #
-      # = USAGE
+      # @example
       #  my_slice = Slice.fetch_by_gene_stable_id('ENSG00000184895')
       #
-      # ---
-      # *Arguments*:
-      # * gene_stable_id: Ensembl gene stable_id (required)
-      # *Returns*:: Ensembl::Core::Slice object
+      # @param [String] gene_stable_id Ensembl gene stable ID
+      # @param [Integer] flanking_seq_length Length of the flanking sequence
+      # @return [Slice] Slice object
       def self.fetch_by_gene_stable_id(gene_stable_id, flanking_seq_length = 0)
         gene_stable_id = Ensembl::Core::GeneStableId.find_by_stable_id(gene_stable_id)
       	gene = gene_stable_id.gene
@@ -129,16 +124,14 @@ module Ensembl
         return Ensembl::Core::Slice.new(seq_region, gene.seq_region_start - flanking_seq_length, gene.seq_region_end + flanking_seq_length, gene.seq_region_strand)
       end
 
-      # = DESCRIPTION
       # Create a Slice based on a Transcript
       #
-      # = USAGE
+      # @example
       #  my_slice = Slice.fetch_by_transcript_stable_id('ENST00000383673')
       #
-      # ---
-      # *Arguments*:
-      # * transcript_stable_id: Ensembl transcript stable_id (required)
-      # *Returns*:: Ensembl::Core::Slice object
+      # @param [String] transcript_stable_id Ensembl transcript stable ID
+      # @param [Integer] flanking_seq_length Length of the flanking sequence
+      # @return [Slice] Slice object
       def self.fetch_by_transcript_stable_id(transcript_stable_id, flanking_seq_length = 0)
         transcript_stable_id = Ensembl::Core::TranscriptStableId.find_by_stable_id(transcript_stable_id)
       	transcript = transcript_stable_id.transcript
@@ -147,17 +140,15 @@ module Ensembl
         return Ensembl::Core::Slice.new(seq_region, transcript.seq_region_start - flanking_seq_length, transcript.seq_region_end + flanking_seq_length, transcript.seq_region_strand)
       end
 
-      # = DESCRIPTION
       # Create an array of all Slices for a given coordinate system.
       #
-      # = USAGE
+      # @example
       #  slices = Slice.fetch_all('chromosome')
       #
-      # ---
-      # *Arguments*:
-      # * coord_system_name:: name of coordinate system (default = chromosome)
-      # * coord_system_version:: version of coordinate system (default = nil)
-      # *Returns*:: an array of Ensembl::Core::Slice objects
+      # @param [String] coord_system_name Name of coordinate system
+      # @param [String] species Name of species
+      # @param [Integer] version Version of coordinate system
+      # @return [Array<Slice>] Array of Slice objects
       def self.fetch_all(coord_system_name = 'chromosome',species = Ensembl::SESSION.collection_species ,version = nil)
         answer = Array.new
         coord_system = nil
@@ -187,50 +178,45 @@ module Ensembl
       ## GENERAL METHODS
       ##################
 
-      # = DESCRIPTION
       # Get the length of a slice
       #
-      # = USAGE
+      # @example
       #  chr4 = SeqRegion.find_by_name('4')
       #  my_slice = Slice.new(chr4, 95000, 98000, -1)
       #  puts my_slice.length
-      # ---
-      # *Arguments*:: none
-      # *Returns*:: Integer
+      # 
+      # @return [Integer] Length of the slice
       def length
         return self.stop - self.start + 1
       end
 
-      # = DESCRIPTION
       # The display_name method returns a full name of this slice, containing
       # the name of the coordinate system, the sequence region, start and
       # stop positions on that sequence region and the strand. E.g. for a slice
       # of bovine chromosome 4 from position 95000 to 98000 on the reverse strand,
       # the display_name would look like: chromosome:4:Btau_3.1:95000:98000:-1
       #
-      # = USAGE
+      # @example
       #  puts my_slice.display_name
-      # ---
-      # *Arguments*:: none
-      # *Result*:: String
+      # 
+      # @return [String] Nicely formatted name of the Slice
       def display_name
       	return [self.seq_region.coord_system.name, self.seq_region.coord_system.version, self.seq_region.name, self.start.to_s, self.stop.to_s, self.strand.to_s].join(':')
       end
       alias to_s display_name
 
-      # = DESCRIPTION
       # The Slice#overlaps? method checks if this slice overlaps another one.
       # The other slice has to be on the same coordinate system
       #
-      # = USAGE
+      # @example
       #  slice_a = Slice.fetch_by_region('chromosome','X',1,1000)
       #  slice_b = Slice.fetch_by_region('chromosome','X',900,1500)
       #  if slice_a.overlaps?(slice_b)
       #    puts "There slices overlap"
       #  end
-      # ---
-      # *Arguments*:: another slice
-      # *Returns*:: true or false
+      # 
+      # @param [Slice] other_slice Another slice
+      # @return [Boolean] True if slices overlap, otherwise false
       def overlaps?(other_slice)
         if ! other_slice.class == Slice
           raise RuntimeError, "The Slice#overlaps? method takes a Slice object as its arguments."
@@ -249,19 +235,18 @@ module Ensembl
         end
       end
 
-      # = DESCRIPTION
       # The Slice#within? method checks if this slice is contained withing another one.
       # The other slice has to be on the same coordinate system
       #
-      # = USAGE
+      # @example
       #  slice_a = Slice.fetch_by_region('chromosome','X',1,1000)
       #  slice_b = Slice.fetch_by_region('chromosome','X',900,950)
       #  if slice_b.overlaps?(slice_a)
       #    puts "Slice b is within slice a"
       #  end
-      # ---
-      # *Arguments*:: another slice
-      # *Returns*:: true or false
+      # 
+      # @param [Slice] other_slice Another slice
+      # @return [Boolean] True if this slice is within other_slice, otherwise false
       def within?(other_slice)
         if ! other_slice.class == Slice
           raise RuntimeError, "The Slice#overlaps? method takes a Slice object as its arguments."
@@ -280,11 +265,10 @@ module Ensembl
         end
       end
 
-      # = DESCRIPTION
       # The Slice#excise method removes a bit of a slice and returns the 
       # remainder as separate slices.
       #
-      # = USAGE
+      # @example
       #  original_slice = Slice.fetch_by_region('chromosome','X',1,10000)
       #  new_slices = original_slice.excise([500..750, 1050..1075])
       #  new_slices.each do |s|
@@ -295,10 +279,9 @@ module Ensembl
       #  #   chromosome:X:1:499:1
       #  #   chromosome:X:751:1049:1
       #  #   chromosome:X:1076:10000:1
-      # ---
-      # *Arguments*:
-      # * ranges: array of ranges (required)
-      # *Returns*:: array of Slice objects
+      # 
+      # @param [Array<Range>] Array of ranges to excise
+      # @return [Array<Slice>] Array of slices
       def excise(ranges)
         if ranges.class != Array
           raise RuntimeError, "Argument should be an array of ranges"
@@ -326,7 +309,6 @@ module Ensembl
         return answer
       end
 
-      # = DESCRIPTION
       # Get the sequence of the Slice as a Bio::Sequence::NA object.
       #
       # If the Slice is on a CoordSystem that is not seq_level, it will try
@@ -338,12 +320,10 @@ module Ensembl
       # Caution: Bio::Sequence::NA makes the sequence
       # downcase!!
       #
-      # = USAGE
+      # @example
       #  my_slice.seq.seq.to_s
       #
-      # ---
-      # *Arguments*:: none
-      # *Returns*:: Bio::Sequence::NA object
+      # @return [Bio::Sequence::NA] Slice sequence as a Bio::Sequence::NA object
       def seq
       	# If we already accessed the sequence, we can just
       	# call the instance variable. Otherwise, we'll have
@@ -381,34 +361,28 @@ module Ensembl
         raise NotImplementedError
       end
 
-      # = DESCRIPTION
       # Take a sub_slice from an existing one.
       #
-      # = USAGE
+      # @example
       #  my_sub_slice = my_slice.sub_slice(400,500)
       #
-      # ---
-      # *Arguments*:
-      # * start: start of subslice relative to slice (default: start of slice)
-      # * stop: stop of subslice relative to slice (default: stop of slice)
-      # *Returns*:: Ensembl::Core::Slice object
+      # @param [Integer] start Start of subslice relative to slice
+      # @param [Integer] stop Stop of subslice relative to slice
+      # @return [Slice] Slice object
       def sub_slice(start = self.start, stop = self.stop)
       	return self.class.new(self.seq_region, start, stop, self.strand)
       end
 
-      # = DESCRIPTION
       # Creates overlapping subslices for a given Slice.
       #
-      # = USAGE
+      # @example
       #  my_slice.split(50000, 250).each do |sub_slice|
       #    puts sub_slice.display_name
       #  end
       #
-      # ---
-      # *Arguments*:
-      # * max_size: maximal size of subslices (default: 100000)
-      # * overlap: overlap in bp between consecutive subslices (default: 0)
-      # *Returns*:: array of Ensembl::Core::Slice objects
+      # @param [Integer] max_size Maximal size of subslices
+      # @param [Integer] overlap Overlap in bp between consecutive subslices
+      # @return [Array<Slice>] Array of Slice objects
       def split(max_size = 100000, overlap = 0)
       	sub_slices = Array.new
         i = 0
@@ -532,7 +506,6 @@ SQL
       end
 
 
-      # = DESCRIPTION
       # Get all MiscFeatures that are located on a Slice for a given MiscSet.
       #
       # Pitfall: just looks at the CoordSystem that the Slice is located on.
@@ -540,14 +513,13 @@ SQL
       # CoordSystem, but all misc_features are annotated on SeqRegions of
       # the 'scaffold' CoordSystem, this method will return an empty array.
       #
-      # = USAGE
+      # @example
       #  my_slice.misc_features('encode').each do |feature|
       #    puts feature.to_yaml
       #  end
-      # ---
-      # *Arguments*:
-      # * code: code of MiscSet
-      # *Returns*:: array of MiscFeature objects
+      # 
+      # @param [String] code Code of MiscSet
+      # @return [Array<MiscFeature>] Array of MiscFeature objects
       def misc_features(code)
       	answer = Array.new
         if code.nil?
@@ -568,7 +540,6 @@ SQL
       	return answer
       end
 
-      # = DESCRIPTION
       # Get all DnaAlignFeatures that are located on a Slice for a given Analysis.
       #
       # Pitfall: just looks at the CoordSystem that the Slice is located on.
@@ -576,14 +547,13 @@ SQL
       # CoordSystem, but all dna_align_features are annotated on SeqRegions of
       # the 'scaffold' CoordSystem, this method will return an empty array.
       #
-      # = USAGE
+      # @example
       #  my_slice.dna_align_features('Vertrna').each do |feature|
       #    puts feature.to_yaml
       #  end
-      # ---
-      # *Arguments*:
-      # * code: name of analysis
-      # *Returns*:: array of DnaAlignFeature objects
+      # 
+      # @param [String] analysis_name Name of analysis
+      # @return [Array<DnaAlignFeature>] Array of DnaAlignFeature objects
       def dna_align_features(analysis_name = nil)
       	if analysis_name.nil?
           return DnaAlignFeature.find_by_sql('SELECT * FROM dna_align_feature WHERE seq_region_id = ' + self.seq_region.id.to_s + ' AND seq_region_start >= ' + self.start.to_s + ' AND seq_region_end <= ' + self.stop.to_s)
@@ -593,7 +563,6 @@ SQL
         end
       end
 
-      # = DESCRIPTION
       # Get all ProteinAlignFeatures that are located on a Slice for a given Analysis.
       #
       # Pitfall: just looks at the CoordSystem that the Slice is located on.
@@ -601,14 +570,13 @@ SQL
       # CoordSystem, but all protein_align_features are annotated on SeqRegions of
       # the 'scaffold' CoordSystem, this method will return an empty array.
       #
-      # = USAGE
+      # @example
       #  my_slice.protein_align_features('Uniprot').each do |feature|
       #    puts feature.to_yaml
       #  end
-      # ---
-      # *Arguments*:
-      # * code: name of analysis
-      # *Returns*:: array of ProteinAlignFeature objects
+      # 
+      # @param [String] analysis_name Name of analysis
+      # @return [Array<ProteinAlignFeature>] Array of ProteinAlignFeature objects
       def protein_align_features(analysis_name)
       	if analysis_name.nil?
           return ProteinAlignFeature.find_by_sql('SELECT * FROM protein_align_feature WHERE seq_region_id = ' + self.seq_region.id.to_s + ' AND seq_region_start >= ' + self.start.to_s + ' AND seq_region_end <= ' + self.stop.to_s)
@@ -623,9 +591,8 @@ SQL
       ############################
       
       
-      #= DESCRIPTION
       # Method to retrieve Variation features from Ensembl::Core::Slice objects
-      #= USAGE
+      # @example
       # slice = Slice.fetch_by_region('chromosome',1,50000,51000)
       # variations = slice.get_variation_features
       # variations.each do |vf|
@@ -660,25 +627,22 @@ SQL
       
     end #Slice
 
-    # = DESCRIPTION
     # The Gap class is similar to the Slice object, but describes a gap and
     # therefore can easily be described by coordinate system and size.
     #
     class Gap
       attr_accessor :coord_system, :size
 
-      # = DESCRIPTION
       # Create a new Gap object from scratch.
       #
-      # = USAGE
+      # @example
       #  my_coord_system = CoordSystem.find_by_name('chromosome')
       #  # Create a gap of 10kb.
       #  gap = Gap.new(my_coord_system, 10000)
-      # ---
-      # *Arguments*:
-      # * coord_system: CoordSystem object (required)
-      # * length: length of the gap (required)
-      # *Returns*:: Gap object
+      # 
+      # @param [CoordSystem] coord_system Coordinate system object
+      # @param [Integer] size Length of the gap
+      # @return [Gap] Gap object
       def initialize(coord_system, size)
         @coord_system, @size = coord_system, size
       end

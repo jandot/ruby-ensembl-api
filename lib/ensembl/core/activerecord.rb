@@ -5,8 +5,9 @@
 #                                       Francesco Strozzi <francesco.strozzi@gmail.com>                                        
 # License::     The Ruby License
 #
+# @author Jan Aerts
+# @author Francesco Strozzi
 
-# = DESCRIPTION
 # == What is it?
 # The Ensembl module provides an API to the Ensembl databases
 # stored at ensembldb.ensembl.org. This is the same information that is
@@ -69,23 +70,19 @@
 #  puts SeqRegion.reflect_on_all_associations(:has_one).collect{|a| a.name.to_s}.join("\n")
 #  puts SeqRegion.reflect_on_all_associations(:belongs_to).collect{|a| a.name.to_s}.join("\n")
 module Ensembl
-  # = DESCRIPTION
   # The Ensembl::Core module covers the core databases from
   # ensembldb.ensembl.org and covers mainly sequences and their annotations.
   # For a full description of the database (and therefore the classes that
   # are available), see http://www.ensembl.org/info/software/core/schema/index.html
   # and http://www.ensembl.org/info/software/core/schema/schema_description.html
   module Core
-    # = DESCRIPTION
     # The Sliceable mixin holds the get_slice method and can be included
     # in any class that lends itself to having a position on a SeqRegion.
     module Sliceable
-      # = DESCRIPTION
       # The Sliceable#slice method takes the coordinates on a reference
       # and creates a Ensembl::Core::Slice object.
-      # ---
-      # *Arguments*:: none
-      # *Returns*:: Ensembl::Core::Slice object
+      # 
+      # @return [Ensembl::Core::Slice] Ensembl::Core::Slice object
       def slice
         start, stop, strand = nil, nil, nil
         
@@ -104,58 +101,47 @@ module Ensembl
         return Ensembl::Core::Slice.new(self.seq_region, start, stop, strand)
       end
       
-      # = DESCRIPTION
       # The Sliceable#seq method takes the coordinates on a reference, transforms
       # onto the seqlevel coordinate system if necessary, and retrieves the
       # sequence.
-      # ---
-      # *Arguments*:: none
-      # *Returns*:: sequence
+      # 
+      # @return [String] sequence
       def seq
         return self.slice.seq
       end
       
-      # = DESCRIPTION
       # The Sliceable#start method is a convenience method and returns
       # self.seq_region_start.
-      # ---
-      # *Arguments*:: none
-      # *Returns*:: sequence
+      # 
+      # @return [Integer] seq_region_start
       def start
         return self.seq_region_start
       end
       
-      # = DESCRIPTION
       # The Sliceable#stop method is a convenience method and returns
       # self.seq_region_end.
-      # ---
-      # *Arguments*:: none
-      # *Returns*:: sequence
+      # 
+      # @return [Integer] seq_region_end
       def stop
         return self.seq_region_end
       end
       
-      # = DESCRIPTION
       # The Sliceable#strand method is a convenience method and returns
       # self.seq_region_strand.
-      # ---
-      # *Arguments*:: none
-      # *Returns*:: sequence
+      # 
+      # @return [Numeric] seq_region_strand
       def strand
         return self.seq_region_strand
       end
       
-      # = DESCRIPTION
       # The Sliceable#length method returns the length of the feature (based on
       # seq_region_start and seq_region_end.
-      # ---
-      # *Arguments*:: none
-      # *Returns*:: sequence
+      # 
+      # @return [Integer] Length of the slice
       def length
         return self.stop - self.start + 1
       end
       
-      # = DESCRIPTION
       # The Sliceable#project method is used to transfer coordinates from one
       # coordinate system to another. Suppose you have a feature on a
       # contig in human (let's say on contig AC000031.6.1.38703) and you
@@ -170,19 +156,15 @@ module Ensembl
       # At the moment, projections can only be done if the two coordinate
       # systems are linked directly in the 'assembly' table.
       #
-      # = USAGE
-      #
+      # @example
       #  # Get a contig slice in cow and project to scaffold level
       #  # (i.e. going from a high rank coord system to a lower rank coord
       #  # system)
       #  original_feature = Gene.find(85743)
       #  target_slices = original_feature.project('scaffold')
       #
-      # ---
-      # *Arguments*:
-      # * coord_system_name:: name of coordinate system to project
-      #   coordinates to
-      # *Returns*:: an array consisting of Slices and, if necessary, Gaps
+      # @param [String] coord_system_name Name of coordinate system to project coordinates to
+      # @return [Array<Slice,Gap>] an array consisting of Slices and, if necessary, Gaps
       def project(coord_system_name)
         return self.slice.project(coord_system_name)
       end
@@ -190,7 +172,6 @@ module Ensembl
     end
 
 
-    # = DESCRIPTION
     # The CoordSystem class describes the coordinate system to which
     # a given SeqRegion belongs. It is an interface to the coord_system
     # table of the Ensembl mysql database.
@@ -205,7 +186,7 @@ module Ensembl
     # See the general documentation of the Ensembl module for
     # more information on what this means and what methods are available.
     #
-    # = USAGE
+    # @example
     #  coord_system = Ensembl::Core::CoordSystem.find_by_name('chromosome')
     #  if coord_system == CoordSystem.toplevel
     #	 puts coord_system.name + " is the toplevel coordinate system."
@@ -215,12 +196,10 @@ module Ensembl
 
       has_many :seq_regions
 
-      # = DESCRIPTION
       # The CoordSystem#toplevel? method checks if this coordinate system is the
       # toplevel coordinate system or not.
-      # ---
-      # *Arguments*:: none
-      # *Returns*:: TRUE or FALSE
+      # 
+      # @return [Boolean] True if coord_system is toplevel, else false.
       def toplevel?
         if Collection.check # When usign multi-species databases
           return true if self == CoordSystem.find_by_rank_and_species_id(1,self.species_id)
@@ -230,12 +209,10 @@ module Ensembl
         return false
       end
 
-      # = DESCRIPTION
       # The CoordSystem#seqlevel? method checks if this coordinate system is the
       # seqlevel coordinate system or not.
-      # ---
-      # *Arguments*:: none
-      # *Returns*:: TRUE or FALSE
+      # 
+      # @return [Boolean] True if coord_system is seqlevel, else false.
       def seqlevel?
         if Collection.check # When usign multi-species databases
            return true if self == CoordSystem.find_by_sql("SELECT * FROM coord_system WHERE attrib LIKE '%sequence_level%' AND species_id = #{self.species_id}")[0]
@@ -245,12 +222,10 @@ module Ensembl
         return false
       end
       
-      # = DESCRIPTION
       # The CoordSystem#find_toplevel class method returns the toplevel coordinate
       # system.
-      # ---
-      # *Arguments*:: none
-      # *Returns*:: CoordSystem object
+      # 
+      # @return [Ensembl::Core::CoordSystem] Toplevel coord_system object.
       def find_toplevel
         not_cached = false
         if Ensembl::SESSION.toplevel_coord_system.nil? 
@@ -271,12 +246,10 @@ module Ensembl
         return Ensembl::SESSION.toplevel_coord_system
       end
       
-      # = DESCRIPTION
       # The CoordSystem#find_seqlevel class method returns the seqlevel coordinate
       # system.
-      # ---
-      # *Arguments*:: none
-      # *Returns*:: CoordSystem object
+      # 
+      # @return [Ensembl::Core::CoordSystem] Seqlevel coord_system object.
       def find_seqlevel
         not_cached = false
         if Ensembl::SESSION.seqlevel_coord_system.nil? 
@@ -297,12 +270,11 @@ module Ensembl
         return Ensembl::SESSION.seqlevel_coord_system
       end
       
-      # = DESCRIPTION
       # The CoordSystem#find_level class method returns the seqlevel coordinate
       # system corresponding to the name passed.
-      # ---
-      # *Arguments*:: Coordinate system name
-      # *Returns*:: CoordSystem object
+      # 
+      # @param [String] coord_system_name Name of coordinate system
+      # @return [Ensembl::Core::CoordSystem] Coordinate system object
       def find_level(coord_system_name)
         if Collection.check # When usign multi-species databases
           return CoordSystem.find_by_sql("SELECT * FROM coord_system WHERE name = '#{coord_system_name}' AND species_id = #{self.species_id}")[0]
@@ -311,7 +283,6 @@ module Ensembl
         end
       end
       
-      # = DESCRIPTION
       # The CoordSystem#find_default_by_name class method returns the
       # coordinate system by that name with the lowest rank. Normally, a lower
       # rank means a 'bigger' coordinate system. The 'chromosome' typically has
@@ -320,9 +291,8 @@ module Ensembl
       # for the NCBI36 and one for the NCBI35 version). The older version of these
       # is typically given a high number and the one with the new version is the
       # 'default' system.
-      # ---
-      # *Arguments*:: none
-      # *Returns*:: CoordSystem object
+      # 
+      # @return [Ensembl::Core::CoordSystem] Coordinate system object
       def self.find_default_by_name(name)
         all_coord_systems_with_name = Ensembl::Core::CoordSystem.find_all_by_name(name)
         if all_coord_systems_with_name.length == 1
@@ -332,13 +302,11 @@ module Ensembl
         end
       end
       
-      # = DESCRIPTION
       # The CoordSystem#name_with_version returns a string containing the name
       # and version of the coordinate system. If no version is available, then
       # just the name is returned
-      # ---
-      # *Arguments*:: none
-      # *Returns*:: String object
+      # 
+      # @return [String] Name of the coordinate system if possible including version
       def name_with_version
         if self.version.nil?
           return name
@@ -368,7 +336,6 @@ module Ensembl
       #end
     end
 
-    # = DESCRIPTION
     # The SeqRegion class describes a part of a coordinate systems. It is an
     # interface to the seq_region table of the Ensembl mysql database.
     #
@@ -376,7 +343,7 @@ module Ensembl
     # See the general documentation of the Ensembl module for
     # more information on what this means and what methods are available.
     #
-    # = USAGE
+    # @example
     #  chr4 = SeqRegion.find_by_name('4')
     #  puts chr4.coord_system.name     #--> 'chromosome'
     #  chr4.genes.each do |gene|
@@ -414,25 +381,22 @@ module Ensembl
 
       alias attribs seq_region_attribs
       
-      # = DESCRIPTION
       # The SeqRegion#slice method returns a slice object that covers the whole
       # of the seq_region.
-      # ---
-      # *Arguments*:: none
-      # *Returns*:: Ensembl::Core::Slice object
+      #
+      # @return [Ensembl::Core::Slice] Slice object
       def slice
         return Ensembl::Core::Slice.new(self)
       end
       
-      # = DESCRIPTION
       # The SeqRegion#assembled_seq_regions returns the sequence regions on which
       # the current region is assembled. For example, calling this method on a
       # contig sequence region, it might return the chromosome that that contig
       # is part of. Optionally, this method takes a coordinate system name so
       # that only regions of that coordinate system are returned.
-      # ---
-      # *Arguments*:: coord_system_name (optional)
-      # *Returns*:: array of SeqRegion objects
+      # 
+      # @param [String] coord_system_name Name of coordinate system
+      # @return [Array<SeqRegion>] Array of SeqRegion objects
       def assembled_seq_regions(coord_system_name = nil)
         if coord_system_name.nil?
           return self.asm_seq_regions
@@ -448,16 +412,15 @@ module Ensembl
         end
       end
 
-      # = DESCRIPTION
       # The SeqRegion#component_seq_regions returns the sequence regions
       # contained within the current region (in other words: the bits used to
       # assemble the current region). For example, calling this method on a
       # chromosome sequence region, it might return the contigs that were assembled
       # into this chromosome. Optionally, this method takes a coordinate system
       # name so that only regions of that coordinate system are returned.
-      # ---
-      # *Arguments*:: coord_system_name (optional)
-      # *Returns*:: array of SeqRegion objects
+      # 
+      # @param [String] coord_system_name Name of coordinate system
+      # @return [Array<SeqRegion>] Array of SeqRegion objects
       def component_seq_regions(coord_system_name = nil)
       	if coord_system_name.nil?
           return self.cmp_seq_regions
@@ -473,21 +436,17 @@ module Ensembl
         end
       end
 
-      # = DESCRIPTION
       # This method queries the assembly table to find those rows (i.e.
       # AssemblyLink objects) for which this seq_region is the assembly.
       #
-      # = USAGE
-      #
+      # @example
       #  my_seq_region = SeqRegion.find('4')
       #  first_link = my_seq_region.assembly_links_as_assembly[0]
       #  puts first_link.asm_start.to_s + "\t" + first_link.asm_end.to_s
       #
-      # ---
-      # *Arguments*:
-      # * coord_system_name: name of coordinate system that the components
-      #   should belong to (default = nil)
-      # *Returns*:: array of AssemblyLink objects
+      # @param [CoordSystem] coord_system Coordinate system object
+      #   that the components should belong to
+      # @return [Array<AssemblyLink>] Array of AssemblyLink objects
       def assembly_links_as_assembly(coord_system = nil)
         if Ensembl::SESSION.coord_system_ids.has_key?(coord_system.name)
           coord_system_id = Ensembl::SESSION.coord_system_ids[coord_system.name]
@@ -499,21 +458,18 @@ module Ensembl
         return AssemblyLink.find_by_sql("SELECT * FROM assembly a WHERE a.asm_seq_region_id = #{self.id} AND a.cmp_seq_region_id IN (SELECT sr.seq_region_id FROM seq_region sr WHERE coord_system_id = #{coord_system.id} )")
       end
 
-      # = DESCRIPTION
       # This method queries the assembly table to find those rows (i.e.
       # AssemblyLink objects) for which this seq_region is the component.
       #
-      # = USAGE
+      # @example
       #
       #  my_seq_region = SeqRegion.find('Chr4.003.1')
       #  first_link = my_seq_region.assembly_links_as_component[0]
       #  puts first_link.asm_start.to_s + "\t" + first_link.asm_end.to_s
       #
-      # ---
-      # *Arguments*:
-      # * coord_system_name: name of coordinate system that the assembly
-      #   should belong to (default = nil)
-      # *Returns*:: array of AssemblyLink objects
+      # @param [CoordSystem] coord_system Coordinate system object that the assembly
+      #   should belong to
+      # @return [Array<AssemblyLink>] Array of AssemblyLink objects
       def assembly_links_as_component(coord_system = nil)
         if coord_system.nil?
           return self.asm_links_as_cmp
@@ -522,25 +478,23 @@ module Ensembl
         end
       end
 
-      # = DESCRIPTION
       # The SeqRegion#sequence method returns the sequence of this seq_region. At
       # the moment, it will only return the sequence if the region belongs to the
       # seqlevel coordinate system.
-      # ---
-      # *Arguments*:: none
-      # *Returns*:: DNA sequence as String
+      #
+      # @return [String] DNA sequence
       def sequence
         return self.dna.sequence
       end
       alias seq sequence
 
-      # = DESCRIPTION
       # The SeqRegion#subsequence method returns a subsequence of this seq_region. At
       # the moment, it will only return the sequence if the region belongs to the
       # seqlevel coordinate system.
-      # ---
-      # *Arguments*:: start and stop position
-      # *Returns*:: DNA sequence as String
+      # 
+      # @param [Integer] start Start position
+      # @param [Integer] stop Stop position
+      # @return [String] DNA sequence
       def subsequence(start, stop)
       	return self.seq.slice(start - 1, (stop - start) + 1)
       end
@@ -548,7 +502,6 @@ module Ensembl
 
     end
 
-    # = DESCRIPTION
     # The AssemblyLink class describes the relationships between different
     # seq_regions. For example, a chromosome might consist of a number of
     # scaffolds, each of which in turn consists of a number of contigs. The
@@ -560,11 +513,11 @@ module Ensembl
     # See the general documentation of the Ensembl module for
     # more information on what this means and what methods are available.
     #
-    # = USAGE
+    # @example
     #  chr4 = SeqRegion.find_by_name('4')
     #  puts chr4.coord_system.name     #--> 'chromosome'
     #  chr4.genes.each do |gene|
-    #	 puts gene.biotype
+    #	   puts gene.biotype
     #  end
     class AssemblyLink < DBConnection
       set_table_name 'assembly'
@@ -575,7 +528,6 @@ module Ensembl
       belongs_to :cmp_seq_region, :foreign_key => 'cmp_seq_region_id', :class_name => 'SeqRegion'
     end
 
-    # = DESCRIPTION
     # The AssemblyException class describes the exceptions in to AssemblyLink. Most
     # notably, this concerns the allosomes. In human, for example, only the
     # part of the Y chromosome that is different from X is covered in the
@@ -597,7 +549,6 @@ module Ensembl
       belongs_to :seq_region
     end
 
-    # = DESCRIPTION
     # The MetaCoord class describes what coordinate systems are used to annotate
     # features. It will for example tell you that marker_features are annotated
     # either on the chromosome, supercontig and clone level.
@@ -611,7 +562,6 @@ module Ensembl
       set_primary_key nil
     end
 
-    # = DESCRIPTION
     # The Meta class describes meta data of the database. These include information
     # on what coordinate system is mapping on another one and which patches
     # are applied.
@@ -625,14 +575,13 @@ module Ensembl
       set_primary_key nil
     end
 
-    # = DESCRIPTION
     # The Analysis class describes an analysis.
     #
     # This class uses ActiveRecord to access data in the Ensembl database.
     # See the general documentation of the Ensembl module for
     # more information on what this means and what methods are available.
     #
-    # = USAGE
+    # @example
     #  repeat_masker_analysis = Analysis.find_by_logic_name('RepeatMask')
     #  puts repeat_masker_analysis.to_yaml
     class Analysis < DBConnection
@@ -650,14 +599,13 @@ module Ensembl
       has_many :prediction_transcripts
     end
 
-    # = DESCRIPTION
     # The AnalysisDescription class belongs to an analysis.
     #
     # This class uses ActiveRecord to access data in the Ensembl database.
     # See the general documentation of the Ensembl module for
     # more information on what this means and what methods are available.
     #
-    # = USAGE
+    # @example
     #  descr = AnalysisDescription.find(3)
     #  puts descr.to_yaml
     class AnalysisDescription < DBConnection
@@ -666,7 +614,6 @@ module Ensembl
       belongs_to :analysis
     end
 
-    # = DESCRIPTION
     # The Dna class contains the actual DNA sequence for the sequence regions
     # that belong to the seq_level coordinate system.
     #
@@ -674,7 +621,7 @@ module Ensembl
     # See the general documentation of the Ensembl module for
     # more information on what this means and what methods are available.
     #
-    # = USAGE
+    # @example
     #  seq_region = SeqRegion.find(1)
     #  puts seq_region.dna.sequence
     class Dna < DBConnection
@@ -683,7 +630,6 @@ module Ensembl
       belongs_to :seq_region
     end
 
-    # = DESCRIPTION
     # The Exon class describes an exon.
     #
     # This class uses ActiveRecord to access data in the Ensembl database.
@@ -694,7 +640,7 @@ module Ensembl
     # to a SeqRegion object and a Slice can be created for objects of this
     # class. See Sliceable and Slice for more information.
     #
-    # = USAGE
+    # @example
     #  seq_region = SeqRegion.find(1)
     #  puts seq_region.exons.length
     class Exon < DBConnection
@@ -719,7 +665,6 @@ module Ensembl
         return self.exon_stable_id.stable_id
       end
 
-      # = DESCRIPTION
       # The Exon#seq method returns the sequence of the exon.
       def seq
         seq_region = nil
@@ -734,7 +679,6 @@ module Ensembl
       end
     end
 
-    # = DESCRIPTION
     # The ExonStableId class provides an interface to the exon_stable_id
     # table. This table contains Ensembl stable IDs for exons.
     #
@@ -742,7 +686,7 @@ module Ensembl
     # See the general documentation of the Ensembl module for
     # more information on what this means and what methods are available.
     #
-    # = USAGE
+    # @example
     #  my_exon = ExonStableId.find_by_stable_id('ENSE00001494622').exon
     class ExonStableId < DBConnection
       set_primary_key 'stable_id'
@@ -750,14 +694,13 @@ module Ensembl
       belongs_to :exon
     end
 
-    # = DESCRIPTION
     # The ExonTranscript class provides the link between exons and transcripts.
     #
     # This class uses ActiveRecord to access data in the Ensembl database.
     # See the general documentation of the Ensembl module for
     # more information on what this means and what methods are available.
     #
-    # = USAGE
+    # @example
     #  link = ExonTranscript.find(1)
     #  puts link.exon.to_yaml
     #  puts link.transcript.to_yaml
@@ -785,7 +728,6 @@ module Ensembl
       belongs_to :protein_align_feature, :class_name => "ProteinAlignFeature", :foreign_key => 'feature_id'
     end
 
-    # = DESCRIPTION
     # The SimpleFeature class describes simple features that have positions
     # on a SeqRegion.
     #
@@ -797,7 +739,7 @@ module Ensembl
     # to a SeqRegion object and a Slice can be created for objects of this
     # class. See Sliceable and Slice for more information.
     #
-    # = USAGE
+    # @example
     #  simple_feature = SimpleFeature.find(123)
     #  puts simple_feature.analysis.logic_name
     class SimpleFeature < DBConnection
@@ -809,7 +751,6 @@ module Ensembl
       belongs_to :analysis
     end
 
-    # = DESCRIPTION
     # The DensityFeature class provides an interface to the density_feature
     # table.
     #
@@ -821,7 +762,7 @@ module Ensembl
     # to a SeqRegion object and a Slice can be created for objects of this
     # class. See Sliceable and Slice for more information.
     #
-    # = USAGE
+    # @example
     #  density_feature = DensityFeature.find(2716384)
     #  puts density_feature.to_yaml
     class DensityFeature < DBConnection
@@ -831,7 +772,6 @@ module Ensembl
       belongs_to :seq_region
     end
 
-    # = DESCRIPTION
     # The DensityType class provides an interface to the density_type
     # table.
     #
@@ -850,7 +790,6 @@ module Ensembl
       belongs_to :analysis
     end
 
-    # = DESCRIPTION
     # The Marker class provides an interface to the marker
     # table. This table contains primer sequences and PCR product lengths.
     #
@@ -858,7 +797,7 @@ module Ensembl
     # See the general documentation of the Ensembl module for
     # more information on what this means and what methods are available.
     #
-    # = USAGE
+    # @example
     #  marker = Marker.find(52194)
     #  puts marker.left_primer
     #  puts marker.right_primer
@@ -874,23 +813,19 @@ module Ensembl
         nil
       end
 
-      # = DESCRIPTION
       # The Marker#name method returns a comma-separated list of synonyms of
       # this marker
       #
-      # = USAGE
+      # @example
       #  marker = Marker.find(1)
       #  puts marker.name    --> 58017,D29149
       def name
       	self.marker_synonyms.collect{|ms| ms.name}.join(',')
       end
 
-      # = DESCRIPTION
       # The Marker#find_by_name class method returns one marker with this name.
       #
-      # ---
-      # *Arguments*:: name
-      # *Returns*:: Marker object or nil
+      # @return [Marker, nil] Marker object or nil
       def self.find_by_name(name)
         all_names = self.find_all_by_name(name)
         if all_names.length == 0
@@ -900,12 +835,10 @@ module Ensembl
         end
       end
 
-      # = DESCRIPTION
       # The Marker#find_all_by_name class method returns all markers with this
       # name. If no marker is found, it returns an empty array.
-      # ---
-      # *Arguments*:: name
-      # *Returns*:: empty array or array of Marker objects
+      # 
+      # @return [Array] Empty array or array of Marker objects
       def self.find_all_by_name(name)
       	marker_synonyms = Ensembl::Core::MarkerSynonym.find_all_by_name(name)
         answers = Array.new
@@ -927,7 +860,6 @@ module Ensembl
       
     end
 
-    # = DESCRIPTION
     # The MarkerSynonym class provides an interface to the marker_synonym
     # table. This table contains names for markers (that are themselves
     # stored in the marker table (so Marker class)).
@@ -936,7 +868,7 @@ module Ensembl
     # See the general documentation of the Ensembl module for
     # more information on what this means and what methods are available.
     #
-    # = USAGE
+    # @example
     #  marker = Marker.find(52194)
     #  puts marker.marker_synonym.source
     #  puts marker.marker_synonym.name
@@ -946,7 +878,6 @@ module Ensembl
       belongs_to :marker
     end
 
-    # = DESCRIPTION
     # The MarkerFeature class provides an interface to the marker_feature
     # table. This table contains mappings of markers to a SeqRegion.
     #
@@ -958,7 +889,7 @@ module Ensembl
     # to a SeqRegion object and a Slice can be created for objects of this
     # class. See Sliceable and Slice for more information.
     #
-    # = USAGE
+    # @example
     #  marker = Marker.find(52194)
     #  puts marker.marker_feature.seq_region_start.to_s
     #  puts marker.marker_feature.seq_region_end.to_s
@@ -971,7 +902,6 @@ module Ensembl
       belongs_to :seq_region
     end
 
-    # = DESCRIPTION
     # The MiscFeature class provides an interface to the misc_feature
     # table. The actual type of feature is stored in the MiscSet class.
     #
@@ -983,7 +913,7 @@ module Ensembl
     # to a SeqRegion object and a Slice can be created for objects of this
     # class. See Sliceable and Slice for more information.
     #
-    # = USAGE
+    # @example
     #  #TODO
     class MiscFeature < DBConnection
       include Sliceable
@@ -1015,7 +945,6 @@ module Ensembl
     end
 
 
-    # = DESCRIPTION
     # The MiscAttrib class provides an interface to the misc_attrib
     # table. It is the link between MiscFeature and AttribType.
     #
@@ -1023,7 +952,7 @@ module Ensembl
     # See the general documentation of the Ensembl module for
     # more information on what this means and what methods are available.
     #
-    # = USAGE
+    # @example
     #  marker = Marker.find(52194)
     #  puts marker.marker_feature.seq_region_start.to_s
     #  puts marker.marker_feature.seq_region_end.to_s
@@ -1038,7 +967,6 @@ module Ensembl
       end
     end
 
-    # = DESCRIPTION
     # The MiscSet class provides an interface to the misc_set
     # table. This table contains the sets to which MiscFeature objects
     # belong.
@@ -1047,7 +975,7 @@ module Ensembl
     # See the general documentation of the Ensembl module for
     # more information on what this means and what methods are available.
     #
-    # = USAGE
+    # @example
     #  feature_set = MiscFeature.find(1)
     #  puts feature_set.features.length.to_s
     class MiscSet < DBConnection
@@ -1057,7 +985,6 @@ module Ensembl
       has_many :misc_features, :through => :misc_feature_misc_set
     end
 
-    # = DESCRIPTION
     # The MiscFeatureMiscSet class provides an interface to the
     # misc_feature_misc_set table. This table links MiscFeature objects to
     # their MiscSet.
@@ -1066,7 +993,7 @@ module Ensembl
     # See the general documentation of the Ensembl module for
     # more information on what this means and what methods are available.
     #
-    # = USAGE
+    # @example
     #  # TODO
     class MiscFeatureMiscSet < DBConnection
       set_primary_key nil
@@ -1075,7 +1002,6 @@ module Ensembl
       belongs_to :misc_set
     end
 
-    # = DESCRIPTION
     # The Gene class provides an interface to the gene
     # table. This table contains mappings of genes to a SeqRegion.
     #
@@ -1087,7 +1013,7 @@ module Ensembl
     # to a SeqRegion object and a Slice can be created for objects of this
     # class. See Sliceable and Slice for more information.
     #
-    # = USAGE
+    # @example
     #  puts Gene.find_by_biotype('protein_coding').length
     class Gene < DBConnection
       include Sliceable
@@ -1109,7 +1035,6 @@ module Ensembl
 
       alias attribs gene_attribs
 
-      # = DESCRIPTION
       # The Gene#stable_id method returns the stable_id of the gene (i.e. the
       # ENSG id).
       def stable_id
@@ -1117,7 +1042,6 @@ module Ensembl
       	
       end
 
-      # = DESCRIPTION
       # The Gene#display_label method returns the default name of the gene.
       def display_label
         return Xref.find(self.display_xref_id).display_label
@@ -1126,7 +1050,6 @@ module Ensembl
       alias :label :display_label
       alias :name :display_label
 
-      # = DESCRIPTION
       # The Gene#find_all_by_name class method searches the Xrefs for that name
       # and returns an array of the corresponding Gene objects. If the name is
       # not found, it returns an empty array.
@@ -1140,7 +1063,6 @@ module Ensembl
       	return answer
       end
       
-      # = DESCRIPTION
       # The Gene#find_by_name class method searches the Xrefs for that name
       # and returns one Gene objects (even if there should be more). If the name is
       # not found, it returns nil.
@@ -1153,7 +1075,6 @@ module Ensembl
         end
       end
       
-      # = DESCRIPTION
       # The Gene#find_by_stable_id class method fetches a Gene object based on
       # its stable ID (i.e. the "ENSG" accession number). If the name is
       # not found, it returns nil.
@@ -1166,7 +1087,6 @@ module Ensembl
         end
       end
       
-      # = DESCRIPTION
       # The Gene#all_xrefs method is a convenience method in that it combines
       # three methods into one. It collects all xrefs for the gene itself, plus
       # all xrefs for all transcripts for the gene, and all xrefs for all
@@ -1184,14 +1104,12 @@ module Ensembl
         return answer
       end
       
-      # = DESCRIPTION
       # The Gene#go_terms method returns all GO terms associated with a gene.
       def go_terms
         go_db_id = ExternalDb.find_by_db_name('GO').id
         return self.all_xrefs.select{|x| x.external_db_id == go_db_id}.collect{|x| x.dbprimary_acc}.uniq
       end
       
-      # = DESCRIPTION
       # The Gene#hgnc returns the HGNC symbol for the gene.
       def hgnc
         hgnc_db_id = ExternalDb.find_by_db_name('HGNC_curated_gene').id
@@ -1202,7 +1120,6 @@ module Ensembl
 
     end
     
-    # = DESCRIPTION
     # The Gene#canonical_transcript returns the longest transcript for that gene.
     #
     def canonical_transcript
@@ -1210,7 +1127,6 @@ module Ensembl
      return ct[0]
     end
 
-    # = DESCRIPTION
     # The GeneStableId class provides an interface to the gene_stable_id
     # table. This table contains Ensembl stable IDs for genes.
     #
@@ -1218,7 +1134,7 @@ module Ensembl
     # See the general documentation of the Ensembl module for
     # more information on what this means and what methods are available.
     #
-    # = USAGE
+    # @example
     #  my_gene = GeneStableId.find_by_stable_id('ENSBTAG00000011670').gene
     class GeneStableId < DBConnection
       set_primary_key 'stable_id'
@@ -1226,7 +1142,6 @@ module Ensembl
       belongs_to :gene
     end
 
-    # = DESCRIPTION
     # The MarkerMapLocation class provides an interface to the
     # marker_map_location table. This table contains mappings of
     # MarkerSynonym objects to a chromosome, and basically just stores
@@ -1236,7 +1151,7 @@ module Ensembl
     # See the general documentation of the Ensembl module for
     # more information on what this means and what methods are available.
     #
-    # = USAGE
+    # @example
     #  marker_synonym = MarkerSynonym.find_by_name('CYP19A1_(5)')
     #  marker_synonym.marker_map_locations.each do |mapping|
     #	 puts mapping.chromosome_name + "\t" + mapping.position.to_s
@@ -1249,7 +1164,6 @@ module Ensembl
       
     end
 
-    # = DESCRIPTION
     # The Map class provides an interface to the map
     # table. This table contains genetic maps.
     #
@@ -1257,7 +1171,7 @@ module Ensembl
     # See the general documentation of the Ensembl module for
     # more information on what this means and what methods are available.
     #
-    # = USAGE
+    # @example
     #  map = Map.find_by_name('MARC')
     #  puts map.markers.length.to_s
     class Map < DBConnection
@@ -1271,7 +1185,6 @@ module Ensembl
       end
     end
 
-    # = DESCRIPTION
     # The RepeatConsensus class provides an interface to the repeat_consensus
     # table. This table contains consensus sequences for repeats.
     #
@@ -1279,7 +1192,7 @@ module Ensembl
     # See the general documentation of the Ensembl module for
     # more information on what this means and what methods are available.
     #
-    # = USAGE
+    # @example
     #  repeat = RepeatFeature.find(29)
     #  puts repeat.repeat_consensus.repeat_name + "\t" + repeat.repeat_consensus.repeat_consensus
     class RepeatConsensus < DBConnection
@@ -1288,7 +1201,6 @@ module Ensembl
       has_many :repeat_features
     end
 
-    # = DESCRIPTION
     # The RepeatFeature class provides an interface to the repeat_feature
     # table. This table contains mappings of repeats to a SeqRegion.
     #
@@ -1300,7 +1212,7 @@ module Ensembl
     # to a SeqRegion object and a Slice can be created for objects of this
     # class. See Sliceable and Slice for more information.
     #
-    # = USAGE
+    # @example
     #  repeat_feature = RepeatFeature.find(29)
     #  puts repeat_feature.seq_region_start.to_s
     class RepeatFeature < DBConnection
@@ -1312,7 +1224,6 @@ module Ensembl
       belongs_to :seq_region
     end
 
-    # = DESCRIPTION
     # The SeqRegionAttrib class provides an interface to the seq_region_attrib
     # table. This table contains attribute values for SeqRegion objects
     #
@@ -1320,7 +1231,7 @@ module Ensembl
     # See the general documentation of the Ensembl module for
     # more information on what this means and what methods are available.
     #
-    # = USAGE
+    # @example
     #  chr4 = SeqRegion.find_by_name('4')
     #  chr4.seq_region_attribs.each do |attrib|
     #	 puts attrib.attrib_type.name + "\t" + attrib.value.to_s
@@ -1332,7 +1243,6 @@ module Ensembl
       belongs_to :attrib_type
     end
 
-    # = DESCRIPTION
     # The GeneAttrib class provides an interface to the gene_attrib
     # table. This table contains attribute values for Gene objects
     #
@@ -1340,7 +1250,7 @@ module Ensembl
     # See the general documentation of the Ensembl module for
     # more information on what this means and what methods are available.
     #
-    # = USAGE
+    # @example
     #  #TODO
     class GeneAttrib < DBConnection
       set_primary_key nil
@@ -1349,7 +1259,6 @@ module Ensembl
       belongs_to :attrib_type
     end
 
-    # = DESCRIPTION
     # The AttribType class provides an interface to the attrib_type
     # table. This table contains the types that attributes can belong to for
     # SeqRegion, Gene and Transcript.
@@ -1358,7 +1267,7 @@ module Ensembl
     # See the general documentation of the Ensembl module for
     # more information on what this means and what methods are available.
     #
-    # = USAGE
+    # @example
     #  #TODO
     class AttribType < DBConnection
       set_primary_key 'attrib_type_id'
@@ -1373,7 +1282,6 @@ module Ensembl
       has_many :transcripts, :through => :transcript_attrib
     end
 
-    # = DESCRIPTION
     # The Transcript class provides an interface to the transcript_stable_id
     # table. This table contains the Ensembl stable IDs for Transcript
     # objects.
@@ -1382,7 +1290,7 @@ module Ensembl
     # See the general documentation of the Ensembl module for
     # more information on what this means and what methods are available.
     #
-    # = USAGE
+    # @example
     #  transcript_stable_id = TranscriptStableId.find_by_stable_id('ENSBTAT00000015494')
     #  puts transcript_stable_id.transcript.to_yaml
     class TranscriptStableId < DBConnection
@@ -1391,7 +1299,6 @@ module Ensembl
       belongs_to :transcript
     end
 
-    # = DESCRIPTION
     # The TranscriptAttrib class provides an interface to the transcript_attrib
     # table. This table contains the attributes for Transcript objects.
     #
@@ -1399,7 +1306,7 @@ module Ensembl
     # See the general documentation of the Ensembl module for
     # more information on what this means and what methods are available.
     #
-    # = USAGE
+    # @example
     #  transcript = Transcript.find(32495)
     #  transcript.transcript_attribs.each do |attr|
     #	 puts attr.attrib_type.name + "\t" + attr.value
@@ -1411,7 +1318,6 @@ module Ensembl
       belongs_to :attrib_type
     end
 
-    # = DESCRIPTION
     # The DnaAlignFeature class provides an interface to the
     # dna_align_feature table. This table contains sequence similarity
     # mappings against a SeqRegion.
@@ -1424,7 +1330,7 @@ module Ensembl
     # to a SeqRegion object and a Slice can be created for objects of this
     # class. See Sliceable and Slice for more information.
     #
-    # = USAGE
+    # @example
     #  unigene_scan = Analysis.find_by_logic_name('Unigene')
     #  unigene_scan.dna_align_features.each do |hit|
     #	 puts hit.seq_region.name + "\t" + hit.hit_name + "\t" + hit.cigar_line
@@ -1441,7 +1347,6 @@ module Ensembl
       has_many :protein_supporting_features
     end
 
-    # = DESCRIPTION
     # The Translation class provides an interface to the
     # translation table. This table contains the translation start and
     # stop positions and exons for a given Transcript
@@ -1450,7 +1355,7 @@ module Ensembl
     # See the general documentation of the Ensembl module for
     # more information on what this means and what methods are available.
     #
-    # = USAGE
+    # @example
     #  #TODO
     class Translation < DBConnection
       set_primary_key 'translation_id'
@@ -1472,14 +1377,12 @@ module Ensembl
       alias attribs translation_attribs
       
       # The Translation#stable_id method returns the stable ID of the translation.
-      # ---
-      # *Arguments*:: none
-      # *Returns*:: String
+      # 
+      # @return [String] Ensembl stable ID
       def stable_id
       	return self.translation_stable_id.stable_id
       end
 
-      # = DESCRIPTION
       # The Translation#display_label method returns the default name of the translation.
       def display_label
         return Xref.find(self.display_xref_id).display_label
@@ -1488,7 +1391,6 @@ module Ensembl
       alias :label :display_label
       alias :name :display_label
 
-      # = DESCRIPTION
       # The Translation#find_by_stable_id class method fetches a Translation
       # object based on its stable ID (i.e. the "ENSP" accession number). If the 
       # name is not found, it returns nil.
@@ -1502,7 +1404,6 @@ module Ensembl
       end
     end
 
-    # = DESCRIPTION
     # The TranslationStableId class provides an interface to the
     # translation_stable_id table. This table contains the Ensembl stable IDs
     # for a given Translation.
@@ -1511,7 +1412,7 @@ module Ensembl
     # See the general documentation of the Ensembl module for
     # more information on what this means and what methods are available.
     #
-    # = USAGE
+    # @example
     #  stable_id = TranslationStableId.find_by_name('ENSBTAP00000015494')
     #  puts stable_id.to_yaml
     class TranslationStableId < DBConnection
@@ -1520,7 +1421,6 @@ module Ensembl
       belongs_to :translation
     end
 
-    # = DESCRIPTION
     # The TranslationAttrib class provides an interface to the
     # translation_attrib table. This table contains attribute values for the
     # Translation class.
@@ -1529,7 +1429,7 @@ module Ensembl
     # See the general documentation of the Ensembl module for
     # more information on what this means and what methods are available.
     #
-    # = USAGE
+    # @example
     #  translation = Translation.find(9979)
     #  translation.translation_attribs.each do |attr|
     #	 puts attr.attr_type.name + "\t" + attr.value
@@ -1541,7 +1441,6 @@ module Ensembl
       belongs_to :attrib_type
     end
 
-    # = DESCRIPTION
     # The Xref class provides an interface to the
     # xref table. This table contains external references for objects in the
     # database.
@@ -1550,7 +1449,7 @@ module Ensembl
     # See the general documentation of the Ensembl module for
     # more information on what this means and what methods are available.
     #
-    # = USAGE
+    # @example
     #  gene = Gene.find(1)
     #  gene.xrefs.each do |xref|
     #	   puts xref.display_label + "\t" + xref.description
@@ -1568,7 +1467,6 @@ module Ensembl
       end
     end
 
-    # = DESCRIPTION
     # The ObjectXref class provides the link between gene, transcript and
     # translation objects on the one hand and an xref on the other.
     #
@@ -1576,7 +1474,7 @@ module Ensembl
     # See the general documentation of the Ensembl module for
     # more information on what this means and what methods are available.
     #
-    # = USAGE
+    # @example
     #  gene = Gene.find(1)
     #  gene.object_xrefs.each do |ox|
     #	   puts ox.to_yaml
@@ -1591,7 +1489,6 @@ module Ensembl
       has_one :go_xref
     end
     
-    # = DESCRIPTION
     # The GoXref class provides an interface to the
     # go_xref table. This table contains the evidence codes for those object_refs
     # that are GO terms.
@@ -1605,7 +1502,6 @@ module Ensembl
       belongs_to :xref
     end
 
-    # = DESCRIPTION
     # The ExternalDb class provides an interface to the
     # external_db table. This table contains references to databases to which
     # xrefs can point to
@@ -1614,7 +1510,7 @@ module Ensembl
     # See the general documentation of the Ensembl module for
     # more information on what this means and what methods are available.
     #
-    # = USAGE
+    # @example
     #  embl_db = ExternalDb.find_by_db_name('EMBL')
     #  puts embl_db.xrefs.length.to_s
     class ExternalDb < DBConnection
@@ -1626,7 +1522,6 @@ module Ensembl
         nil
       end
 
-      # = DESCRIPTION
       # The ExternalDb#find_all_by_display_label method returns all external
       # databases that have this label. There should normally be no more than
       # one. If no databases are found with this name, this method returns an
@@ -1641,7 +1536,6 @@ module Ensembl
         return answer
       end
       
-      # = DESCRIPTION
       # The ExternalDb#find_by_display_label method returns a
       # database that has this label. If no databases are found with this name,
       # this method returns nil.
@@ -1658,7 +1552,6 @@ module Ensembl
       
     end
 
-    # = DESCRIPTION
     # The ExternalSynonym class provides an interface to the
     # external_synonym table. This table contains synonyms for Xref objects.
     #
@@ -1670,7 +1563,7 @@ module Ensembl
     # to a SeqRegion object and a Slice can be created for objects of this
     # class. See Sliceable and Slice for more information.
     #
-    # = USAGE
+    # @example
     #  xref = Xref.find(185185)
     #  puts xref.external_synonyms[0].synonyms
     class ExternalSynonym < DBConnection
@@ -1679,7 +1572,6 @@ module Ensembl
       belongs_to :xref
     end
 
-    # = DESCRIPTION
     # The Karyotype class provides an interface to the
     # karyotype table. This table contains <>.
     #
@@ -1691,7 +1583,7 @@ module Ensembl
     # to a SeqRegion object and a Slice can be created for objects of this
     # class. See Sliceable and Slice for more information.
     #
-    # = USAGE
+    # @example
     #  band = Karyotype.find_by_band('p36.32')
     #  puts band.to_yaml
     class Karyotype < DBConnection
@@ -1702,7 +1594,6 @@ module Ensembl
       belongs_to :seq_region
     end
 
-    # = DESCRIPTION
     # The OligoFeature class provides an interface to the
     # oligo_feature table. This table contains mappings of Oligo objects to
     # a SeqRegion.
@@ -1715,7 +1606,7 @@ module Ensembl
     # to a SeqRegion object and a Slice can be created for objects of this
     # class. See Sliceable and Slice for more information.
     #
-    # = USAGE
+    # @example
     #  seq_region = SeqRegion.find_by_name('4')
     #  puts seq_region.oligo_features.length
     class OligoFeature < DBConnection
@@ -1728,7 +1619,6 @@ module Ensembl
       belongs_to :analysis
     end
 
-    # = DESCRIPTION
     # The OligoProbe class provides an interface to the
     # oligo_probe table.
     #
@@ -1736,7 +1626,7 @@ module Ensembl
     # See the general documentation of the Ensembl module for
     # more information on what this means and what methods are available.
     #
-    # = USAGE
+    # @example
     #  probe = OligoProbe.find_by_name('373:434;')
     #  puts probe.probeset + "\t" + probe.oligo_array.name
     class OligoProbe < DBConnection
@@ -1746,7 +1636,6 @@ module Ensembl
       belongs_to :oligo_array
     end
 
-    # = DESCRIPTION
     # The OligoArray class provides an interface to the
     # oligo_array table. This table contains data describing a microarray
     # slide.
@@ -1755,7 +1644,7 @@ module Ensembl
     # See the general documentation of the Ensembl module for
     # more information on what this means and what methods are available.
     #
-    # = USAGE
+    # @example
     #  array = OligoArray.find_by_name_and_type('Bovine','AFFY')
     #  puts array.oligo_probes.length
     class OligoArray < DBConnection
@@ -1764,7 +1653,6 @@ module Ensembl
       has_many :oligo_probes
     end
 
-    # = DESCRIPTION
     # The PredictionExon class provides an interface to the
     # prediction_exon table. This table contains <>.
     #
@@ -1776,7 +1664,7 @@ module Ensembl
     # to a SeqRegion object and a Slice can be created for objects of this
     # class. See Sliceable and Slice for more information.
     #
-    # = USAGE
+    # @example
     #  #TODO
     class PredictionExon < DBConnection
       include Sliceable
@@ -1787,7 +1675,6 @@ module Ensembl
       belongs_to :seq_region
     end
 
-    # = DESCRIPTION
     # The PredictionTranscript class provides an interface to the
     # prediction_transcript table.
     #
@@ -1799,7 +1686,7 @@ module Ensembl
     # to a SeqRegion object and a Slice can be created for objects of this
     # class. See Sliceable and Slice for more information.
     #
-    # = USAGE
+    # @example
     #  predicted_transcript = PredictionTranscript.find_by_display_label('GENSCAN00000000006')
     #  puts predicted_transcript.prediction_exons.length
     class PredictionTranscript < DBConnection
@@ -1812,7 +1699,6 @@ module Ensembl
       belongs_to :analysis
     end
 
-    # = DESCRIPTION
     # The ProteinFeature class provides an interface to the
     # protein_feature table. This table contains mappings of a Translation
     # onto a SeqRegion.
@@ -1825,7 +1711,7 @@ module Ensembl
     # to a SeqRegion object and a Slice can be created for objects of this
     # class. See Sliceable and Slice for more information.
     #
-    # = USAGE
+    # @example
     #  #TODO
     class ProteinFeature < DBConnection
       include Sliceable
@@ -1836,7 +1722,6 @@ module Ensembl
       belongs_to :analysis
     end
 
-    # = DESCRIPTION
     # The ProteinAlignFeature class provides an interface to the
     # protein_align_feature table. This table contains sequence similarity
     # mappings against a SeqRegion.
@@ -1849,7 +1734,7 @@ module Ensembl
     # to a SeqRegion object and a Slice can be created for objects of this
     # class. See Sliceable and Slice for more information.
     #
-    # = USAGE
+    # @example
     #  uniprot_scan = Analysis.find_by_logic_name('Uniprot')
     #  uniprot_scan.protein_align_features.each do |hit|
     #	 puts hit.seq_region.name + "\t" + hit.hit_name + "\t" + hit.cigar_line
@@ -1866,7 +1751,6 @@ module Ensembl
       has_many :transcript_supporting_features
     end
 
-    # = DESCRIPTION
     # The RegulatoryFactor class provides an interface to the
     # regulatory_factor table.
     #
@@ -1874,7 +1758,7 @@ module Ensembl
     # See the general documentation of the Ensembl module for
     # more information on what this means and what methods are available.
     #
-    # = USAGE
+    # @example
     #  factor = RegulatoryFactor.find_by_name('crtHsap8070')
     #  puts factor.to_yaml
     class RegulatoryFactor < DBConnection
@@ -1883,7 +1767,6 @@ module Ensembl
       has_many :regulatory_features
     end
 
-    # = DESCRIPTION
     # The RegulatoryFeature class provides an interface to the
     # regulatory_feature table. This table contains mappings of
     # RegulatoryFactor objects against a SeqRegion.
@@ -1896,7 +1779,7 @@ module Ensembl
     # to a SeqRegion object and a Slice can be created for objects of this
     # class. See Sliceable and Slice for more information.
     #
-    # = USAGE
+    # @example
     #  analysis = Analysis.find_by_logic_name('miRanda')
     #  analysis.regulatory_features.each do |feature|
     #	 puts feature.name + "\t" + feature.regulatory_factor.name

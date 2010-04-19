@@ -4,13 +4,13 @@
 # Copyright::   Copyright (C) 2008 Francesco Strozzi <francesco.strozzi@gmail.com>
 # License::     The Ruby License
 #
+# @author Francesco Strozzi
 
 nil
 module Ensembl
   
   module Variation
     
-    # = DESCRIPTION
     # The Variation class represents single nucleotide polymorhisms (SNP) or variations 
     # and provides information like the names (IDs), the validation status and 
     # the allele information.
@@ -23,16 +23,16 @@ module Ensembl
     # See the general documentation of the Ensembl module for
     # more information on what this means and what methods are available.
     #
-    #= USAGE
-    # v = Variation.find_by_name('rs10111')
-    # v.alleles.each do |a|
-    #  puts a.allele, a.frequency
-    # end
+    # @example
+    #   v = Variation.find_by_name('rs10111')
+    #   v.alleles.each do |a|
+    #     puts a.allele, a.frequency
+    #   end
     #
-    # variations = Variation.fetch_all_by_source('dbSNP') (many records)
-    # variations.each do |v|
-    #   puts v.name
-    # end
+    #   variations = Variation.fetch_all_by_source('dbSNP') # many records
+    #   variations.each do |v|
+    #     puts v.name
+    #   end
     # 
     class Variation < DBConnection
       set_primary_key "variation_id"
@@ -54,7 +54,6 @@ module Ensembl
     end
     
     
-    # = DESCRIPTION
     # The VariationFeature class gives information about the genomic position of 
     # each Variation, including also validation status and consequence type. 
     #
@@ -62,17 +61,17 @@ module Ensembl
     # See the general documentation of the Ensembl module for
     # more information on what this means and what methods are available.
     #
-    #= USAGE
-    # * SLOWER QUERY*
-    # vf = VariationFeature.find_by_variation_name('rs10111')
-    # * FASTER QUERY*
-    # vf = Variation.find_by_name('rs10111').variation_feature
-    #
-    # puts vf.seq_region_start, vf.seq_region_end, vf.allele_string
-    # puts vf.variation.ancestral_allele
-    # genomic_region = vf.fetch_region (returns an Ensembl::Core::Slice)
-    # genomic_region.genes
-    # up_region,down_region = vf.flanking_seq (returns two Ensembl::Core::Slice)
+    # @example
+    #   # SLOWER QUERY
+    #   vf = VariationFeature.find_by_variation_name('rs10111')
+    #   # FASTER QUERY
+    #   vf = Variation.find_by_name('rs10111').variation_feature
+    #   
+    #   puts vf.seq_region_start, vf.seq_region_end, vf.allele_string
+    #   puts vf.variation.ancestral_allele
+    #   genomic_region = vf.fetch_region (returns an Ensembl::Core::Slice)
+    #   genomic_region.genes
+    #   up_region,down_region = vf.flanking_seq (returns two Ensembl::Core::Slice)
     #
     class VariationFeature < DBConnection
       set_primary_key "variation_feature_id"
@@ -82,10 +81,13 @@ module Ensembl
       has_many :transcript_variations
       
       
-      #=DESCRIPTION
       # Based on Perl API 'get_all_Genes' method for Variation class. Get a genomic region
       # starting from the Variation coordinates, expanding the region upstream and
-      # downstream. Default values are -5000 and +5000.
+      # downstream.
+      #
+      # @param [Integer] up Length of upstream flanking region
+      # @param [Integer] down Length of downstream flanking region
+      # @return [Slice] Slice object containing the variation
       def fetch_region(up = 5000, down = 5000)
         sr = core_connection(self.seq_region_id)
         slice = Ensembl::Core::Slice.fetch_by_region(Ensembl::Core::CoordSystem.find(sr.coord_system_id).name,sr.name,self.seq_region_start-up,self.seq_region_end+down)
@@ -125,7 +127,6 @@ module Ensembl
       
     end # VariationFeature
     
-    #= DESCRIPTION
     # The TranscriptVariation class gives information about the position of 
     # a VariationFeature, mapped on an annotated transcript.
     #
@@ -133,11 +134,11 @@ module Ensembl
     # See the general documentation of the Ensembl module for
     # more information on what this means and what methods are available.
     #
-    #= USAGE 
-    # vf = Variation.find_by_name('rs10111').variation_feature
-    # vf.transcript_variations.each do |tv|
-    #   puts tv.peptide_allele_string, tv.transcript.stable_id    
-    # end
+    # @example 
+    #   vf = Variation.find_by_name('rs10111').variation_feature
+    #   vf.transcript_variations.each do |tv|
+    #     puts tv.peptide_allele_string, tv.transcript.stable_id    
+    #   end
     #
     class TranscriptVariation < DBConnection
       set_primary_key "transcript_variation_id"

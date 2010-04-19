@@ -6,10 +6,11 @@
 #                           
 # License::     The Ruby License
 #
+# @author Jan Aerts
+# @author Francesco Strozzi
 module Ensembl
   module Core
     class Slice
-      # = DESCRIPTION
       # The Slice#project method is used to transfer coordinates from one
       # coordinate system to another. Suppose you have a slice on a
       # contig in human (let's say on contig AC000031.6.1.38703) and you
@@ -24,8 +25,7 @@ module Ensembl
       # At the moment, projections can only be done if the two coordinate
       # systems are linked directly in the 'assembly' table.
       #
-      # = USAGE
-      #
+      # @example
       #  # Get a contig slice in cow and project to scaffold level
       #  # (i.e. going from a high rank coord system to a lower rank coord
       #  # system)
@@ -47,11 +47,9 @@ module Ensembl
       #  puts second_bit.class  	    #--> Gap
       #  puts third_bit.display_name	    #--> scaffold:Btau_3.1:Chr4.003.106:1:738311:1
       #
-      # ---
-      # *Arguments*:
-      # * coord_system_name:: name of coordinate system to project
-      #   coordinates to
-      # *Returns*:: an array consisting of Slices and, if necessary, Gaps
+      # @param [String] coord_system_name Name of coordinate system to project 
+      #    coordinates to
+      # @return [Array<Slice, Gap>] Array of Slices and, if necessary, Gaps
       def project(coord_system_name)
         answer = Array.new # an array of slices
         unless Ensembl::SESSION.coord_systems.has_key?(self.seq_region.coord_system_id)

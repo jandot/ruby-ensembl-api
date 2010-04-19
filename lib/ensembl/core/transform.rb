@@ -4,13 +4,13 @@
 # Copyright::   Copyright (C) 2007 Jan Aerts <http://jandot.myopenid.com>
 # License::     The Ruby License
 #
+# @author Jan Aerts
 nil
 module Ensembl
   nil
   module Core
     nil
     module Sliceable
-      # = DESCRIPTION
       # The #transform method is used to transfer coordinates for a feature
       # from one coordinate system to another. It basically creates a clone of
       # the original feature and changes the seq_region, start position, stop
@@ -42,8 +42,7 @@ module Ensembl
       # At the moment, transformations can only be done if the two coordinate
       # systems are linked directly in the 'assembly' table.
       #
-      # = USAGE
-      #
+      # @example
       #  # Get a gene in cow and transform to scaffold level
       #  # (i.e. going from a high rank coord system to a lower rank coord
       #  # system)
@@ -60,11 +59,10 @@ module Ensembl
       #  puts target_gene.seq_region_end    #--> 1982868
       #  puts target_gene.seq_region_strand #--> 1
       #
-      # ---
-      # *Arguments*:
-      # * coord_system_name:: name of coordinate system to transform to
-      #   coordinates to
-      # *Returns*:: nil or an object of the same class as self
+      # @param [String] coord_system_name Name of the coordinate system to
+      #   transform the coordinates to
+      # @return Nil or an object of the same class
+      #   as self
       def transform(coord_system_name)
         #-
         # There are two things I can do:
