@@ -1,0 +1,353 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+  <head>
+    <meta name="Content-Type" content="text/html; charset=utf-8" />
+<title>Class: Ensembl::Core::DBConnection</title>
+<link rel="stylesheet" href="../../css/style.css" type="text/css" media="screen" charset="utf-8" />
+<link rel="stylesheet" href="../../css/common.css" type="text/css" media="screen" charset="utf-8" />
+
+<script type="text/javascript" charset="utf-8">
+  relpath = '../..';
+  if (relpath != '') relpath += '/';
+</script>
+<script type="text/javascript" charset="utf-8" src="../../js/jquery.js"></script>
+<script type="text/javascript" charset="utf-8" src="../../js/app.js"></script>
+
+  </head>
+  <body>
+    <script type="text/javascript" charset="utf-8">
+      if (window.top.frames.main) document.body.className = 'frames';
+    </script>
+    
+    <div id="header">
+      <div id="menu">
+  
+    <a href="../../_index.html">Index (D)</a> &raquo; 
+    <span class='title'><a href="../../Ensembl.html" title="Ensembl (module)">Ensembl</a></span> &raquo; <span class='title'><a href="../Core.html" title="Ensembl::Core (module)">Core</a></span>
+     &raquo; 
+    <span class="title">DBConnection</span>
+  
+  
+  <div class="noframes"><span class="title">(</span><a href="." target="_top">no frames</a><span class="title">)</span></div>
+</div>
+
+      <div id="search">
+  <a id="class_list_link" href="#">Class List</a>
+  <a id="method_list_link" href="#">Method List</a>
+  <a id ="file_list_link" href="#">File List</a>
+</div>
+
+      <div class="clear"></div>
+    </div>
+    
+    <iframe id="search_frame"></iframe>
+    
+    <div id="content"><h1>Class: Ensembl::Core::DBConnection 
+  
+  
+</h1>
+
+<dl class="box">
+  
+    <dt class="r1">Inherits:</dt>
+    <dd class="r1">
+      <span class="inheritName"><a href="../DBRegistry/Base.html" title="Ensembl::DBRegistry::Base (class)">Ensembl::DBRegistry::Base</a></span>
+      
+        <ul class="fullTree">
+          <li>Object</li>
+          
+            <li class="next">ActiveRecord::Base</li>
+          
+            <li class="next"><a href="../DBRegistry/Base.html" title="Ensembl::DBRegistry::Base (class)">Ensembl::DBRegistry::Base</a></li>
+          
+            <li class="next">Ensembl::Core::DBConnection</li>
+          
+        </ul>
+        <a href="#" class="inheritanceTree">show all</a>
+      
+      </dd>
+    
+  
+  
+    
+  
+    
+  
+  
+  
+    <dt class="r2 last">Defined in:</dt>
+    <dd class="r2 last">lib/ensembl/db_connection.rb</dd>
+  
+</dl>
+<div class="clear"></div>
+
+<h2>Overview</h2><div class="docstring">
+  <div class="discussion">
+    <h1>DESCRIPTION</h1>
+<p>
+The Ensembl::Core::DBConnection is the actual connection established with
+the Ensembl server.
+</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+</div><div id="subclasses">
+  <h2>Direct Known Subclasses</h2>
+  <p class="children"><a href="Analysis.html" title="Ensembl::Core::Analysis (class)">Analysis</a>, <a href="AnalysisDescription.html" title="Ensembl::Core::AnalysisDescription (class)">AnalysisDescription</a>, <a href="AssemblyException.html" title="Ensembl::Core::AssemblyException (class)">AssemblyException</a>, <a href="AssemblyLink.html" title="Ensembl::Core::AssemblyLink (class)">AssemblyLink</a>, <a href="AttribType.html" title="Ensembl::Core::AttribType (class)">AttribType</a>, <a href="CoordSystem.html" title="Ensembl::Core::CoordSystem (class)">CoordSystem</a>, <a href="DensityFeature.html" title="Ensembl::Core::DensityFeature (class)">DensityFeature</a>, <a href="DensityType.html" title="Ensembl::Core::DensityType (class)">DensityType</a>, <a href="Dna.html" title="Ensembl::Core::Dna (class)">Dna</a>, <a href="DnaAlignFeature.html" title="Ensembl::Core::DnaAlignFeature (class)">DnaAlignFeature</a>, <a href="Exon.html" title="Ensembl::Core::Exon (class)">Exon</a>, <a href="ExonStableId.html" title="Ensembl::Core::ExonStableId (class)">ExonStableId</a>, <a href="ExonSupportingFeature.html" title="Ensembl::Core::ExonSupportingFeature (class)">ExonSupportingFeature</a>, <a href="ExonTranscript.html" title="Ensembl::Core::ExonTranscript (class)">ExonTranscript</a>, <a href="ExternalDb.html" title="Ensembl::Core::ExternalDb (class)">ExternalDb</a>, <a href="ExternalSynonym.html" title="Ensembl::Core::ExternalSynonym (class)">ExternalSynonym</a>, <a href="Gene.html" title="Ensembl::Core::Gene (class)">Gene</a>, <a href="GeneAttrib.html" title="Ensembl::Core::GeneAttrib (class)">GeneAttrib</a>, <a href="GeneStableId.html" title="Ensembl::Core::GeneStableId (class)">GeneStableId</a>, <a href="GoXref.html" title="Ensembl::Core::GoXref (class)">GoXref</a>, <a href="Karyotype.html" title="Ensembl::Core::Karyotype (class)">Karyotype</a>, <a href="Map.html" title="Ensembl::Core::Map (class)">Map</a>, <a href="Marker.html" title="Ensembl::Core::Marker (class)">Marker</a>, <a href="MarkerFeature.html" title="Ensembl::Core::MarkerFeature (class)">MarkerFeature</a>, <a href="MarkerMapLocation.html" title="Ensembl::Core::MarkerMapLocation (class)">MarkerMapLocation</a>, <a href="MarkerSynonym.html" title="Ensembl::Core::MarkerSynonym (class)">MarkerSynonym</a>, <a href="Meta.html" title="Ensembl::Core::Meta (class)">Meta</a>, <a href="MetaCoord.html" title="Ensembl::Core::MetaCoord (class)">MetaCoord</a>, <a href="MiscAttrib.html" title="Ensembl::Core::MiscAttrib (class)">MiscAttrib</a>, <a href="MiscFeature.html" title="Ensembl::Core::MiscFeature (class)">MiscFeature</a>, <a href="MiscFeatureMiscSet.html" title="Ensembl::Core::MiscFeatureMiscSet (class)">MiscFeatureMiscSet</a>, <a href="MiscSet.html" title="Ensembl::Core::MiscSet (class)">MiscSet</a>, <a href="ObjectXref.html" title="Ensembl::Core::ObjectXref (class)">ObjectXref</a>, <a href="OligoArray.html" title="Ensembl::Core::OligoArray (class)">OligoArray</a>, <a href="OligoFeature.html" title="Ensembl::Core::OligoFeature (class)">OligoFeature</a>, <a href="OligoProbe.html" title="Ensembl::Core::OligoProbe (class)">OligoProbe</a>, <a href="PredictionExon.html" title="Ensembl::Core::PredictionExon (class)">PredictionExon</a>, <a href="PredictionTranscript.html" title="Ensembl::Core::PredictionTranscript (class)">PredictionTranscript</a>, <a href="ProteinAlignFeature.html" title="Ensembl::Core::ProteinAlignFeature (class)">ProteinAlignFeature</a>, <a href="ProteinFeature.html" title="Ensembl::Core::ProteinFeature (class)">ProteinFeature</a>, <a href="RegulatoryFactor.html" title="Ensembl::Core::RegulatoryFactor (class)">RegulatoryFactor</a>, <a href="RegulatoryFeature.html" title="Ensembl::Core::RegulatoryFeature (class)">RegulatoryFeature</a>, <a href="RepeatConsensus.html" title="Ensembl::Core::RepeatConsensus (class)">RepeatConsensus</a>, <a href="RepeatFeature.html" title="Ensembl::Core::RepeatFeature (class)">RepeatFeature</a>, <a href="SeqRegion.html" title="Ensembl::Core::SeqRegion (class)">SeqRegion</a>, <a href="SeqRegionAttrib.html" title="Ensembl::Core::SeqRegionAttrib (class)">SeqRegionAttrib</a>, <a href="SimpleFeature.html" title="Ensembl::Core::SimpleFeature (class)">SimpleFeature</a>, <a href="Transcript.html" title="Ensembl::Core::Transcript (class)">Transcript</a>, <a href="TranscriptAttrib.html" title="Ensembl::Core::TranscriptAttrib (class)">TranscriptAttrib</a>, <a href="TranscriptStableId.html" title="Ensembl::Core::TranscriptStableId (class)">TranscriptStableId</a>, <a href="TranscriptSupportingFeature.html" title="Ensembl::Core::TranscriptSupportingFeature (class)">TranscriptSupportingFeature</a>, <a href="Translation.html" title="Ensembl::Core::Translation (class)">Translation</a>, <a href="TranslationAttrib.html" title="Ensembl::Core::TranslationAttrib (class)">TranslationAttrib</a>, <a href="TranslationStableId.html" title="Ensembl::Core::TranslationStableId (class)">TranslationStableId</a>, <a href="Xref.html" title="Ensembl::Core::Xref (class)">Xref</a></p>
+</div>
+
+
+  
+  
+  
+  
+  
+
+  
+    <h2>Class Method Summary</h2>
+
+    <ul class="summary">
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#connect-class_method" title="connect (class method)">+ (Object) <strong>connect</strong>(species, release = Ensembl::ENSEMBL_RELEASE, args = {}) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'><h1>DESCRIPTION</h1>
+<p>
+The Ensembl::Core::DBConnection#connect method makes the connection to the
+Ensembl core database for a given species.
+</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#ensemblgenomes_connect-class_method" title="ensemblgenomes_connect (class method)">+ (Object) <strong>ensemblgenomes_connect</strong>(species, release = Ensembl::ENSEMBL_RELEASE, args = {}) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'><h1>DESCRIPTION</h1>
+<p>
+Simple wrapper for the normal DBConnection.connect() method.
+</p>
+</div></span>
+  
+</li>
+
+      
+    </ul>
+  
+
+
+  
+  
+  
+  
+  
+  
+  
+  <h3 class="inherited">Methods inherited from <a href="../DBRegistry/Base.html" title="Ensembl::DBRegistry::Base (class)">Ensembl::DBRegistry::Base</a></h3>
+  <p class="inherited"><a href="../DBRegistry/Base.html#get_info-class_method" title="Ensembl::DBRegistry::Base.get_info (method)">get_info</a>, <a href="../DBRegistry/Base.html#get_name_from_db-class_method" title="Ensembl::DBRegistry::Base.get_name_from_db (method)">get_name_from_db</a></p>
+
+  
+
+  <div id="class_method_details" class="method_details_list">
+    <h2>Class Method Details</h2>
+    
+    
+      <div class="method_details first">
+  <p class="signature first" id="connect-class_method">
+  
+    + (<tt>Object</tt>) <strong>connect</strong>(species, release = Ensembl::ENSEMBL_RELEASE, args = {}) 
+  
+
+  
+</p><div class="docstring">
+  <div class="discussion">
+    <h1>DESCRIPTION</h1>
+<p>
+The Ensembl::Core::DBConnection#connect method makes the connection to the
+Ensembl core database for a given species. By default, it connects to
+release 50 for that species. You <em>could</em> use a lower number, but
+some parts of the API might not work, or worse: give the wrong results.
+</p>
+<h1>USAGE</h1>
+<pre class="code">
+ <span class='comment val'># Connect to release 50 of human</span>
+ <span class='Ensembl constant id'>Ensembl</span><span class='colon2 op'>::</span><span class='Core constant id'>Core</span><span class='colon2 op'>::</span><span class='DBConnection constant id'>DBConnection</span><span class='dot token'>.</span><span class='connect identifier id'>connect</span><span class='lparen token'>(</span><span class='string val'>'homo_sapiens'</span><span class='rparen token'>)</span>
+
+ <span class='comment val'># Connect to release 42 of chicken</span>
+ <span class='Ensembl constant id'>Ensembl</span><span class='colon2 op'>::</span><span class='Core constant id'>Core</span><span class='colon2 op'>::</span><span class='DBConnection constant id'>DBConnection</span><span class='dot token'>.</span><span class='connect identifier id'>connect</span><span class='lparen token'>(</span><span class='string val'>'gallus_gallus'</span><span class='rparen token'>)</span>
+</pre>
+<hr size="1"></hr><p>
+<b>Arguments</b>:
+</p>
+<ul>
+<li>species:: species to connect to. Arguments should be in snake_case
+
+</li>
+<li>ensembl_release:: the release of the database to connect to
+
+</li>
+</ul>
+<pre class="code">
+ <span class='lparen token'>(</span><span class='default identifier id'>default</span> <span class='assign token'>=</span> <span class='integer val'>50</span><span class='rparen token'>)</span>
+</pre>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+120
+121
+122
+123
+124
+125
+126
+127
+128
+129
+130
+131
+132
+133
+134
+135
+136
+137
+138
+139
+140
+141
+142
+143
+144
+145
+146</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/ensembl/db_connection.rb', line 120</span>
+
+<span class='def def kw'>def</span> <span class='self self kw'>self</span><span class='dot token'>.</span><span class='connect identifier id'>connect</span><span class='lparen token'>(</span><span class='species identifier id'>species</span><span class='comma token'>,</span> <span class='release identifier id'>release</span> <span class='assign token'>=</span> <span class='Ensembl constant id'>Ensembl</span><span class='colon2 op'>::</span><span class='ENSEMBL_RELEASE constant id'>ENSEMBL_RELEASE</span><span class='comma token'>,</span> <span class='args identifier id'>args</span> <span class='assign token'>=</span> <span class='lbrace token'>{</span><span class='rbrace token'>}</span><span class='rparen token'>)</span>
+  <span class='Ensembl constant id'>Ensembl</span><span class='colon2 op'>::</span><span class='SESSION constant id'>SESSION</span><span class='dot token'>.</span><span class='reset identifier id'>reset</span>
+  <span class='db_name identifier id'>db_name</span> <span class='assign token'>=</span> <span class='nil nil kw'>nil</span>
+  <span class='comment val'># if the connection is established with Ensembl Genomes, set the default port and host</span>
+  <span class='if if kw'>if</span> <span class='args identifier id'>args</span><span class='lbrack token'>[</span><span class='symbol val'>:ensembl_genomes</span><span class='rbrack token'>]</span>
+    <span class='args identifier id'>args</span><span class='lbrack token'>[</span><span class='symbol val'>:port</span><span class='rbrack token'>]</span> <span class='assign token'>=</span> <span class='EG_PORT constant id'>EG_PORT</span>
+    <span class='args identifier id'>args</span><span class='lbrack token'>[</span><span class='symbol val'>:host</span><span class='rbrack token'>]</span> <span class='assign token'>=</span> <span class='EG_HOST constant id'>EG_HOST</span>
+  <span class='end end kw'>end</span>    
+  <span class='if if kw'>if</span> <span class='args identifier id'>args</span><span class='lbrack token'>[</span><span class='symbol val'>:port</span><span class='rbrack token'>]</span><span class='dot token'>.</span><span class='nil? fid id'>nil?</span> <span class='then then kw'>then</span>
+    <span class='args identifier id'>args</span><span class='lbrack token'>[</span><span class='symbol val'>:port</span><span class='rbrack token'>]</span> <span class='assign token'>=</span> <span class='lparen token'>(</span> <span class='release identifier id'>release</span> <span class='gt op'>&gt;</span> <span class='integer val'>47</span> <span class='rparen token'>)</span> <span class='question op'>?</span> <span class='integer val'>5306</span> <span class='colon op'>:</span> <span class='integer val'>3306</span>
+  <span class='end end kw'>end</span>
+  <span class='if if kw'>if</span> <span class='args identifier id'>args</span><span class='lbrack token'>[</span><span class='symbol val'>:database</span><span class='rbrack token'>]</span>
+    <span class='db_name identifier id'>db_name</span> <span class='assign token'>=</span> <span class='args identifier id'>args</span><span class='lbrack token'>[</span><span class='symbol val'>:database</span><span class='rbrack token'>]</span>
+  <span class='else else kw'>else</span> 
+    <span class='db_name identifier id'>db_name</span> <span class='assign token'>=</span> <span class='self self kw'>self</span><span class='dot token'>.</span><span class='get_name_from_db identifier id'>get_name_from_db</span><span class='lparen token'>(</span><span class='string val'>'core'</span><span class='comma token'>,</span><span class='species identifier id'>species</span><span class='comma token'>,</span><span class='release identifier id'>release</span><span class='comma token'>,</span><span class='args identifier id'>args</span><span class='rparen token'>)</span> <span class='comment val'># try to find the corresponding core database</span>
+  <span class='end end kw'>end</span> 
+  <span class='establish_connection identifier id'>establish_connection</span><span class='lparen token'>(</span>
+                      <span class='symbol val'>:adapter</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='args identifier id'>args</span><span class='lbrack token'>[</span><span class='symbol val'>:adapter</span><span class='rbrack token'>]</span> <span class='orop op'>||</span> <span class='Ensembl constant id'>Ensembl</span><span class='colon2 op'>::</span><span class='DB_ADAPTER constant id'>DB_ADAPTER</span><span class='comma token'>,</span>
+                      <span class='symbol val'>:host</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='args identifier id'>args</span><span class='lbrack token'>[</span><span class='symbol val'>:host</span><span class='rbrack token'>]</span> <span class='orop op'>||</span> <span class='Ensembl constant id'>Ensembl</span><span class='colon2 op'>::</span><span class='DB_HOST constant id'>DB_HOST</span><span class='comma token'>,</span>
+                      <span class='symbol val'>:database</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='db_name identifier id'>db_name</span><span class='comma token'>,</span>
+                      <span class='symbol val'>:username</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='args identifier id'>args</span><span class='lbrack token'>[</span><span class='symbol val'>:username</span><span class='rbrack token'>]</span> <span class='orop op'>||</span> <span class='Ensembl constant id'>Ensembl</span><span class='colon2 op'>::</span><span class='DB_USERNAME constant id'>DB_USERNAME</span><span class='comma token'>,</span>
+                      <span class='symbol val'>:password</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='args identifier id'>args</span><span class='lbrack token'>[</span><span class='symbol val'>:password</span><span class='rbrack token'>]</span> <span class='orop op'>||</span> <span class='Ensembl constant id'>Ensembl</span><span class='colon2 op'>::</span><span class='DB_PASSWORD constant id'>DB_PASSWORD</span><span class='comma token'>,</span>
+                      <span class='symbol val'>:port</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='args identifier id'>args</span><span class='lbrack token'>[</span><span class='symbol val'>:port</span><span class='rbrack token'>]</span>
+                    <span class='rparen token'>)</span>
+  
+  <span class='self self kw'>self</span><span class='dot token'>.</span><span class='retrieve_connection identifier id'>retrieve_connection</span> <span class='comment val'># Checkout that the connection is working       </span>
+<span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <p class="signature " id="ensemblgenomes_connect-class_method">
+  
+    + (<tt>Object</tt>) <strong>ensemblgenomes_connect</strong>(species, release = Ensembl::ENSEMBL_RELEASE, args = {}) 
+  
+
+  
+</p><div class="docstring">
+  <div class="discussion">
+    <h1>DESCRIPTION</h1>
+<p>
+Simple wrapper for the normal DBConnection.connect() method. This is used
+to set the connection directly with the Ensembl Genomes database host
+</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+153
+154
+155
+156</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/ensembl/db_connection.rb', line 153</span>
+
+<span class='def def kw'>def</span> <span class='self self kw'>self</span><span class='dot token'>.</span><span class='ensemblgenomes_connect identifier id'>ensemblgenomes_connect</span><span class='lparen token'>(</span><span class='species identifier id'>species</span><span class='comma token'>,</span> <span class='release identifier id'>release</span> <span class='assign token'>=</span> <span class='Ensembl constant id'>Ensembl</span><span class='colon2 op'>::</span><span class='ENSEMBL_RELEASE constant id'>ENSEMBL_RELEASE</span><span class='comma token'>,</span> <span class='args identifier id'>args</span> <span class='assign token'>=</span> <span class='lbrace token'>{</span><span class='rbrace token'>}</span><span class='rparen token'>)</span>
+  <span class='args identifier id'>args</span><span class='lbrack token'>[</span><span class='symbol val'>:ensembl_genomes</span><span class='rbrack token'>]</span> <span class='assign token'>=</span> <span class='true true kw'>true</span>
+  <span class='self self kw'>self</span><span class='dot token'>.</span><span class='connect identifier id'>connect</span><span class='lparen token'>(</span><span class='species identifier id'>species</span><span class='comma token'>,</span><span class='release identifier id'>release</span><span class='comma token'>,</span><span class='args identifier id'>args</span><span class='rparen token'>)</span>
+<span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+  </div>
+
+</div>
+    
+    <div id="footer">
+  Generated on Mon Apr 19 20:33:35 2010 by 
+  <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool">yard</a>
+  0.5.4 (ruby-1.8.6).
+</div>
+
+  </body>
+</html>

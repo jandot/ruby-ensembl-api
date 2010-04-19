@@ -1,0 +1,533 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+  <head>
+    <meta name="Content-Type" content="text/html; charset=utf-8" />
+<title>Class: Ensembl::Core::Collection</title>
+<link rel="stylesheet" href="../../css/style.css" type="text/css" media="screen" charset="utf-8" />
+<link rel="stylesheet" href="../../css/common.css" type="text/css" media="screen" charset="utf-8" />
+
+<script type="text/javascript" charset="utf-8">
+  relpath = '../..';
+  if (relpath != '') relpath += '/';
+</script>
+<script type="text/javascript" charset="utf-8" src="../../js/jquery.js"></script>
+<script type="text/javascript" charset="utf-8" src="../../js/app.js"></script>
+
+  </head>
+  <body>
+    <script type="text/javascript" charset="utf-8">
+      if (window.top.frames.main) document.body.className = 'frames';
+    </script>
+    
+    <div id="header">
+      <div id="menu">
+  
+    <a href="../../_index.html">Index (C)</a> &raquo; 
+    <span class='title'><a href="../../Ensembl.html" title="Ensembl (module)">Ensembl</a></span> &raquo; <span class='title'><a href="../Core.html" title="Ensembl::Core (module)">Core</a></span>
+     &raquo; 
+    <span class="title">Collection</span>
+  
+  
+  <div class="noframes"><span class="title">(</span><a href="." target="_top">no frames</a><span class="title">)</span></div>
+</div>
+
+      <div id="search">
+  <a id="class_list_link" href="#">Class List</a>
+  <a id="method_list_link" href="#">Method List</a>
+  <a id ="file_list_link" href="#">File List</a>
+</div>
+
+      <div class="clear"></div>
+    </div>
+    
+    <iframe id="search_frame"></iframe>
+    
+    <div id="content"><h1>Class: Ensembl::Core::Collection 
+  
+  
+</h1>
+
+<dl class="box">
+  
+    <dt class="r1">Inherits:</dt>
+    <dd class="r1">
+      <span class="inheritName">Object</span>
+      
+        <ul class="fullTree">
+          <li>Object</li>
+          
+            <li class="next">Ensembl::Core::Collection</li>
+          
+        </ul>
+        <a href="#" class="inheritanceTree">show all</a>
+      
+      </dd>
+    
+  
+  
+    
+  
+    
+  
+  
+  
+    <dt class="r2 last">Defined in:</dt>
+    <dd class="r2 last">lib/ensembl/core/collection.rb</dd>
+  
+</dl>
+<div class="clear"></div>
+
+<h2>Overview</h2><div class="docstring">
+  <div class="discussion">
+    <p>
+Class to describe and handle multi-species databases
+</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+</div>
+
+
+  
+    <h2>Class Method Summary</h2>
+
+    <ul class="summary">
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#check-class_method" title="check (class method)">+ (Boolean) <strong>check</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'><p>
+Method to check if the current core database is a multi-species db.
+</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#find_all_coord_by_table_name-class_method" title="find_all_coord_by_table_name (class method)">+ (Array&lt;Integer&gt;) <strong>find_all_coord_by_table_name</strong>(table_name, species_id) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'><p>
+Returns an array with all the coord_system_id associated with a particular
+species and a table_name.
+</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#get_species_id-class_method" title="get_species_id (class method)">+ (Integer) <strong>get_species_id</strong>(species) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'><p>
+Returns the species_id of a particular species present in the database.
+</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#species-class_method" title="species (class method)">+ (Array&lt;String&gt;) <strong>species</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'><p>
+Returns an array with all the Species present in a collection database.
+</p>
+</div></span>
+  
+</li>
+
+      
+    </ul>
+  
+
+
+
+  <div id="class_method_details" class="method_details_list">
+    <h2>Class Method Details</h2>
+    
+    
+      <div class="method_details first">
+  <p class="signature first" id="check-class_method">
+  
+    + (<tt>Boolean</tt>) <strong>check</strong> 
+  
+
+  
+</p><div class="docstring">
+  <div class="discussion">
+    <p>
+Method to check if the current core database is a multi-species db. Returns
+a boolean value.
+</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  <h3>Returns:</h3>
+<ul class="return">
+  
+    <li>
+      
+        <span class='type'>(<tt>Boolean</tt>)</span>
+      
+      
+      
+      
+        &mdash;
+        <div class='inline'><p>
+True if current db is multi-species db; otherwise false.
+</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+20
+21
+22
+23
+24
+25
+26</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/ensembl/core/collection.rb', line 20</span>
+
+<span class='def def kw'>def</span> <span class='self self kw'>self</span><span class='dot token'>.</span><span class='check identifier id'>check</span><span class='lparen token'>(</span><span class='rparen token'>)</span>
+  <span class='host identifier id'>host</span><span class='comma token'>,</span><span class='user identifier id'>user</span><span class='comma token'>,</span><span class='password identifier id'>password</span><span class='comma token'>,</span><span class='db_name identifier id'>db_name</span><span class='comma token'>,</span><span class='port identifier id'>port</span> <span class='assign token'>=</span> <span class='Ensembl constant id'>Ensembl</span><span class='colon2 op'>::</span><span class='Core constant id'>Core</span><span class='colon2 op'>::</span><span class='DBConnection constant id'>DBConnection</span><span class='dot token'>.</span><span class='get_info identifier id'>get_info</span>
+  <span class='if if kw'>if</span> <span class='db_name identifier id'>db_name</span> <span class='match op'>=~</span><span class='regexp val'>/(\w+)_collection_core_.*/</span> 
+    <span class='return return kw'>return</span> <span class='true true kw'>true</span>
+  <span class='end end kw'>end</span>
+  <span class='return return kw'>return</span> <span class='false false kw'>false</span>
+<span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <p class="signature " id="find_all_coord_by_table_name-class_method">
+  
+    + (<tt>Array&lt;Integer&gt;</tt>) <strong>find_all_coord_by_table_name</strong>(table_name, species_id) 
+  
+
+  
+</p><div class="docstring">
+  <div class="discussion">
+    <p>
+Returns an array with all the coord_system_id associated with a particular
+species and a table_name. Used inside Slice#method_missing to filter the
+coord_system_id using a particular species_id.
+</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  <h3>Parameters:</h3>
+<ul class="param">
+  
+    <li>
+      
+        <span class='type'>(<tt>String</tt>)</span>
+      
+      
+        <span class='name'>table_name</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'><p>
+Table name
+</p>
+</div>
+      
+    </li>
+  
+    <li>
+      
+        <span class='type'>(<tt>Integer</tt>)</span>
+      
+      
+        <span class='name'>species_id</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'><p>
+ID of species in the database
+</p>
+</div>
+      
+    </li>
+  
+</ul>
+<h3>Returns:</h3>
+<ul class="return">
+  
+    <li>
+      
+        <span class='type'>(<tt>Array&lt;Integer&gt;</tt>)</span>
+      
+      
+      
+      
+        &mdash;
+        <div class='inline'><p>
+Array containing coord_system IDs.
+</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+55
+56
+57
+58</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/ensembl/core/collection.rb', line 55</span>
+
+<span class='def def kw'>def</span> <span class='self self kw'>self</span><span class='dot token'>.</span><span class='find_all_coord_by_table_name identifier id'>find_all_coord_by_table_name</span><span class='lparen token'>(</span><span class='table_name identifier id'>table_name</span><span class='comma token'>,</span><span class='species_id identifier id'>species_id</span><span class='rparen token'>)</span>
+  <span class='all_ids identifier id'>all_ids</span> <span class='assign token'>=</span> <span class='CoordSystem constant id'>CoordSystem</span><span class='dot token'>.</span><span class='find_all_by_species_id identifier id'>find_all_by_species_id</span><span class='lparen token'>(</span><span class='species_id identifier id'>species_id</span><span class='rparen token'>)</span>
+  <span class='return return kw'>return</span> <span class='MetaCoord constant id'>MetaCoord</span><span class='dot token'>.</span><span class='find_all_by_coord_system_id_and_table_name identifier id'>find_all_by_coord_system_id_and_table_name</span><span class='lparen token'>(</span><span class='all_ids identifier id'>all_ids</span><span class='comma token'>,</span><span class='table_name identifier id'>table_name</span><span class='rparen token'>)</span>
+<span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <p class="signature " id="get_species_id-class_method">
+  
+    + (<tt>Integer</tt>) <strong>get_species_id</strong>(species) 
+  
+
+  
+</p><div class="docstring">
+  <div class="discussion">
+    <p>
+Returns the species_id of a particular species present in the database.
+</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  <h3>Parameters:</h3>
+<ul class="param">
+  
+    <li>
+      
+        <span class='type'>(<tt>String</tt>)</span>
+      
+      
+        <span class='name'>species</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'><p>
+Name of species
+</p>
+</div>
+      
+    </li>
+  
+</ul>
+<h3>Returns:</h3>
+<ul class="return">
+  
+    <li>
+      
+        <span class='type'>(<tt>Integer</tt>)</span>
+      
+      
+      
+      
+        &mdash;
+        <div class='inline'><p>
+Species ID in the database.
+</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+39
+40
+41
+42
+43
+44
+45
+46
+47</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/ensembl/core/collection.rb', line 39</span>
+
+<span class='def def kw'>def</span> <span class='self self kw'>self</span><span class='dot token'>.</span><span class='get_species_id identifier id'>get_species_id</span><span class='lparen token'>(</span><span class='species identifier id'>species</span><span class='rparen token'>)</span>
+  <span class='species identifier id'>species</span> <span class='assign token'>=</span> <span class='species identifier id'>species</span><span class='dot token'>.</span><span class='downcase identifier id'>downcase</span>
+  <span class='meta identifier id'>meta</span> <span class='assign token'>=</span> <span class='Meta constant id'>Meta</span><span class='dot token'>.</span><span class='find_by_sql identifier id'>find_by_sql</span><span class='lparen token'>(</span><span class='dstring node'>&quot;SELECT * FROM meta WHERE LOWER(meta_value) = '#{species}'&quot;</span><span class='rparen token'>)</span><span class='lbrack token'>[</span><span class='integer val'>0</span><span class='rbrack token'>]</span>
+  <span class='if if kw'>if</span> <span class='meta identifier id'>meta</span><span class='dot token'>.</span><span class='nil? fid id'>nil?</span>
+    <span class='return return kw'>return</span> <span class='nil nil kw'>nil</span>
+  <span class='else else kw'>else</span>
+    <span class='return return kw'>return</span> <span class='meta identifier id'>meta</span><span class='dot token'>.</span><span class='species_id identifier id'>species_id</span>
+  <span class='end end kw'>end</span>
+<span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <p class="signature " id="species-class_method">
+  
+    + (<tt>Array&lt;String&gt;</tt>) <strong>species</strong> 
+  
+
+  
+</p><div class="docstring">
+  <div class="discussion">
+    <p>
+Returns an array with all the Species present in a collection database.
+</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  <h3>Returns:</h3>
+<ul class="return">
+  
+    <li>
+      
+        <span class='type'>(<tt>Array&lt;String&gt;</tt>)</span>
+      
+      
+      
+      
+        &mdash;
+        <div class='inline'><p>
+Array containing species names in colleciton
+</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+31
+32
+33</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/ensembl/core/collection.rb', line 31</span>
+
+<span class='def def kw'>def</span> <span class='self self kw'>self</span><span class='dot token'>.</span><span class='species identifier id'>species</span><span class='lparen token'>(</span><span class='rparen token'>)</span>
+  <span class='return return kw'>return</span> <span class='Meta constant id'>Meta</span><span class='dot token'>.</span><span class='find_all_by_meta_key identifier id'>find_all_by_meta_key</span><span class='lparen token'>(</span><span class='string val'>&quot;species.db_name&quot;</span><span class='rparen token'>)</span><span class='dot token'>.</span><span class='collect identifier id'>collect</span> <span class='lbrace token'>{</span><span class='bitor op'>|</span><span class='m identifier id'>m</span><span class='bitor op'>|</span> <span class='m identifier id'>m</span><span class='dot token'>.</span><span class='meta_value identifier id'>meta_value</span><span class='rbrace token'>}</span>
+<span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+  </div>
+
+</div>
+    
+    <div id="footer">
+  Generated on Mon Apr 19 20:33:28 2010 by 
+  <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool">yard</a>
+  0.5.4 (ruby-1.8.6).
+</div>
+
+  </body>
+</html>

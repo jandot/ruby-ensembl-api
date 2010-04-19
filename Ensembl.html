@@ -1,0 +1,255 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+  <head>
+    <meta name="Content-Type" content="text/html; charset=utf-8" />
+<title>Module: Ensembl</title>
+<link rel="stylesheet" href="css/style.css" type="text/css" media="screen" charset="utf-8" />
+<link rel="stylesheet" href="css/common.css" type="text/css" media="screen" charset="utf-8" />
+
+<script type="text/javascript" charset="utf-8">
+  relpath = '';
+  if (relpath != '') relpath += '/';
+</script>
+<script type="text/javascript" charset="utf-8" src="js/jquery.js"></script>
+<script type="text/javascript" charset="utf-8" src="js/app.js"></script>
+
+  </head>
+  <body>
+    <script type="text/javascript" charset="utf-8">
+      if (window.top.frames.main) document.body.className = 'frames';
+    </script>
+    
+    <div id="header">
+      <div id="menu">
+  
+    <a href="_index.html">Index (E)</a> &raquo; 
+    
+    
+    <span class="title">Ensembl</span>
+  
+  
+  <div class="noframes"><span class="title">(</span><a href="." target="_top">no frames</a><span class="title">)</span></div>
+</div>
+
+      <div id="search">
+  <a id="class_list_link" href="#">Class List</a>
+  <a id="method_list_link" href="#">Method List</a>
+  <a id ="file_list_link" href="#">File List</a>
+</div>
+
+      <div class="clear"></div>
+    </div>
+    
+    <iframe id="search_frame"></iframe>
+    
+    <div id="content"><h1>Module: Ensembl 
+  
+  
+</h1>
+
+<dl class="box">
+  
+  
+    
+  
+    
+  
+  
+  
+    <dt class="r1 last">Defined in:</dt>
+    <dd class="r1 last">lib/ensembl.rb<span class="defines">,<br />
+  lib/ensembl/core/slice.rb,<br /> lib/ensembl/core/project.rb,<br /> lib/ensembl/db_connection.rb,<br /> lib/ensembl/core/transform.rb,<br /> lib/ensembl/core/collection.rb,<br /> lib/ensembl/core/transcript.rb,<br /> lib/ensembl/core/activerecord.rb,<br /> lib/ensembl/variation/variation.rb,<br /> lib/ensembl/variation/activerecord.rb</span>
+</dd>
+  
+</dl>
+<div class="clear"></div>
+
+<h2>Overview</h2><div class="docstring">
+  <div class="discussion">
+    <h2>What is it?</h2>
+<p>
+The Ensembl module provides an API to the Ensembl databases stored at
+ensembldb.ensembl.org. This is the same information that is available from
+http://www.ensembl.org.
+</p>
+<p>
+The Ensembl::Core module mainly covers sequences and annotations. The
+Ensembl::Variation module covers variations (e.g. SNPs). The
+Ensembl::Compara module covers comparative mappings between species.
+</p>
+<h2>ActiveRecord</h2>
+<p>
+The Ensembl API provides a ruby interface to the Ensembl mysql databases at
+ensembldb.ensembl.org. Most of the API is based on ActiveRecord to get data
+from that database. In general, each table is described by a class with the
+same name: the coord_system table is covered by the CoordSystem class, the
+seq_region table is covered by the SeqRegion class, etc. As a result,
+accessors are available for all columns in each table. For example, the
+seq_region table has the following columns: seq_region_id, name,
+coord_system_id and length. Through ActiveRecord, these column names become
+available as attributes of SeqRegion objects:
+</p>
+<pre class="code">
+  <span class='puts identifier id'>puts</span> <span class='my_seq_region identifier id'>my_seq_region</span><span class='dot token'>.</span><span class='seq_region_id identifier id'>seq_region_id</span>
+  <span class='puts identifier id'>puts</span> <span class='my_seq_region identifier id'>my_seq_region</span><span class='dot token'>.</span><span class='name identifier id'>name</span>
+  <span class='puts identifier id'>puts</span> <span class='my_seq_region identifier id'>my_seq_region</span><span class='dot token'>.</span><span class='coord_system_id identifier id'>coord_system_id</span>
+  <span class='puts identifier id'>puts</span> <span class='my_seq_region identifier id'>my_seq_region</span><span class='dot token'>.</span><span class='length identifier id'>length</span><span class='dot token'>.</span><span class='to_s identifier id'>to_s</span>
+</pre>
+<p>
+ActiveRecord makes it easy to extract data from those tables using the
+collection of #find methods. There are three types of #find methods (e.g.
+for the CoordSystem class):
+</p>
+<ol>
+<li type="a">find based on primary key in table:
+
+</li>
+</ol>
+<pre class="code">
+ <span class='my_coord_system identifier id'>my_coord_system</span> <span class='assign token'>=</span> <span class='CoordSystem constant id'>CoordSystem</span><span class='dot token'>.</span><span class='find identifier id'>find</span><span class='lparen token'>(</span><span class='integer val'>5</span><span class='rparen token'>)</span>
+</pre>
+<ol>
+<li type="a">find_by_sql:
+
+</li>
+</ol>
+<pre class="code">
+ <span class='my_coord_system identifier id'>my_coord_system</span> <span class='assign token'>=</span> <span class='CoordSystem constant id'>CoordSystem</span><span class='dot token'>.</span><span class='find_by_sql identifier id'>find_by_sql</span><span class='lparen token'>(</span><span class='string val'>'SELECT * FROM coord_system WHERE name = '</span><span class='chromosome identifier id'>chromosome</span><span class='string val'>'&quot;)
+</span></pre>
+<ol>
+<li type="a">find_by_&lt;insert_your_column_name_here&gt;
+
+</li>
+</ol>
+<pre class="code">
+ <span class='my_coord_system1 identifier id'>my_coord_system1</span> <span class='assign token'>=</span> <span class='CoordSystem constant id'>CoordSystem</span><span class='dot token'>.</span><span class='find_by_name identifier id'>find_by_name</span><span class='lparen token'>(</span><span class='string val'>'chromosome'</span><span class='rparen token'>)</span>
+ <span class='my_coord_system2 identifier id'>my_coord_system2</span> <span class='assign token'>=</span> <span class='CoordSystem constant id'>CoordSystem</span><span class='dot token'>.</span><span class='find_by_rank identifier id'>find_by_rank</span><span class='lparen token'>(</span><span class='integer val'>3</span><span class='rparen token'>)</span>
+</pre>
+<p>
+To find out which find_by_&lt;column&gt; methods are available, you can
+list the column names using the column_names class methods:
+</p>
+<pre class="code">
+ <span class='puts identifier id'>puts</span> <span class='Ensembl constant id'>Ensembl</span><span class='colon2 op'>::</span><span class='Core constant id'>Core</span><span class='colon2 op'>::</span><span class='CoordSystem constant id'>CoordSystem</span><span class='dot token'>.</span><span class='column_names identifier id'>column_names</span><span class='dot token'>.</span><span class='join identifier id'>join</span><span class='lparen token'>(</span><span class='string val'>&quot;\t&quot;</span><span class='rparen token'>)</span>
+</pre>
+<p>
+For more information on the find methods, see
+http://ar.rubyonrails.org/classes/ActiveRecord/Base.html#M000344
+</p>
+<p>
+The relationships between different tables are accessible through the
+classes as well. For example, to loop over all seq_regions belonging to a
+coord_system (a coord_system &quot;has many&quot; seq_regions):
+</p>
+<pre class="code">
+  <span class='chr_coord_system identifier id'>chr_coord_system</span> <span class='assign token'>=</span> <span class='CoordSystem constant id'>CoordSystem</span><span class='dot token'>.</span><span class='find_by_name identifier id'>find_by_name</span><span class='lparen token'>(</span><span class='string val'>'chromosome'</span><span class='rparen token'>)</span>
+  <span class='chr_coord_system identifier id'>chr_coord_system</span><span class='dot token'>.</span><span class='seq_regions identifier id'>seq_regions</span><span class='dot token'>.</span><span class='each identifier id'>each</span> <span class='do do kw'>do</span> <span class='bitor op'>|</span><span class='seq_region identifier id'>seq_region</span><span class='bitor op'>|</span>
+    <span class='puts identifier id'>puts</span> <span class='seq_region identifier id'>seq_region</span><span class='dot token'>.</span><span class='name identifier id'>name</span>
+  <span class='end end kw'>end</span>
+</pre>
+<p>
+Of course, you can go the other way as well (a seq_region &quot;belongs
+to&quot; a coord_system):
+</p>
+<pre class="code">
+  <span class='chr4 identifier id'>chr4</span> <span class='assign token'>=</span> <span class='SeqRegion constant id'>SeqRegion</span><span class='dot token'>.</span><span class='find_by_name identifier id'>find_by_name</span><span class='lparen token'>(</span><span class='string val'>'4'</span><span class='rparen token'>)</span>
+  <span class='puts identifier id'>puts</span> <span class='chr4 identifier id'>chr4</span><span class='dot token'>.</span><span class='coord_system identifier id'>coord_system</span><span class='dot token'>.</span><span class='name identifier id'>name</span>  <span class='comment val'>#--&gt; 'chromosome'</span>
+</pre>
+<p>
+To find out what relationships exist for a given class, you can use the
+#reflect_on_all_associations class methods:
+</p>
+<pre class="code">
+ <span class='puts identifier id'>puts</span> <span class='SeqRegion constant id'>SeqRegion</span><span class='dot token'>.</span><span class='reflect_on_all_associations identifier id'>reflect_on_all_associations</span><span class='lparen token'>(</span><span class='symbol val'>:has_many</span><span class='rparen token'>)</span><span class='dot token'>.</span><span class='collect identifier id'>collect</span><span class='lbrace token'>{</span><span class='bitor op'>|</span><span class='a identifier id'>a</span><span class='bitor op'>|</span> <span class='a identifier id'>a</span><span class='dot token'>.</span><span class='name identifier id'>name</span><span class='dot token'>.</span><span class='to_s identifier id'>to_s</span><span class='rbrace token'>}</span><span class='dot token'>.</span><span class='join identifier id'>join</span><span class='lparen token'>(</span><span class='string val'>&quot;\n&quot;</span><span class='rparen token'>)</span>
+ <span class='puts identifier id'>puts</span> <span class='SeqRegion constant id'>SeqRegion</span><span class='dot token'>.</span><span class='reflect_on_all_associations identifier id'>reflect_on_all_associations</span><span class='lparen token'>(</span><span class='symbol val'>:has_one</span><span class='rparen token'>)</span><span class='dot token'>.</span><span class='collect identifier id'>collect</span><span class='lbrace token'>{</span><span class='bitor op'>|</span><span class='a identifier id'>a</span><span class='bitor op'>|</span> <span class='a identifier id'>a</span><span class='dot token'>.</span><span class='name identifier id'>name</span><span class='dot token'>.</span><span class='to_s identifier id'>to_s</span><span class='rbrace token'>}</span><span class='dot token'>.</span><span class='join identifier id'>join</span><span class='lparen token'>(</span><span class='string val'>&quot;\n&quot;</span><span class='rparen token'>)</span>
+ <span class='puts identifier id'>puts</span> <span class='SeqRegion constant id'>SeqRegion</span><span class='dot token'>.</span><span class='reflect_on_all_associations identifier id'>reflect_on_all_associations</span><span class='lparen token'>(</span><span class='symbol val'>:belongs_to</span><span class='rparen token'>)</span><span class='dot token'>.</span><span class='collect identifier id'>collect</span><span class='lbrace token'>{</span><span class='bitor op'>|</span><span class='a identifier id'>a</span><span class='bitor op'>|</span> <span class='a identifier id'>a</span><span class='dot token'>.</span><span class='name identifier id'>name</span><span class='dot token'>.</span><span class='to_s identifier id'>to_s</span><span class='rbrace token'>}</span><span class='dot token'>.</span><span class='join identifier id'>join</span><span class='lparen token'>(</span><span class='string val'>&quot;\n&quot;</span><span class='rparen token'>)</span>
+</pre>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+</div><h2>Defined Under Namespace</h2>
+<p class="children">
+   
+    
+      <strong class="modules">Modules:</strong> <a href="Ensembl/Core.html" title="Ensembl::Core (module)">Core</a>, <a href="Ensembl/DBRegistry.html" title="Ensembl::DBRegistry (module)">DBRegistry</a>, <a href="Ensembl/Variation.html" title="Ensembl::Variation (module)">Variation</a>
+    
+   
+    
+      <strong class="classes">Classes:</strong> <a href="Ensembl/DummyDBConnection.html" title="Ensembl::DummyDBConnection (class)">DummyDBConnection</a>, <a href="Ensembl/Session.html" title="Ensembl::Session (class)">Session</a>
+    
+  
+</p>
+
+  <h2>Constant Summary</h2>
+  
+    <dl class="constants">
+      
+        <dt id="ENSEMBL_RELEASE-constant" class="">ENSEMBL_RELEASE =
+          
+        </dt>
+        <dd><pre class="code"><span class='integer val'>56</span>
+</pre></dd>
+      
+        <dt id="SESSION-constant" class="">SESSION =
+          
+        </dt>
+        <dd><pre class="code"><span class='Ensembl constant id'>Ensembl</span><span class='colon2 op'>::</span><span class='Session constant id'>Session</span><span class='dot token'>.</span><span class='new identifier id'>new</span>
+</pre></dd>
+      
+        <dt id="DB_ADAPTER-constant" class="">DB_ADAPTER =
+          
+        </dt>
+        <dd><pre class="code"><span class='string val'>'mysql'</span>
+</pre></dd>
+      
+        <dt id="DB_HOST-constant" class="">DB_HOST =
+          
+        </dt>
+        <dd><pre class="code"><span class='string val'>'ensembldb.ensembl.org'</span>
+</pre></dd>
+      
+        <dt id="DB_USERNAME-constant" class="">DB_USERNAME =
+          
+        </dt>
+        <dd><pre class="code"><span class='string val'>'anonymous'</span>
+</pre></dd>
+      
+        <dt id="DB_PASSWORD-constant" class="">DB_PASSWORD =
+          
+        </dt>
+        <dd><pre class="code"><span class='string val'>''</span>
+</pre></dd>
+      
+        <dt id="EG_HOST-constant" class="">EG_HOST =
+          
+        </dt>
+        <dd><pre class="code"><span class='string val'>'mysql.ebi.ac.uk'</span>
+</pre></dd>
+      
+        <dt id="EG_PORT-constant" class="">EG_PORT =
+          
+        </dt>
+        <dd><pre class="code"><span class='integer val'>4157</span>
+</pre></dd>
+      
+    </dl>
+  
+
+
+
+
+
+</div>
+    
+    <div id="footer">
+  Generated on Mon Apr 19 20:33:35 2010 by 
+  <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool">yard</a>
+  0.5.4 (ruby-1.8.6).
+</div>
+
+  </body>
+</html>

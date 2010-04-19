@@ -1,0 +1,308 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+  <head>
+    <meta name="Content-Type" content="text/html; charset=utf-8" />
+<title>Class: Ensembl::DBRegistry::Base</title>
+<link rel="stylesheet" href="../../css/style.css" type="text/css" media="screen" charset="utf-8" />
+<link rel="stylesheet" href="../../css/common.css" type="text/css" media="screen" charset="utf-8" />
+
+<script type="text/javascript" charset="utf-8">
+  relpath = '../..';
+  if (relpath != '') relpath += '/';
+</script>
+<script type="text/javascript" charset="utf-8" src="../../js/jquery.js"></script>
+<script type="text/javascript" charset="utf-8" src="../../js/app.js"></script>
+
+  </head>
+  <body>
+    <script type="text/javascript" charset="utf-8">
+      if (window.top.frames.main) document.body.className = 'frames';
+    </script>
+    
+    <div id="header">
+      <div id="menu">
+  
+    <a href="../../_index.html">Index (B)</a> &raquo; 
+    <span class='title'><a href="../../Ensembl.html" title="Ensembl (module)">Ensembl</a></span> &raquo; <span class='title'><a href="../DBRegistry.html" title="Ensembl::DBRegistry (module)">DBRegistry</a></span>
+     &raquo; 
+    <span class="title">Base</span>
+  
+  
+  <div class="noframes"><span class="title">(</span><a href="." target="_top">no frames</a><span class="title">)</span></div>
+</div>
+
+      <div id="search">
+  <a id="class_list_link" href="#">Class List</a>
+  <a id="method_list_link" href="#">Method List</a>
+  <a id ="file_list_link" href="#">File List</a>
+</div>
+
+      <div class="clear"></div>
+    </div>
+    
+    <iframe id="search_frame"></iframe>
+    
+    <div id="content"><h1>Class: Ensembl::DBRegistry::Base 
+  
+  
+</h1>
+
+<dl class="box">
+  
+    <dt class="r1">Inherits:</dt>
+    <dd class="r1">
+      <span class="inheritName">ActiveRecord::Base</span>
+      
+        <ul class="fullTree">
+          <li>Object</li>
+          
+            <li class="next">ActiveRecord::Base</li>
+          
+            <li class="next">Ensembl::DBRegistry::Base</li>
+          
+        </ul>
+        <a href="#" class="inheritanceTree">show all</a>
+      
+      </dd>
+    
+  
+  
+    
+  
+    
+  
+  
+  
+    <dt class="r2 last">Defined in:</dt>
+    <dd class="r2 last">lib/ensembl/db_connection.rb</dd>
+  
+</dl>
+<div class="clear"></div>
+
+<h2>Overview</h2><div class="docstring">
+  <div class="discussion">
+    <h1>DESCRIPTION</h1>
+<p>
+The Ensembl::Registry::Base is a generic super class providing general
+methods to get database and connection info.
+</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+</div><div id="subclasses">
+  <h2>Direct Known Subclasses</h2>
+  <p class="children"><a href="../Core/DBConnection.html" title="Ensembl::Core::DBConnection (class)">Ensembl::Core::DBConnection</a>, <a href="../Variation/DBConnection.html" title="Ensembl::Variation::DBConnection (class)">Ensembl::Variation::DBConnection</a></p>
+</div>
+
+
+  
+
+  
+    <h2>Class Method Summary</h2>
+
+    <ul class="summary">
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#get_info-class_method" title="get_info (class method)">+ (Object) <strong>get_info</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'></div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#get_name_from_db-class_method" title="get_name_from_db (class method)">+ (Object) <strong>get_name_from_db</strong>(match, species, release, args) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'><h1>DESCRIPTION</h1>
+<p>
+Class method to retrieve the name of a database, using species, release and
+connection parameters passed by the user.
+</p>
+</div></span>
+  
+</li>
+
+      
+    </ul>
+  
+
+
+  
+
+  <div id="class_method_details" class="method_details_list">
+    <h2>Class Method Details</h2>
+    
+    
+      <div class="method_details first">
+  <p class="signature first" id="get_info-class_method">
+  
+    + (<tt>Object</tt>) <strong>get_info</strong> 
+  
+
+  
+</p><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+48
+49
+50</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/ensembl/db_connection.rb', line 48</span>
+
+<span class='def def kw'>def</span> <span class='self self kw'>self</span><span class='dot token'>.</span><span class='get_info identifier id'>get_info</span>
+  <span class='host identifier id'>host</span><span class='comma token'>,</span><span class='user identifier id'>user</span><span class='comma token'>,</span><span class='password identifier id'>password</span><span class='comma token'>,</span><span class='db_name identifier id'>db_name</span><span class='comma token'>,</span><span class='port identifier id'>port</span> <span class='assign token'>=</span> <span class='self self kw'>self</span><span class='dot token'>.</span><span class='retrieve_connection identifier id'>retrieve_connection</span><span class='dot token'>.</span><span class='instance_values identifier id'>instance_values</span><span class='lbrack token'>[</span><span class='string val'>&quot;connection_options&quot;</span><span class='rbrack token'>]</span>
+<span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <p class="signature " id="get_name_from_db-class_method">
+  
+    + (<tt>Object</tt>) <strong>get_name_from_db</strong>(match, species, release, args) 
+  
+
+  
+</p><div class="docstring">
+  <div class="discussion">
+    <h1>DESCRIPTION</h1>
+<p>
+Class method to retrieve the name of a database, using species, release and
+connection parameters passed by the user.
+</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72
+73
+74
+75
+76
+77
+78
+79
+80
+81
+82
+83
+84
+85
+86
+87
+88</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/ensembl/db_connection.rb', line 55</span>
+
+<span class='def def kw'>def</span> <span class='self self kw'>self</span><span class='dot token'>.</span><span class='get_name_from_db identifier id'>get_name_from_db</span><span class='lparen token'>(</span><span class='match identifier id'>match</span><span class='comma token'>,</span><span class='species identifier id'>species</span><span class='comma token'>,</span><span class='release identifier id'>release</span><span class='comma token'>,</span><span class='args identifier id'>args</span><span class='rparen token'>)</span>
+  <span class='species identifier id'>species</span> <span class='assign token'>=</span> <span class='species identifier id'>species</span><span class='dot token'>.</span><span class='underscore identifier id'>underscore</span> <span class='comment val'># Always in lowercase. This keeps things simple when dealing with complex species names like in Ensembl Genomes database</span>
+  <span class='dummy_db identifier id'>dummy_db</span> <span class='assign token'>=</span> <span class='DummyDBConnection constant id'>DummyDBConnection</span><span class='dot token'>.</span><span class='connect identifier id'>connect</span><span class='lparen token'>(</span><span class='args identifier id'>args</span><span class='rparen token'>)</span> 
+  <span class='dummy_connection identifier id'>dummy_connection</span> <span class='assign token'>=</span> <span class='dummy_db identifier id'>dummy_db</span><span class='dot token'>.</span><span class='connection identifier id'>connection</span>
+  
+  <span class='comment val'># check if a database exists with exactly the species name passed (regular way)</span>
+  <span class='db_name identifier id'>db_name</span> <span class='assign token'>=</span> <span class='dummy_connection identifier id'>dummy_connection</span><span class='dot token'>.</span><span class='select_values identifier id'>select_values</span><span class='lparen token'>(</span><span class='dstring node'>&quot;SHOW DATABASES LIKE '%#{species}_#{match}_#{release.to_s}%'&quot;</span><span class='rparen token'>)</span><span class='lbrack token'>[</span><span class='integer val'>0</span><span class='rbrack token'>]</span>
+  
+  <span class='comment val'># if a database is not found and we are working on Ensembl Genomes database...</span>
+  <span class='if if kw'>if</span> <span class='db_name identifier id'>db_name</span><span class='dot token'>.</span><span class='nil? fid id'>nil?</span> <span class='and and kw'>and</span> <span class='args identifier id'>args</span><span class='lbrack token'>[</span><span class='symbol val'>:ensembl_genomes</span><span class='rbrack token'>]</span> <span class='then then kw'>then</span>
+    <span class='words identifier id'>words</span> <span class='assign token'>=</span> <span class='species identifier id'>species</span><span class='dot token'>.</span><span class='split identifier id'>split</span><span class='lparen token'>(</span><span class='regexp val'>/_/</span><span class='rparen token'>)</span>
+    <span class='first identifier id'>first</span> <span class='assign token'>=</span> <span class='words identifier id'>words</span><span class='dot token'>.</span><span class='shift identifier id'>shift</span>
+    <span class='comment val'># ...try to find a collection database using the first name of the species passed (convention used for collection databases)</span>
+    <span class='db_name identifier id'>db_name</span> <span class='assign token'>=</span> <span class='dummy_connection identifier id'>dummy_connection</span><span class='dot token'>.</span><span class='select_values identifier id'>select_values</span><span class='lparen token'>(</span><span class='string val'>&quot;SHOW DATABASES&quot;</span><span class='rparen token'>)</span><span class='dot token'>.</span><span class='select identifier id'>select</span> <span class='lbrace token'>{</span><span class='bitor op'>|</span><span class='d identifier id'>d</span><span class='bitor op'>|</span> <span class='d identifier id'>d</span><span class='match op'>=~</span><span class='dregexp node'>/#{first}.*_collection_#{match}_#{release.to_s}/</span><span class='rbrace token'>}</span><span class='lbrack token'>[</span><span class='integer val'>0</span><span class='rbrack token'>]</span>
+    <span class='comment val'># if a collection database match is found, then look inside to find the species</span>
+    <span class='if if kw'>if</span> <span class='db_name identifier id'>db_name</span> <span class='neq op'>!=</span> <span class='nil nil kw'>nil</span> <span class='then then kw'>then</span>
+      <span class='dummy_db identifier id'>dummy_db</span><span class='dot token'>.</span><span class='disconnect! fid id'>disconnect!</span> <span class='comment val'># close the generic connection with the host</span>
+      <span class='args identifier id'>args</span><span class='lbrack token'>[</span><span class='symbol val'>:database</span><span class='rbrack token'>]</span> <span class='assign token'>=</span> <span class='db_name identifier id'>db_name</span>
+      <span class='dummy_db identifier id'>dummy_db</span> <span class='assign token'>=</span> <span class='DummyDBConnection constant id'>DummyDBConnection</span><span class='dot token'>.</span><span class='connect identifier id'>connect</span><span class='lparen token'>(</span><span class='args identifier id'>args</span><span class='rparen token'>)</span> <span class='comment val'># open a new connection directly with the collection database</span>
+      <span class='others identifier id'>others</span> <span class='assign token'>=</span> <span class='string val'>''</span>
+      <span class='words identifier id'>words</span><span class='dot token'>.</span><span class='each identifier id'>each</span> <span class='do do kw'>do</span> <span class='bitor op'>|</span><span class='w identifier id'>w</span><span class='bitor op'>|</span>
+        <span class='others identifier id'>others</span> <span class='lshft op'>&lt;&lt;</span> <span class='dstring node'>&quot; #{w}&quot;</span>
+      <span class='end end kw'>end</span>
+      <span class='species_name identifier id'>species_name</span> <span class='assign token'>=</span> <span class='dstring node'>&quot;#{first}#{others}&quot;</span> <span class='comment val'># transform the species name, so it can match the species names stored in the collection database</span>
+      <span class='Ensembl constant id'>Ensembl</span><span class='colon2 op'>::</span><span class='SESSION constant id'>SESSION</span><span class='dot token'>.</span><span class='collection_species identifier id'>collection_species</span> <span class='assign token'>=</span> <span class='species_name identifier id'>species_name</span> <span class='comment val'># set the species used for this session, so it's easier to fetch slices from the genome of that species</span>
+      
+      <span class='comment val'># check that the species passed is present in the collection database, otherwise returns a warning</span>
+      <span class='exists identifier id'>exists</span> <span class='assign token'>=</span> <span class='dummy_db identifier id'>dummy_db</span><span class='dot token'>.</span><span class='connection identifier id'>connection</span><span class='dot token'>.</span><span class='select_values identifier id'>select_values</span><span class='lparen token'>(</span><span class='dstring node'>&quot;SELECT species_id FROM meta WHERE LOWER(meta_value) = '#{species_name}' AND meta_key = 'species.db_name'&quot;</span><span class='rparen token'>)</span><span class='lbrack token'>[</span><span class='integer val'>0</span><span class='rbrack token'>]</span>
+      <span class='warn identifier id'>warn</span> <span class='dstring node'>&quot;WARNING: No species '#{species}' found in the database. Please check that the name is correct.&quot;</span> <span class='if if_mod kw'>if</span> <span class='notop op'>!</span><span class='exists identifier id'>exists</span>
+    <span class='end end kw'>end</span>
+  <span class='end end kw'>end</span>
+  <span class='warn identifier id'>warn</span> <span class='dstring node'>&quot;WARNING: No connection to database established. Check that the species is in snake_case (was: #{species}).&quot;</span> <span class='if if_mod kw'>if</span> <span class='db_name identifier id'>db_name</span><span class='dot token'>.</span><span class='nil? fid id'>nil?</span>
+  <span class='return return kw'>return</span> <span class='db_name identifier id'>db_name</span>
+<span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+  </div>
+
+</div>
+    
+    <div id="footer">
+  Generated on Mon Apr 19 20:33:29 2010 by 
+  <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool">yard</a>
+  0.5.4 (ruby-1.8.6).
+</div>
+
+  </body>
+</html>

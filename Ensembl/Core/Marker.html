@@ -1,0 +1,498 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+  <head>
+    <meta name="Content-Type" content="text/html; charset=utf-8" />
+<title>Class: Ensembl::Core::Marker</title>
+<link rel="stylesheet" href="../../css/style.css" type="text/css" media="screen" charset="utf-8" />
+<link rel="stylesheet" href="../../css/common.css" type="text/css" media="screen" charset="utf-8" />
+
+<script type="text/javascript" charset="utf-8">
+  relpath = '../..';
+  if (relpath != '') relpath += '/';
+</script>
+<script type="text/javascript" charset="utf-8" src="../../js/jquery.js"></script>
+<script type="text/javascript" charset="utf-8" src="../../js/app.js"></script>
+
+  </head>
+  <body>
+    <script type="text/javascript" charset="utf-8">
+      if (window.top.frames.main) document.body.className = 'frames';
+    </script>
+    
+    <div id="header">
+      <div id="menu">
+  
+    <a href="../../_index.html">Index (M)</a> &raquo; 
+    <span class='title'><a href="../../Ensembl.html" title="Ensembl (module)">Ensembl</a></span> &raquo; <span class='title'><a href="../Core.html" title="Ensembl::Core (module)">Core</a></span>
+     &raquo; 
+    <span class="title">Marker</span>
+  
+  
+  <div class="noframes"><span class="title">(</span><a href="." target="_top">no frames</a><span class="title">)</span></div>
+</div>
+
+      <div id="search">
+  <a id="class_list_link" href="#">Class List</a>
+  <a id="method_list_link" href="#">Method List</a>
+  <a id ="file_list_link" href="#">File List</a>
+</div>
+
+      <div class="clear"></div>
+    </div>
+    
+    <iframe id="search_frame"></iframe>
+    
+    <div id="content"><h1>Class: Ensembl::Core::Marker 
+  
+  
+</h1>
+
+<dl class="box">
+  
+    <dt class="r1">Inherits:</dt>
+    <dd class="r1">
+      <span class="inheritName"><a href="DBConnection.html" title="Ensembl::Core::DBConnection (class)">DBConnection</a></span>
+      
+        <ul class="fullTree">
+          <li>Object</li>
+          
+            <li class="next">ActiveRecord::Base</li>
+          
+            <li class="next"><a href="../DBRegistry/Base.html" title="Ensembl::DBRegistry::Base (class)">Ensembl::DBRegistry::Base</a></li>
+          
+            <li class="next"><a href="DBConnection.html" title="Ensembl::Core::DBConnection (class)">DBConnection</a></li>
+          
+            <li class="next">Ensembl::Core::Marker</li>
+          
+        </ul>
+        <a href="#" class="inheritanceTree">show all</a>
+      
+      </dd>
+    
+  
+  
+    
+  
+    
+  
+  
+  
+    <dt class="r2 last">Defined in:</dt>
+    <dd class="r2 last">lib/ensembl/core/activerecord.rb</dd>
+  
+</dl>
+<div class="clear"></div>
+
+<h2>Overview</h2><div class="docstring">
+  <div class="discussion">
+    <p>
+The Marker class provides an interface to the marker table. This table
+contains primer sequences and PCR product lengths.
+</p>
+<p>
+This class uses ActiveRecord to access data in the Ensembl database. See
+the general documentation of the Ensembl module for more information on
+what this means and what methods are available.
+</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+  <div class="examples">
+    <h3>Examples:</h3>
+    
+      <h4><div class='inline'></div></h4>
+      <pre class="example code"><span class='marker identifier id'>marker</span> <span class='assign token'>=</span> <span class='Marker constant id'>Marker</span><span class='dot token'>.</span><span class='find identifier id'>find</span><span class='lparen token'>(</span><span class='integer val'>52194</span><span class='rparen token'>)</span>
+<span class='puts identifier id'>puts</span> <span class='marker identifier id'>marker</span><span class='dot token'>.</span><span class='left_primer identifier id'>left_primer</span>
+<span class='puts identifier id'>puts</span> <span class='marker identifier id'>marker</span><span class='dot token'>.</span><span class='right_primer identifier id'>right_primer</span>
+<span class='puts identifier id'>puts</span> <span class='marker identifier id'>marker</span><span class='dot token'>.</span><span class='min_primer_dist identifier id'>min_primer_dist</span><span class='dot token'>.</span><span class='to_s identifier id'>to_s</span>
+</pre>
+    
+  </div>
+
+</div>
+
+  
+  
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <h2>Class Method Summary</h2>
+
+    <ul class="summary">
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#find_all_by_name-class_method" title="find_all_by_name (class method)">+ (Array) <strong>find_all_by_name</strong>(name) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'><p>
+The Marker#find_all_by_name class method returns all markers with this
+name.
+</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#find_by_name-class_method" title="find_by_name (class method)">+ (Marker<sup>?</sup>) <strong>find_by_name</strong>(name) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'><p>
+The Marker#find_by_name class method returns one marker with this name.
+</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#inheritance_column-class_method" title="inheritance_column (class method)">+ (Object) <strong>inheritance_column</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'></div></span>
+  
+</li>
+
+      
+    </ul>
+  
+    <h2>Instance Method Summary</h2>
+
+    <ul class="summary">
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#name-instance_method" title="#name (instance method)">- (Object) <strong>name</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'><p>
+The Marker#name method returns a comma-separated list of synonyms of this
+marker.
+</p>
+</div></span>
+  
+</li>
+
+      
+    </ul>
+  
+
+
+  
+  
+  
+  
+  
+  
+  
+  <h3 class="inherited">Methods inherited from <a href="DBConnection.html" title="Ensembl::Core::DBConnection (class)">DBConnection</a></h3>
+  <p class="inherited"><a href="DBConnection.html#connect-class_method" title="Ensembl::Core::DBConnection.connect (method)">connect</a>, <a href="DBConnection.html#ensemblgenomes_connect-class_method" title="Ensembl::Core::DBConnection.ensemblgenomes_connect (method)">ensemblgenomes_connect</a></p>
+
+  
+  
+  
+  
+  
+  
+  
+  <h3 class="inherited">Methods inherited from <a href="../DBRegistry/Base.html" title="Ensembl::DBRegistry::Base (class)">Ensembl::DBRegistry::Base</a></h3>
+  <p class="inherited"><a href="../DBRegistry/Base.html#get_info-class_method" title="Ensembl::DBRegistry::Base.get_info (method)">get_info</a>, <a href="../DBRegistry/Base.html#get_name_from_db-class_method" title="Ensembl::DBRegistry::Base.get_name_from_db (method)">get_name_from_db</a></p>
+
+  
+
+  <div id="class_method_details" class="method_details_list">
+    <h2>Class Method Details</h2>
+    
+    
+      <div class="method_details first">
+  <p class="signature first" id="find_all_by_name-class_method">
+  
+    + (<tt>Array</tt>) <strong>find_all_by_name</strong>(name) 
+  
+
+  
+</p><div class="docstring">
+  <div class="discussion">
+    <p>
+The Marker#find_all_by_name class method returns all markers with this
+name. If no marker is found, it returns an empty array.
+</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  <h3>Returns:</h3>
+<ul class="return">
+  
+    <li>
+      
+        <span class='type'>(<tt>Array</tt>)</span>
+      
+      
+      
+      
+        &mdash;
+        <div class='inline'><p>
+Empty array or array of Marker objects
+</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+842
+843
+844
+845
+846
+847
+848
+849
+850</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/ensembl/core/activerecord.rb', line 842</span>
+
+<span class='def def kw'>def</span> <span class='self self kw'>self</span><span class='dot token'>.</span><span class='find_all_by_name identifier id'>find_all_by_name</span><span class='lparen token'>(</span><span class='name identifier id'>name</span><span class='rparen token'>)</span>
+  <span class='marker_synonyms identifier id'>marker_synonyms</span> <span class='assign token'>=</span> <span class='Ensembl constant id'>Ensembl</span><span class='colon2 op'>::</span><span class='Core constant id'>Core</span><span class='colon2 op'>::</span><span class='MarkerSynonym constant id'>MarkerSynonym</span><span class='dot token'>.</span><span class='find_all_by_name identifier id'>find_all_by_name</span><span class='lparen token'>(</span><span class='name identifier id'>name</span><span class='rparen token'>)</span>
+  <span class='answers identifier id'>answers</span> <span class='assign token'>=</span> <span class='Array constant id'>Array</span><span class='dot token'>.</span><span class='new identifier id'>new</span>
+  <span class='marker_synonyms identifier id'>marker_synonyms</span><span class='dot token'>.</span><span class='each identifier id'>each</span> <span class='do do kw'>do</span> <span class='bitor op'>|</span><span class='ms identifier id'>ms</span><span class='bitor op'>|</span>
+    <span class='answers identifier id'>answers</span><span class='dot token'>.</span><span class='push identifier id'>push</span><span class='lparen token'>(</span><span class='Ensembl constant id'>Ensembl</span><span class='colon2 op'>::</span><span class='Core constant id'>Core</span><span class='colon2 op'>::</span><span class='Marker constant id'>Marker</span><span class='dot token'>.</span><span class='find_all_by_marker_id identifier id'>find_all_by_marker_id</span><span class='lparen token'>(</span><span class='ms identifier id'>ms</span><span class='dot token'>.</span><span class='marker_id identifier id'>marker_id</span><span class='rparen token'>)</span><span class='rparen token'>)</span>
+  <span class='end end kw'>end</span>
+  <span class='answers identifier id'>answers</span><span class='dot token'>.</span><span class='flatten! fid id'>flatten!</span>
+  <span class='return return kw'>return</span> <span class='answers identifier id'>answers</span>
+<span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <p class="signature " id="find_by_name-class_method">
+  
+    + (<tt><a href="" title="Ensembl::Core::Marker (class)">Marker</a></tt><sup>?</sup>) <strong>find_by_name</strong>(name) 
+  
+
+  
+</p><div class="docstring">
+  <div class="discussion">
+    <p>
+The Marker#find_by_name class method returns one marker with this name.
+</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  <h3>Returns:</h3>
+<ul class="return">
+  
+    <li>
+      
+        <span class='type'>(<tt><a href="" title="Ensembl::Core::Marker (class)">Marker</a></tt>, <tt>nil</tt>)</span>
+      
+      
+      
+      
+        &mdash;
+        <div class='inline'><p>
+Marker object or nil
+</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+829
+830
+831
+832
+833
+834
+835
+836</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/ensembl/core/activerecord.rb', line 829</span>
+
+<span class='def def kw'>def</span> <span class='self self kw'>self</span><span class='dot token'>.</span><span class='find_by_name identifier id'>find_by_name</span><span class='lparen token'>(</span><span class='name identifier id'>name</span><span class='rparen token'>)</span>
+  <span class='all_names identifier id'>all_names</span> <span class='assign token'>=</span> <span class='self self kw'>self</span><span class='dot token'>.</span><span class='find_all_by_name identifier id'>find_all_by_name</span><span class='lparen token'>(</span><span class='name identifier id'>name</span><span class='rparen token'>)</span>
+  <span class='if if kw'>if</span> <span class='all_names identifier id'>all_names</span><span class='dot token'>.</span><span class='length identifier id'>length</span> <span class='eq op'>==</span> <span class='integer val'>0</span>
+    <span class='return return kw'>return</span> <span class='nil nil kw'>nil</span>
+  <span class='else else kw'>else</span>
+    <span class='return return kw'>return</span> <span class='all_names identifier id'>all_names</span><span class='lbrack token'>[</span><span class='integer val'>0</span><span class='rbrack token'>]</span>
+  <span class='end end kw'>end</span>
+<span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <p class="signature " id="inheritance_column-class_method">
+  
+    + (<tt>Object</tt>) <strong>inheritance_column</strong> 
+  
+
+  
+</p><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+812
+813
+814</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/ensembl/core/activerecord.rb', line 812</span>
+
+<span class='def def kw'>def</span> <span class='self self kw'>self</span><span class='dot token'>.</span><span class='inheritance_column identifier id'>inheritance_column</span>
+  <span class='nil nil kw'>nil</span>
+<span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+  </div>
+
+  <div id="instance_method_details" class="method_details_list">
+    <h2>Instance Method Details</h2>
+    
+    
+      <div class="method_details first">
+  <p class="signature first" id="name-instance_method">
+  
+    - (<tt>Object</tt>) <strong>name</strong> 
+  
+
+  
+</p><div class="docstring">
+  <div class="discussion">
+    <p>
+The Marker#name method returns a comma-separated list of synonyms of this
+marker
+</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+  <div class="examples">
+    <h3>Examples:</h3>
+    
+      <h4><div class='inline'></div></h4>
+      <pre class="example code"><span class='marker identifier id'>marker</span> <span class='assign token'>=</span> <span class='Marker constant id'>Marker</span><span class='dot token'>.</span><span class='find identifier id'>find</span><span class='lparen token'>(</span><span class='integer val'>1</span><span class='rparen token'>)</span>
+<span class='puts identifier id'>puts</span> <span class='marker identifier id'>marker</span><span class='dot token'>.</span><span class='name identifier id'>name</span>    <span class='minus op'>-</span><span class='minus op'>-</span><span class='gt op'>&gt;</span> <span class='integer val'>58017</span><span class='comma token'>,</span><span class='D29149 constant id'>D29149</span>
+</pre>
+    
+  </div>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+822
+823
+824</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/ensembl/core/activerecord.rb', line 822</span>
+
+<span class='def def kw'>def</span> <span class='name identifier id'>name</span>
+  <span class='self self kw'>self</span><span class='dot token'>.</span><span class='marker_synonyms identifier id'>marker_synonyms</span><span class='dot token'>.</span><span class='collect identifier id'>collect</span><span class='lbrace token'>{</span><span class='bitor op'>|</span><span class='ms identifier id'>ms</span><span class='bitor op'>|</span> <span class='ms identifier id'>ms</span><span class='dot token'>.</span><span class='name identifier id'>name</span><span class='rbrace token'>}</span><span class='dot token'>.</span><span class='join identifier id'>join</span><span class='lparen token'>(</span><span class='string val'>','</span><span class='rparen token'>)</span>
+<span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+  </div>
+
+</div>
+    
+    <div id="footer">
+  Generated on Mon Apr 19 20:33:31 2010 by 
+  <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool">yard</a>
+  0.5.4 (ruby-1.8.6).
+</div>
+
+  </body>
+</html>

@@ -1,0 +1,222 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+  <head>
+    <meta name="Content-Type" content="text/html; charset=utf-8" />
+<title>Class: Ensembl::Core::MiscAttrib</title>
+<link rel="stylesheet" href="../../css/style.css" type="text/css" media="screen" charset="utf-8" />
+<link rel="stylesheet" href="../../css/common.css" type="text/css" media="screen" charset="utf-8" />
+
+<script type="text/javascript" charset="utf-8">
+  relpath = '../..';
+  if (relpath != '') relpath += '/';
+</script>
+<script type="text/javascript" charset="utf-8" src="../../js/jquery.js"></script>
+<script type="text/javascript" charset="utf-8" src="../../js/app.js"></script>
+
+  </head>
+  <body>
+    <script type="text/javascript" charset="utf-8">
+      if (window.top.frames.main) document.body.className = 'frames';
+    </script>
+    
+    <div id="header">
+      <div id="menu">
+  
+    <a href="../../_index.html">Index (M)</a> &raquo; 
+    <span class='title'><a href="../../Ensembl.html" title="Ensembl (module)">Ensembl</a></span> &raquo; <span class='title'><a href="../Core.html" title="Ensembl::Core (module)">Core</a></span>
+     &raquo; 
+    <span class="title">MiscAttrib</span>
+  
+  
+  <div class="noframes"><span class="title">(</span><a href="." target="_top">no frames</a><span class="title">)</span></div>
+</div>
+
+      <div id="search">
+  <a id="class_list_link" href="#">Class List</a>
+  <a id="method_list_link" href="#">Method List</a>
+  <a id ="file_list_link" href="#">File List</a>
+</div>
+
+      <div class="clear"></div>
+    </div>
+    
+    <iframe id="search_frame"></iframe>
+    
+    <div id="content"><h1>Class: Ensembl::Core::MiscAttrib 
+  
+  
+</h1>
+
+<dl class="box">
+  
+    <dt class="r1">Inherits:</dt>
+    <dd class="r1">
+      <span class="inheritName"><a href="DBConnection.html" title="Ensembl::Core::DBConnection (class)">DBConnection</a></span>
+      
+        <ul class="fullTree">
+          <li>Object</li>
+          
+            <li class="next">ActiveRecord::Base</li>
+          
+            <li class="next"><a href="../DBRegistry/Base.html" title="Ensembl::DBRegistry::Base (class)">Ensembl::DBRegistry::Base</a></li>
+          
+            <li class="next"><a href="DBConnection.html" title="Ensembl::Core::DBConnection (class)">DBConnection</a></li>
+          
+            <li class="next">Ensembl::Core::MiscAttrib</li>
+          
+        </ul>
+        <a href="#" class="inheritanceTree">show all</a>
+      
+      </dd>
+    
+  
+  
+    
+  
+    
+  
+  
+  
+    <dt class="r2 last">Defined in:</dt>
+    <dd class="r2 last">lib/ensembl/core/activerecord.rb</dd>
+  
+</dl>
+<div class="clear"></div>
+
+<h2>Overview</h2><div class="docstring">
+  <div class="discussion">
+    <p>
+The MiscAttrib class provides an interface to the misc_attrib table. It is
+the link between MiscFeature and AttribType.
+</p>
+<p>
+This class uses ActiveRecord to access data in the Ensembl database. See
+the general documentation of the Ensembl module for more information on
+what this means and what methods are available.
+</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+  <div class="examples">
+    <h3>Examples:</h3>
+    
+      <h4><div class='inline'></div></h4>
+      <pre class="example code"><span class='marker identifier id'>marker</span> <span class='assign token'>=</span> <span class='Marker constant id'>Marker</span><span class='dot token'>.</span><span class='find identifier id'>find</span><span class='lparen token'>(</span><span class='integer val'>52194</span><span class='rparen token'>)</span>
+<span class='puts identifier id'>puts</span> <span class='marker identifier id'>marker</span><span class='dot token'>.</span><span class='marker_feature identifier id'>marker_feature</span><span class='dot token'>.</span><span class='seq_region_start identifier id'>seq_region_start</span><span class='dot token'>.</span><span class='to_s identifier id'>to_s</span>
+<span class='puts identifier id'>puts</span> <span class='marker identifier id'>marker</span><span class='dot token'>.</span><span class='marker_feature identifier id'>marker_feature</span><span class='dot token'>.</span><span class='seq_region_end identifier id'>seq_region_end</span><span class='dot token'>.</span><span class='to_s identifier id'>to_s</span>
+</pre>
+    
+  </div>
+
+</div>
+
+  
+  
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <h2>Instance Method Summary</h2>
+
+    <ul class="summary">
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#to_s-instance_method" title="#to_s (instance method)">- (Object) <strong>to_s</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'></div></span>
+  
+</li>
+
+      
+    </ul>
+  
+
+
+  
+  
+  
+  
+  
+  
+  
+  <h3 class="inherited">Methods inherited from <a href="DBConnection.html" title="Ensembl::Core::DBConnection (class)">DBConnection</a></h3>
+  <p class="inherited"><a href="DBConnection.html#connect-class_method" title="Ensembl::Core::DBConnection.connect (method)">connect</a>, <a href="DBConnection.html#ensemblgenomes_connect-class_method" title="Ensembl::Core::DBConnection.ensemblgenomes_connect (method)">ensemblgenomes_connect</a></p>
+
+  
+  
+  
+  
+  
+  
+  
+  <h3 class="inherited">Methods inherited from <a href="../DBRegistry/Base.html" title="Ensembl::DBRegistry::Base (class)">Ensembl::DBRegistry::Base</a></h3>
+  <p class="inherited"><a href="../DBRegistry/Base.html#get_info-class_method" title="Ensembl::DBRegistry::Base.get_info (method)">get_info</a>, <a href="../DBRegistry/Base.html#get_name_from_db-class_method" title="Ensembl::DBRegistry::Base.get_name_from_db (method)">get_name_from_db</a></p>
+
+  
+
+  <div id="instance_method_details" class="method_details_list">
+    <h2>Instance Method Details</h2>
+    
+    
+      <div class="method_details first">
+  <p class="signature first" id="to_s-instance_method">
+  
+    - (<tt>Object</tt>) <strong>to_s</strong> 
+  
+
+  
+</p><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+965
+966
+967</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/ensembl/core/activerecord.rb', line 965</span>
+
+<span class='def def kw'>def</span> <span class='to_s identifier id'>to_s</span>
+  <span class='return return kw'>return</span> <span class='self self kw'>self</span><span class='dot token'>.</span><span class='attrib_type identifier id'>attrib_type</span><span class='dot token'>.</span><span class='code identifier id'>code</span> <span class='plus op'>+</span> <span class='string val'>&quot;:&quot;</span> <span class='plus op'>+</span> <span class='self self kw'>self</span><span class='dot token'>.</span><span class='value identifier id'>value</span><span class='dot token'>.</span><span class='to_s identifier id'>to_s</span>
+<span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+  </div>
+
+</div>
+    
+    <div id="footer">
+  Generated on Mon Apr 19 20:33:33 2010 by 
+  <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool">yard</a>
+  0.5.4 (ruby-1.8.6).
+</div>
+
+  </body>
+</html>
