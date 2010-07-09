@@ -732,6 +732,17 @@ module Ensembl
       	slice = Ensembl::Core::Slice.new(seq_region, seq_region_start, seq_region_end, seq_region_strand)
         return slice.seq
       end
+      
+      
+      def self.find_by_stable_id(stable_id)
+          exon_stable_id = ExonStableId.find_by_stable_id(stable_id)
+          if exon_stable_id.nil?
+            return nil
+          else
+            return exon_stable_id.exon
+          end
+      end
+      
     end
 
     # = DESCRIPTION
