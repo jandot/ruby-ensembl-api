@@ -99,12 +99,12 @@ module Ensembl
       end
       
       def transcript_variations
-        tv = TranscriptVariation.find_all_by_variation_feature_id(self.variation_feature_id)
-        if tv[0].nil? then # the variation is not stored in the database, so run the calculation
+        tvs = TranscriptVariation.find_all_by_variation_feature_id(self.variation_feature_id)
+        if tvs[0].nil? then # the variation is not stored in the database, so run the calculation
           sr = core_connection(self.seq_region_id)
           return custom_transcript_variation(self,sr)
         else
-          return tv # the variation is already present in the database
+          return tvs # the variation is already present in the database
         end  
       end
       
@@ -140,7 +140,7 @@ module Ensembl
         upstream = 5000
         tvs = [] # store all the calculated TranscriptVariations
 
-        # retrieve the slice of the genomic region where the variation is mapped
+        # retrieve the slice of the genomic region where the variation is located
         region = Ensembl::Core::Slice.fetch_by_region(Ensembl::Core::CoordSystem.find(sr.coord_system_id).name,sr.name,vf.seq_region_start-upstream,vf.seq_region_end+downstream-1)
 
         # iterate through all the transcripts present in the region

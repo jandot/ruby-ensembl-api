@@ -123,6 +123,9 @@ class ActiveRecordVariation < Test::Unit::TestCase
   def test_variation_transcript
     t = Variation.find_by_name('rs7671997').variation_features[0].transcript_variations
     assert_equal(2,t.size)
+    assert_equal('INTRONIC',t[0].consequence_type)
+    assert_equal('5PRIME_UTR',t[1].consequence_type)
+    assert_equal(15008544,t[0].variation_feature_id)
     transcript = t[0].transcript
     assert_equal('protein_coding',transcript.biotype)
     assert_equal(2230096,transcript.seq_region_start)
@@ -130,6 +133,7 @@ class ActiveRecordVariation < Test::Unit::TestCase
     assert_equal('ENST00000243706',transcript.stable_id)
     e = transcript.exons
     assert_equal('CTCCCGTGAGGCAGTGCGAGGCGCGCGGGGCACGGAGGGCGGTGGCGGCGGGCTCCTGCGAGAAGCAAGCGGAACTTCCTGAG',e[0].seq.upcase)
+
   end
   
   def test_source
