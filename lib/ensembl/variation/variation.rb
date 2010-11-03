@@ -100,7 +100,7 @@ module Ensembl
       
       def transcript_variations
         tv = TranscriptVariation.find_all_by_variation_feature_id(self.variation_feature_id)
-        if tv[0].nil? then # the variation is not stored in the database
+        if tv[0].nil? then # the variation is not stored in the database, so run the calculation
           sr = core_connection(self.seq_region_id)
           return custom_transcript_variation(self,sr)
         else
@@ -129,6 +129,39 @@ module Ensembl
           Ensembl::SESSION.seq_regions[seq_region.id] = seq_region
         end
         return seq_region
+      end
+      
+      # Calculate a consequence type for a user-defined variation
+      def custom_transcript_variation(vf,sr)
+        @variation_name = vf.variation_name
+        @seq_region = sr
+
+        downstream = 5000
+        upstream = 5000
+        tvs = [] # store all the calculated TranscriptVariations
+
+        # retrieve the slice of the genomic region where the variation is mapped
+        region = Ensembl::Core::Slice.fetch_by_region(Ensembl::Core::CoordSystem.find(sr.coord_system_id).name,sr.name,vf.seq_region_start-upstream,vf.seq_region_end+downstream-1)
+
+        # iterate through all the transcripts present in the region
+        region.genes.transcripts.each do |t|
+          tv = TranscriptVariation.new() # create a new TranscriptVariation object for every transcript present
+          tv.transcript_stable_id = t.stable_id
+
+          # do the calculations
+
+          tvs << tv
+        end
+
+        # if there are no transcripts within 5000 bases upstream and downstream, set the variation as INTERGENIC
+        if tvs.size == 0 then
+          tv = TranscriptVariation.new()
+          tv.variation_name = vf.variation_name
+          tv.consequence_type = "INTERGENIC"
+          tvs << tv
+        end
+
+        return tvs
       end
       
     end # VariationFeature
