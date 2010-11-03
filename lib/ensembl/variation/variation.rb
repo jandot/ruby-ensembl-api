@@ -81,7 +81,6 @@ module Ensembl
       has_many :samples, :through => :tagged_variation_features
       has_many :transcript_variations
       
-      
       #=DESCRIPTION
       # Based on Perl API 'get_all_Genes' method for Variation class. Get a genomic region
       # starting from the Variation coordinates, expanding the region upstream and
@@ -142,6 +141,31 @@ module Ensembl
     class TranscriptVariation < DBConnection
       set_primary_key "transcript_variation_id"
       belongs_to :variation_feature
+      validates_inclusion_of :consequence_type, :in => ['ESSENTIAL_SPLICE_SITE',
+                                                        'STOP_GAINED',
+                                                        'STOP_LOST',
+                                                        'COMPLEX_INDEL',
+                                                        'FRAMESHIFT_CODING',
+                                                        'NON_SYNONYMOUS_CODING',
+                                                        'SPLICE_SITE',
+                                                        'PARTIAL_CODON',
+                                                        'SYNONYMOUS_CODING',
+                                                        'REGULATORY_REGION',
+                                                        'WITHIN_MATURE_miRNA',
+                                                        '5PRIME_UTR',
+                                                        '3PRIME_UTR',
+                                                        'INTRONIC',
+                                                        'NMD_TRANSCRIPT',
+                                                        'UPSTREAM',
+                                                        'DOWNSTREAM',
+                                                        'WITHIN_NON_CODING_GENE',
+                                                        'HGMD_MUTATION'
+                                                        ], :message => "Consequence type not allowed!"
+                                                        
+      def consequence_type
+        a = attributes_before_type_cast
+        "#{a['consequence_type']}" 
+      end                                                  
       
       def transcript
         if !Ensembl::Core::DBConnection.connected? then
