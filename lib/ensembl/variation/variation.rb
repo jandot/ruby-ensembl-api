@@ -79,7 +79,6 @@ module Ensembl
       belongs_to :variation
       has_many :tagged_variation_features
       has_many :samples, :through => :tagged_variation_features
-      has_many :transcript_variations
       
       #=DESCRIPTION
       # Based on Perl API 'get_all_Genes' method for Variation class. Get a genomic region
@@ -97,6 +96,16 @@ module Ensembl
         slice_up = Ensembl::Core::Slice.fetch_by_region(Ensembl::Core::CoordSystem.find(sr.coord_system_id).name,sr.name,f.up_seq_region_start,f.up_seq_region_end,self.seq_region_strand)
         slice_down = Ensembl::Core::Slice.fetch_by_region(Ensembl::Core::CoordSystem.find(sr.coord_system_id).name,sr.name,f.down_seq_region_start,f.down_seq_region_end,self.seq_region_strand)
         return slice_up,slice_down
+      end
+      
+      def transcript_variations
+        tv = TranscriptVariation.find_all_by_variation_feature_id(self.variation_feature_id)
+        if tv[0].nil? then # the variation is not stored in the database
+          sr = core_connection(self.seq_region_id)
+          return custom_transcript_variation(self,sr)
+        else
+          return tv # the variation is already present in the database
+        end  
       end
       
       private 
