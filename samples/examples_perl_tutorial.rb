@@ -7,7 +7,7 @@ require 'progressbar'
 include Ensembl::Core
 
 ## Connecting to the Database
-DBConnection.connect('homo_sapiens')
+DBConnection.connect('homo_sapiens',45)
 
 ## Object adaptors
 # not necessary, ruby uses class methods instead
@@ -39,10 +39,15 @@ puts slice.seq
 puts "== Query a slice about itself =="
 puts slice.to_yaml
 
-puts "== Get genes for a slice =="
-slice = Slice.fetch_by_region('chromosome','19',112200,1122000)
+puts "== Get genes for a slice and print exons and introns=="
+slice = Slice.fetch_by_region('chromosome','19',112200,500000)
 slice.genes.each do |gene|
   puts gene.stable_id
+  puts 'Exons for first transcript:'
+  puts gene.transcripts[0].exons.sort_by{|e| e.start}.collect{|e| e.start.to_s + '->' + e.stop.to_s}.join("\t")
+  puts 'Introns for first transcript:'
+  puts gene.transcripts[0].introns.sort_by{|i| i.start}.collect{|i| i.start.to_s + '->' + i.stop.to_s}.join("\t")
+  puts
 end
 
 puts "== Get DNA alignment features for 20:80000..88000 =="
