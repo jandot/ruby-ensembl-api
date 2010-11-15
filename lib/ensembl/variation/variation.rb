@@ -165,11 +165,46 @@ module Ensembl
                   else
                     tv.consequence_type = "WITHIN_NON_CODING_GENE"
                   end
-              else
+              else # coding gene
                 if vf.seq_region_start > t.seq_region_start and vf.seq_region_end < t.coding_region_genomic_start then
                   tv.consequence_type = (t.strand == 1) ? "5PRIME_UTR" : "3PRIME_UTR"  
                 elsif vf.seq_region_start > t.coding_region_genomic_end and vf.seq_region_end < t.seq_region_end then
                   tv.consequence_type = (t.strand == 1) ? "3PRIME_UTR" : "5PRIME_UTR"
+                elsif vf.seq_region_start < t.coding_region_genomic_start and vf.seq_region_end > t.coding_region_genomic_start then
+                  tv.consequence_type = "COMPLEX_INDEL"
+                elsif vf.seq_region_start < t.coding_region_genomic_end and vf.seq_region_end > t.coding_region_end then
+                  tv.consequence_type = "COMPLEX_INDEL"
+                else # now look at exon / intron structure
+                  exon_up = t.exon_for_genomic_position(vf.seq_region_start)
+                  exon_down = t.exon_for_genomic_position(vf.seq_region_end)
+                  if exon_up.nil? and exon_down.nil? # we are inside an intron
+                    # checking boundaries
+                    near_exon_up_2bp = t.exon_for_genomic_position(vf.seq_region_start-2)
+                    near_exon_down_2bp = t.exon_for_genomic_position(vf.seq_region_end+2)
+                    near_exon_up_8bp = t.exon_for_genomic_position(vf.seq_region_start-8)
+                    near_exon_down_8bp = t.exon_for_genomic_position(vf.seq_region_end+8)
+                    if near_exon_up_2bp or near_exon_down_2bp then
+                      tv.consequence_type = "ESSENTIAL_SPLICE_SITE"
+                    elsif near_exon_up_8bp or near_exon_down_8bp then
+                      tv.consequence_type = "SPLICE_SITE"
+                    end
+                  elsif exon_up and exon_down # the variation is inside an exon
+                    # check if it is a splice site
+                    if (vf.seq_region_start-exon_up.seq_region_start) <= 3 or (exon_down.seq_region_end-vf.seq_region_end) <= 3 then
+                      tv.consequence_type = "SPLICE_SITE"
+                    else 
+                      # is not a splice site, so let's check for frameshift, synonymous or non synonymous coding, stop gained or stop lost
+                      
+                    end
+                  else # a complex indel spanning intron/exon boundary
+                    tv.consequence_type = "COMPLEX_INDEL"
+                  end
+                end  
+                
+                  
+                    
+                  
+                  
               end          
                   
                   
