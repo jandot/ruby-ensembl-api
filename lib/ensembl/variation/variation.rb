@@ -158,9 +158,24 @@ module Ensembl
             elsif vf.seq_region_start >= t.seq_region_start and vf.seq_region_end < t.seq_region_end then
                 # within transcript
               if t.biotype != 'protein_coding': # not a coding gene
-                tv.consequence_type = (t.biotype == "miRNA") ? "WITHIN_MATURE_miRNA" : "WITHIN_NON_CODING_GENE"   
-              
+                  if t.biotype == "miRNA" then 
+                    tv.consequence_type = "WITHIN_MATURE_miRNA"
+                  elsif t.biotype == "nonsense_mediated_decay"
+                    tv.consequence_type = "NMD_TRANSCRIPT"
+                  else
+                    tv.consequence_type = "WITHIN_NON_CODING_GENE"
+                  end
+              else
+                if vf.seq_region_start > t.seq_region_start and vf.seq_region_end < t.coding_region_genomic_start then
+                  tv.consequence_type = (t.strand == 1) ? "5PRIME_UTR" : "3PRIME_UTR"  
+                elsif vf.seq_region_start > t.coding_region_genomic_end and vf.seq_region_end < t.seq_region_end then
+                  tv.consequence_type = (t.strand == 1) ? "3PRIME_UTR" : "5PRIME_UTR"
+              end          
+                  
+                  
+                
 
+            
             tvs << tv
           end
         end
