@@ -1,5 +1,5 @@
 #
-# = test/unit/release_50/variation/test_activerecord.rb - Unit test for Ensembl::Variation
+# = test/unit/release_56/variation/test_activerecord.rb - Unit test for Ensembl::Variation
 #
 # Copyright::   Copyright (C) 2009
 #               Francesco Strozzi <francesco.strozzi@gmail.com>
