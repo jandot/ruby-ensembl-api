@@ -5,7 +5,7 @@
 # License::     The Ruby License
 #
 
-nil
+
 module Ensembl
   
   module Variation
@@ -79,7 +79,6 @@ module Ensembl
       belongs_to :variation
       has_many :tagged_variation_features
       has_many :samples, :through => :tagged_variation_features
-      
       #=DESCRIPTION
       # Based on Perl API 'get_all_Genes' method for Variation class. Get a genomic region
       # starting from the Variation coordinates, expanding the region upstream and
@@ -100,7 +99,7 @@ module Ensembl
       
       def transcript_variations
         tvs = TranscriptVariation.find_all_by_variation_feature_id(self.variation_feature_id)
-        if tvs[0].nil? then # the variation is not stored in the database, so run the calculation
+        if tvs[0].nil? then # the variation is not stored in the database, so run the calculations
           sr = core_connection(self.seq_region_id)
           return custom_transcript_variation(self,sr)
         else
@@ -142,21 +141,33 @@ module Ensembl
 
         # retrieve the slice of the genomic region where the variation is located
         region = Ensembl::Core::Slice.fetch_by_region(Ensembl::Core::CoordSystem.find(sr.coord_system_id).name,sr.name,vf.seq_region_start-upstream,vf.seq_region_end+downstream-1)
-
         # iterate through all the transcripts present in the region
-        region.genes.transcripts.each do |t|
-          tv = TranscriptVariation.new() # create a new TranscriptVariation object for every transcript present
-          tv.transcript_stable_id = t.stable_id
+        genes = region.genes
+        if genes[0] != nil
+          transcripts.each do |t|
+            tv = TranscriptVariation.new() # create a new TranscriptVariation object for every transcript present
+            tv.transcript_stable_id = t.stable_id
 
-          # do the calculations
+            # do the calculations
+            
+            # check if the variation is outside the transcript
+            if vf.seq_region_end < t.seq_region_start then
+              tv.consequence_type = (t.strand == 1) ? "UPSTREAM" : "DOWNSTREAM"
+            elsif vf.seq_region_start > t.seq_region_end then
+              tv.consequence_type = (t.strand == 1) ? "DOWNSTREAM" : "UPSTREAM"
+            elsif vf.seq_region_start >= t.seq_region_start and vf.seq_region_end < t.seq_region_end then
+                # within transcript
+              if t.biotype != 'protein_coding': # not a coding gene
+                tv.consequence_type = (t.biotype == "miRNA") ? "WITHIN_MATURE_miRNA" : "WITHIN_NON_CODING_GENE"   
+              
 
-          tvs << tv
+            tvs << tv
+          end
         end
-
-        # if there are no transcripts within 5000 bases upstream and downstream, set the variation as INTERGENIC
+        
+        # if there are no transcripts within 5000 bases upstream and downstream set the variation as INTERGENIC (no effect on any transcript)
         if tvs.size == 0 then
           tv = TranscriptVariation.new()
-          tv.variation_name = vf.variation_name
           tv.consequence_type = "INTERGENIC"
           tvs << tv
         end
@@ -204,9 +215,8 @@ module Ensembl
                                                         'HGMD_MUTATION'
                                                         ], :message => "Consequence type not allowed!"
                                                         
-      def consequence_type
-        a = attributes_before_type_cast
-        "#{a['consequence_type']}" 
+      def consequence_type # workaround as ActiveRecord do not parse SET field in MySQL
+        "#{attributes_before_type_cast['consequence_type']}" 
       end                                                  
       
       def transcript
