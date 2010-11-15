@@ -249,5 +249,10 @@ module Ensembl
       belongs_to :variation_group
       belongs_to :source
     end
+    
+    class SeqRegion < DBConnection
+      set_primary_key "seq_region_id"
+    end
+    
   end
 end

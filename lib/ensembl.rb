@@ -9,7 +9,7 @@
 
 module Ensembl
   ENSEMBL_RELEASE = 56
-
+  
   class Session
     attr_accessor :coord_systems
     attr_accessor :seqlevel_id, :seqlevel_coord_system
