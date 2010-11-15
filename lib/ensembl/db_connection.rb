@@ -9,7 +9,7 @@
 
 
 require 'rubygems'
-require 'activerecord'
+require 'active_record'
 
 module Ensembl
   DB_ADAPTER = 'mysql'
