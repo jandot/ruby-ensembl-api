@@ -24,11 +24,17 @@ class TestVariation < Test::Unit::TestCase
     DBConnection.remove_connection
   end
   
-  def test_custom_transcript
+  def test_intergenic
     vf = VariationFeature.new(:seq_region_id => SeqRegion.find_by_name("X").seq_region_id, :seq_region_start => 23694, :seq_region_end => 23694, :seq_region_strand => 1, :allele_string => "A/T",:variation_name => "fake_SNP")
     tv = vf.transcript_variations
     assert_instance_of(TranscriptVariation,tv[0])
     assert_equal("INTERGENIC",tv[0].consequence_type)
+  end
+  
+  def test_3prime_utr
+    vf = VariationFeature.new(:seq_region_id => 27506, :seq_region_start => 96810688, :seq_region_end => 96810688, :seq_region_strand => 1, :allele_string => "G/C", :variation_name => "rs16869283")
+    tv = vf.transcript_variations
+    assert_equal("3PRIME_UTR", tv[0].consequence_type) 
   end
   
   

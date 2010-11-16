@@ -142,12 +142,13 @@ module Ensembl
         # retrieve the slice of the genomic region where the variation is located
         region = Ensembl::Core::Slice.fetch_by_region(Ensembl::Core::CoordSystem.find(sr.coord_system_id).name,sr.name,vf.seq_region_start-upstream,vf.seq_region_end+downstream-1)
         # iterate through all the transcripts present in the region
-        genes = region.genes
+        puts "Region: ",region
+        genes = region.genes(inclusive = true)
         if genes[0] != nil
-          transcripts.each do |t|
+          genes.each do |g| 
+            g.transcripts.each do |t|
             tv = TranscriptVariation.new() # create a new TranscriptVariation object for every transcript present
-            tv.transcript_stable_id = t.stable_id
-
+            puts t.stable_id
             # do the calculations
             
             # check if the variation is outside the transcript
@@ -155,7 +156,7 @@ module Ensembl
               tv.consequence_type = (t.strand == 1) ? "UPSTREAM" : "DOWNSTREAM"
             elsif vf.seq_region_start > t.seq_region_end then
               tv.consequence_type = (t.strand == 1) ? "DOWNSTREAM" : "UPSTREAM"
-            elsif vf.seq_region_start >= t.seq_region_start and vf.seq_region_end < t.seq_region_end then
+            elsif vf.seq_region_start >= t.seq_region_start and vf.seq_region_end <= t.seq_region_end then
                 # within transcript
               if t.biotype != 'protein_coding': # not a coding gene
                   if t.biotype == "miRNA" then 
@@ -200,18 +201,12 @@ module Ensembl
                     tv.consequence_type = "COMPLEX_INDEL"
                   end
                 end  
-                
-                  
-                    
-                  
-                  
+                   
               end          
-                  
-                  
-                
-
-            
-            tvs << tv
+                      
+             tvs << tv
+            end
+           end 
           end
         end
         
