@@ -142,74 +142,31 @@ module Ensembl
         # retrieve the slice of the genomic region where the variation is located
         region = Ensembl::Core::Slice.fetch_by_region(Ensembl::Core::CoordSystem.find(sr.coord_system_id).name,sr.name,vf.seq_region_start-upstream,vf.seq_region_end+downstream-1)
         # iterate through all the transcripts present in the region
-        puts "Region: ",region
         genes = region.genes(inclusive = true)
         if genes[0] != nil
-          genes.each do |g| 
+          genes.each do |g|
             g.transcripts.each do |t|
-            tv = TranscriptVariation.new() # create a new TranscriptVariation object for every transcript present
-            puts t.stable_id
-            # do the calculations
+              tv = TranscriptVariation.new() # create a new TranscriptVariation object for every transcript present
+              # do the calculations
+              # check if the variation is outside the transcript
+              tv.consequence_type = check_outside(vf,t)
+              
+              # if no consequence type is found, then variation is inside the transcript
+              # check for non coding gene (only for SNPs)
+              tv.consequence_type = check_non_coding(vf,t) if tv.consequence_type == "" and t.biotype != 'protein_coding'
             
-            # check if the variation is outside the transcript
-            if vf.seq_region_end < t.seq_region_start then
-              tv.consequence_type = (t.strand == 1) ? "UPSTREAM" : "DOWNSTREAM"
-            elsif vf.seq_region_start > t.seq_region_end then
-              tv.consequence_type = (t.strand == 1) ? "DOWNSTREAM" : "UPSTREAM"
-            elsif vf.seq_region_start >= t.seq_region_start and vf.seq_region_end <= t.seq_region_end then
-                # within transcript
-              if t.biotype != 'protein_coding': # not a coding gene
-                  if t.biotype == "miRNA" then 
-                    tv.consequence_type = "WITHIN_MATURE_miRNA"
-                  elsif t.biotype == "nonsense_mediated_decay"
-                    tv.consequence_type = "NMD_TRANSCRIPT"
-                  else
-                    tv.consequence_type = "WITHIN_NON_CODING_GENE"
-                  end
-              else # coding gene
-                if vf.seq_region_start > t.seq_region_start and vf.seq_region_end < t.coding_region_genomic_start then
-                  tv.consequence_type = (t.strand == 1) ? "5PRIME_UTR" : "3PRIME_UTR"  
-                elsif vf.seq_region_start > t.coding_region_genomic_end and vf.seq_region_end < t.seq_region_end then
-                  tv.consequence_type = (t.strand == 1) ? "3PRIME_UTR" : "5PRIME_UTR"
-                elsif vf.seq_region_start < t.coding_region_genomic_start and vf.seq_region_end > t.coding_region_genomic_start then
-                  tv.consequence_type = "COMPLEX_INDEL"
-                elsif vf.seq_region_start < t.coding_region_genomic_end and vf.seq_region_end > t.coding_region_end then
-                  tv.consequence_type = "COMPLEX_INDEL"
-                else # now look at exon / intron structure
-                  exon_up = t.exon_for_genomic_position(vf.seq_region_start)
-                  exon_down = t.exon_for_genomic_position(vf.seq_region_end)
-                  if exon_up.nil? and exon_down.nil? # we are inside an intron
-                    # checking boundaries
-                    near_exon_up_2bp = t.exon_for_genomic_position(vf.seq_region_start-2)
-                    near_exon_down_2bp = t.exon_for_genomic_position(vf.seq_region_end+2)
-                    near_exon_up_8bp = t.exon_for_genomic_position(vf.seq_region_start-8)
-                    near_exon_down_8bp = t.exon_for_genomic_position(vf.seq_region_end+8)
-                    if near_exon_up_2bp or near_exon_down_2bp then
-                      tv.consequence_type = "ESSENTIAL_SPLICE_SITE"
-                    elsif near_exon_up_8bp or near_exon_down_8bp then
-                      tv.consequence_type = "SPLICE_SITE"
-                    end
-                  elsif exon_up and exon_down # the variation is inside an exon
-                    # check if it is a splice site
-                    if (vf.seq_region_start-exon_up.seq_region_start) <= 3 or (exon_down.seq_region_end-vf.seq_region_end) <= 3 then
-                      tv.consequence_type = "SPLICE_SITE"
-                    else 
-                      # is not a splice site, so let's check for frameshift, synonymous or non synonymous coding, stop gained or stop lost
-                      
-                    end
-                  else # a complex indel spanning intron/exon boundary
-                    tv.consequence_type = "COMPLEX_INDEL"
-                  end
-                end  
-                   
-              end          
-                      
-             tvs << tv
-            end
-           end 
+              # if no consequence type is found, then check intron / exon boundaries
+              tv.consequence_type = check_splice_site(vf,t) if tv.consequence_type == ""
+              
+              # if no consequence type is found, check if the variation is inside UTRs
+              tv.consequence_type = check_utr(vf,t) if tv.consequence_type == ""
+            
+              # if no consequence type is found, then check codon change
+              
+              tvs << tv 
+            end   
           end
         end
-        
         # if there are no transcripts within 5000 bases upstream and downstream set the variation as INTERGENIC (no effect on any transcript)
         if tvs.size == 0 then
           tv = TranscriptVariation.new()
@@ -219,6 +176,64 @@ module Ensembl
 
         return tvs
       end
+      
+      def check_outside(vf,t)
+        if vf.seq_region_end < t.seq_region_start then
+           return (t.strand == 1) ? "UPSTREAM" : "DOWNSTREAM"
+        elsif vf.seq_region_start > t.seq_region_end then
+           return (t.strand == 1) ? "DOWNSTREAM" : "UPSTREAM"
+        end
+        return nil      
+      end
+      
+      def check_non_coding(vf,t)
+          if t.biotype == "miRNA" then 
+             return (vf.seq_region_start == vf.seq_region_end) ? "WITHIN_MATURE_miRNA" : "COMPLEX_INDEL"
+          elsif t.biotype == "nonsense_mediated_decay"
+             return (vf.seq_region_start == vf.seq_region_end) ? "NMD_TRANSCRIPT" : "COMPLEX_INDEL"
+          else
+             return (vf.seq_region_start == vf.seq_region_end) ? "WITHIN_NON_CODING_GENE" : "COMPLEX_INDEL"
+          end
+          return nil
+      end
+      
+      def check_utr(vf,t)
+          if vf.seq_region_start > t.seq_region_start and vf.seq_region_end < t.coding_region_genomic_start then
+             return (t.strand == 1) ? "5PRIME_UTR" : "3PRIME_UTR"
+          elsif vf.seq_region_start > t.coding_region_genomic_end and vf.seq_region_end < t.seq_region_end then
+             return (t.strand == 1) ? "3PRIME_UTR" : "5PRIME_UTR"
+          end
+          return nil   
+      end
+      
+      def check_splice_site(vf,t)
+          exon_up = t.exon_for_genomic_position(vf.seq_region_start)
+          exon_down = t.exon_for_genomic_position(vf.seq_region_end)
+          if exon_up.nil? and exon_down.nil? # we are inside an intron
+             # checking boundaries
+             near_exon_up_2bp = t.exon_for_genomic_position(vf.seq_region_start-2)
+             near_exon_down_2bp = t.exon_for_genomic_position(vf.seq_region_end+2)
+             near_exon_up_8bp = t.exon_for_genomic_position(vf.seq_region_start-8)
+             near_exon_down_8bp = t.exon_for_genomic_position(vf.seq_region_end+8)
+             if near_exon_up_2bp or near_exon_down_2bp then
+                return "ESSENTIAL_SPLICE_SITE"
+             elsif near_exon_up_8bp or near_exon_down_8bp then
+                return "SPLICE_SITE"
+             else
+                return "INTRONIC"   
+             end
+          elsif exon_up and exon_down # the variation is inside an exon
+                # check if it is a splice site
+                if (vf.seq_region_start-exon_up.seq_region_start) <= 3 or (exon_down.seq_region_end-vf.seq_region_end) <= 3 then
+                    return "SPLICE_SITE"                      
+                end
+          else # a complex indel spanning intron/exon boundary
+               return "COMPLEX_INDEL"
+          end
+          return nil
+            
+      end
+      
       
     end # VariationFeature
     
