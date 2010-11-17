@@ -302,9 +302,9 @@ module Ensembl
       # The Transcript#exon_for_position identifies the exon that covers a given
       # genomic position. Returns the exon object, or nil if in intron.
       def exon_for_genomic_position(pos)
-        if pos < coding_region_genomic_start or pos > coding_region_genomic_end
-          raise RuntimeError, "Position has to be within transcript"
-        end
+        #if pos < coding_region_genomic_start or pos > coding_region_genomic_end
+        #  raise RuntimeError, "Position has to be within transcript"
+        #end
         self.exons.each do |exon|
           if exon.start <= pos and exon.stop >= pos
             return exon
