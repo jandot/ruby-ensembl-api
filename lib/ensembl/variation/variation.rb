@@ -47,6 +47,7 @@ module Ensembl
       has_many :variation_group_variations
       has_many :variation_groups, :through => :variation_group_variations
       has_many :individual_genotype_multiple_bps
+      has_many :failed_descriptions, :through => :failed_variations
       
       def self.fetch_all_by_source(source)
         variations = Source.find_by_name(source).variations
@@ -79,6 +80,32 @@ module Ensembl
       belongs_to :variation
       has_many :tagged_variation_features
       has_many :samples, :through => :tagged_variation_features
+      has_many :seq_regions
+      validates_inclusion_of :consequence_type, :in => ['ESSENTIAL_SPLICE_SITE',
+                                                        'STOP_GAINED',
+                                                        'STOP_LOST',
+                                                        'COMPLEX_INDEL',
+                                                        'FRAMESHIFT_CODING',
+                                                        'NON_SYNONYMOUS_CODING',
+                                                        'SPLICE_SITE',
+                                                        'PARTIAL_CODON',
+                                                        'SYNONYMOUS_CODING',
+                                                        'REGULATORY_REGION',
+                                                        'WITHIN_MATURE_miRNA',
+                                                        '5PRIME_UTR',
+                                                        '3PRIME_UTR',
+                                                        'INTRONIC',
+                                                        'NMD_TRANSCRIPT',
+                                                        'UPSTREAM',
+                                                        'DOWNSTREAM',
+                                                        'WITHIN_NON_CODING_GENE',
+                                                        'HGMD_MUTATION'
+                                                        ], :message => "Consequence type not allowed!"      
+      
+      def consequence_type # workaround as ActiveRecord do not parse SET field in MySQL
+        "#{attributes_before_type_cast['consequence_type']}" 
+      end 
+      
       #=DESCRIPTION
       # Based on Perl API 'get_all_Genes' method for Variation class. Get a genomic region
       # starting from the Variation coordinates, expanding the region upstream and
@@ -111,11 +138,10 @@ module Ensembl
       
       def core_connection(seq_region_id) 
         if !Ensembl::Core::DBConnection.connected? then  
-          host,user,password,db_name,port = Ensembl::Variation::DBConnection.get_info
-          if db_name =~/(\w+_\w+)_\w+_(\d+)_\S+/ then
-            species,release = $1,$2
+          host,user,password,db_name,port,species,release = Ensembl::Variation::DBConnection.get_info
+          begin
             Ensembl::Core::DBConnection.connect(species,release.to_i,:username => user, :password => password,:host => host, :port => port)
-          else
+          rescue
             raise NameError, "Can't derive Core database name from #{db_name}. Are you using non conventional names?"
           end
         end
@@ -132,58 +158,94 @@ module Ensembl
       
       # Calculate a consequence type for a user-defined variation
       def custom_transcript_variation(vf,sr)
+        
+        require 'benchmark'
+        
         @variation_name = vf.variation_name
         @seq_region = sr
 
         downstream = 5000
         upstream = 5000
         tvs = [] # store all the calculated TranscriptVariations
-
-        # retrieve the slice of the genomic region where the variation is located
-        region = Ensembl::Core::Slice.fetch_by_region(Ensembl::Core::CoordSystem.find(sr.coord_system_id).name,sr.name,vf.seq_region_start-upstream,vf.seq_region_end+downstream-1)
-        # iterate through all the transcripts present in the region
-        genes = region.genes(inclusive = true)
-        if genes[0] != nil
+        region,genes = nil,nil
+        Benchmark.bm do |b|
+         # retrieve the slice of the genomic region where the variation is located
+         b.report("FETCH REGION") {region = Ensembl::Core::Slice.fetch_by_region(Ensembl::Core::CoordSystem.find(sr.coord_system_id).name,sr.name,vf.seq_region_start-upstream,vf.seq_region_end+downstream-1)}
+         # iterate through all the transcripts present in the region
+         b.report("FETCH GENES ") {genes = region.genes(inclusive = true)}
+         if genes[0] != nil
           genes.each do |g|
             g.transcripts.each do |t|
               tv = TranscriptVariation.new() # create a new TranscriptVariation object for every transcript present
               # do the calculations
-              # check if the variation is outside the transcript
-              tv.consequence_type = check_outside(vf,t)
               
-              # if no consequence type is found, then variation is inside the transcript
-              # check for non coding gene (only for SNPs)
+              # check if the variation is intergenic for this transcript (no effects)
+              tv.consequence_type = check_intergenic(vf,t)
+              
+              # check if the variation is upstram or downstram the transcript
+              tv.consequence_type = check_upstream_downstream(vf,t) if tv.consequence_type == ""
+              
+              # if no consequence type is found, then the variation is inside the transcript         
+              # check for non coding gene
               tv.consequence_type = check_non_coding(vf,t) if tv.consequence_type == "" and t.biotype != 'protein_coding'
-            
+
               # if no consequence type is found, then check intron / exon boundaries
               tv.consequence_type = check_splice_site(vf,t) if tv.consequence_type == ""
-              
+
               # if no consequence type is found, check if the variation is inside UTRs
-              tv.consequence_type = check_utr(vf,t) if tv.consequence_type == ""
-            
-              # if no consequence type is found, then check codon change
+              tv.consequence_type = check_utr(vf,t) if tv.consequence_type == ""    
+                        
+              # if no consequence type is found, then variation is inside an exon. 
+              # Check the codon change
+              b.report("AA CHANGE ") {(tv.consequence_type,tv.peptide_allele_string) = check_aa_change(vf,t) if tv.consequence_type == ""}
+                
               
+              if tv.methods.include?("transcript_stable_id") then # This changed from release 58
+                 tv.transcript_stable_id = t.stable_id
+              else
+                 tv.transcript_id = t.id
+              end
+              
+              tv.consequence_type = "INTERGENIC" if tv.consequence_type == ""
               tvs << tv 
             end   
           end
-        end
-        # if there are no transcripts within 5000 bases upstream and downstream set the variation as INTERGENIC (no effect on any transcript)
-        if tvs.size == 0 then
+         end
+         # if there are no transcripts/genes within 5000 bases upstream and downstream set the variation as INTERGENIC (no effects)
+         if tvs.size == 0 then
           tv = TranscriptVariation.new()
           tv.consequence_type = "INTERGENIC"
           tvs << tv
-        end
+         end
 
-        return tvs
+         return tvs
+        end # end Benchmark 
+       end
+      
+      ## CONSEQUENCE CALCULATION FUNCTIONS ##
+      
+      def check_intergenic(vf,t)
+        if vf.seq_region_end < t.seq_region_start and ((t.seq_region_start - vf.seq_region_end) +1) > 5000 then
+           return "INTERGENIC"
+        elsif vf.seq_region_start > t.seq_region_end and ((vf.seq_region_start - t.seq_region_end) +1) > 5000 then
+           return "INTERGENIC"      
+        end
+        return nil        
       end
       
-      def check_outside(vf,t)
-        if vf.seq_region_end < t.seq_region_start then
+      def check_upstream_downstream(vf,t)
+        if vf.seq_region_end < t.seq_region_start and ((t.seq_region_start - vf.seq_region_end) +1) <= 5000 then
            return (t.strand == 1) ? "UPSTREAM" : "DOWNSTREAM"
-        elsif vf.seq_region_start > t.seq_region_end then
+        elsif vf.seq_region_start > t.seq_region_end and ((vf.seq_region_start - t.seq_region_end)+1) <= 5000 then
            return (t.strand == 1) ? "DOWNSTREAM" : "UPSTREAM"
+        
+        # check if it's an InDel and if overlaps the transcript start / end   
+        elsif t.seq_region_start > vf.seq_region_start and t.seq_region_start < vf.seq_region_end then
+            return "COMPLEX_INDEL"
+        elsif t.seq_region_end > vf.seq_region_start and t.seq_region_end < vf.seq_region_end then
+            return "COMPLEX_INDEL"                
         end
-        return nil      
+        return nil
       end
       
       def check_non_coding(vf,t)
@@ -201,7 +263,7 @@ module Ensembl
           if vf.seq_region_start > t.seq_region_start and vf.seq_region_end < t.coding_region_genomic_start then
              return (t.strand == 1) ? "5PRIME_UTR" : "3PRIME_UTR"
           elsif vf.seq_region_start > t.coding_region_genomic_end and vf.seq_region_end < t.seq_region_end then
-             return (t.strand == 1) ? "3PRIME_UTR" : "5PRIME_UTR"
+             return (t.strand == 1) ? "3PRIME_UTR" : "5PRIME_UTR"   
           end
           return nil   
       end
@@ -225,14 +287,54 @@ module Ensembl
           elsif exon_up and exon_down # the variation is inside an exon
                 # check if it is a splice site
                 if (vf.seq_region_start-exon_up.seq_region_start) <= 3 or (exon_down.seq_region_end-vf.seq_region_end) <= 3 then
-                    return "SPLICE_SITE"                      
+                    return "SPLICE_SITE"                   
                 end
           else # a complex indel spanning intron/exon boundary
                return "COMPLEX_INDEL"
           end
-          return nil
-            
+          return nil      
       end
+      
+      def check_aa_change(vf,t)
+          alleles = vf.allele_string.split('/') # get the different alleles for this variation
+          
+          # if the variation is an InDel then it produces a frameshift
+          if vf.seq_region_start != vf.seq_region_end or alleles.include?("-") then
+            return "FRAMESHIFT_CODING",nil
+          end
+
+          # Find the position inside the CDS
+          mutation_position = t.genomic2cds(vf.seq_region_start)
+          mutation_base = Bio::Sequence::NA.new(alleles[1])
+          if t.seq_region_strand == -1
+             mutation_base.reverse_complement!
+          end
+          # The rank of the codon 
+          target_codon = (mutation_position)/3 + 1
+          cds_sequence = t.cds_seq
+          mut_sequence = cds_sequence.dup
+          # Replace base with the variant allele
+          mut_sequence[mutation_position] = mutation_base.seq
+          refcodon =  cds_sequence[(target_codon*3 -3)..(target_codon*3-1)]
+          mutcodon =  mut_sequence[(target_codon*3 -3)..(target_codon*3-1)]
+          codontable = Bio::CodonTable[1]
+          refaa = codontable[refcodon]
+          mutaa = codontable[mutcodon.downcase]
+          if mutaa == nil
+            raise RuntimeError "Codon #{mutcodon.downcase} wasn't recognized."
+          end
+          pep_string = refaa+"/"+mutaa
+          if mutaa == "*" and refaa != "*"
+            return "STOP_GAINED",pep_string
+          elsif mutaa != "*" and refaa == "*"
+            return "STOP_LOST",pep_string
+          elsif mutaa != refaa
+            return "NON_SYNONYMOUS_CODING",pep_string 
+          elsif mutaa == refaa
+            return "SYNONYMOUS_CODING",pep_string 
+          end
+           
+       end
       
       
     end # VariationFeature
@@ -280,16 +382,15 @@ module Ensembl
       end                                                  
       
       def transcript
-        if !Ensembl::Core::DBConnection.connected? then
-          host,user,password,db_name,port = Ensembl::Variation::DBConnection.get_info
-          if db_name =~/(\w+_\w+)_\w+_(\d+)_\S+/ then
-            species,release = $1,$2
+        host,user,password,db_name,port,species,release = Ensembl::Variation::DBConnection.get_info
+        if !Ensembl::Core::DBConnection.connected? then     
+          begin
             Ensembl::Core::DBConnection.connect(species,release.to_i,:username => user, :password => password,:host => host, :port => port)
-          else
-            raise NameError, "Can't get Core database name from #{db_name}. Pheraps you are using non conventional names"
-          end
-        end
-        Ensembl::Core::Transcript.find(self.transcript_id)
+          rescue
+            raise NameError, "Can't get Core database name from #{db_name}. Perhaps you are using non conventional names"
+          end    
+        end 
+        return (self.methods.include?("transcript_id")) ? Ensembl::Core::Transcript.find(self.transcript_id) : Ensembl::Core::Transcript.find_by_stable_id(self.transcript_stable_id)
       end
       
     end
