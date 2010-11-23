@@ -47,6 +47,9 @@ module Ensembl
       self.pluralize_table_names = false
       def self.get_info
         host,user,password,db_name,port = self.retrieve_connection.instance_values["connection_options"]
+        db_name =~/(\w+_\w+)_\w+_(\d+)_\S+/
+        species,release = $1,$2 # just works for standard Ensembl database names
+        return host,user,password,db_name,port,species,release.to_i
       end
       # = DESCRIPTION
       # Class method to retrieve the name of a database, using species, release and connection parameters
@@ -86,6 +89,7 @@ module Ensembl
         warn "WARNING: No connection to database established. Check that the species is in snake_case (was: #{species})." if db_name.nil?
         return db_name
       end
+      
       
     end
     
