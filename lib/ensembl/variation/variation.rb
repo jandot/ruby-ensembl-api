@@ -158,21 +158,17 @@ module Ensembl
       
       # Calculate a consequence type for a user-defined variation
       def custom_transcript_variation(vf,sr)
-        
-        require 'benchmark'
-        
+                
         @variation_name = vf.variation_name
         @seq_region = sr
 
         downstream = 5000
         upstream = 5000
         tvs = [] # store all the calculated TranscriptVariations
-        region,genes = nil,nil
-        Benchmark.bm do |b|
          # retrieve the slice of the genomic region where the variation is located
-         b.report("FETCH REGION") {region = Ensembl::Core::Slice.fetch_by_region(Ensembl::Core::CoordSystem.find(sr.coord_system_id).name,sr.name,vf.seq_region_start-upstream,vf.seq_region_end+downstream-1)}
+         region = Ensembl::Core::Slice.fetch_by_region(Ensembl::Core::CoordSystem.find(sr.coord_system_id).name,sr.name,vf.seq_region_start-upstream,vf.seq_region_end+downstream-1)
          # iterate through all the transcripts present in the region
-         b.report("FETCH GENES ") {genes = region.genes(inclusive = true)}
+        genes = region.genes(inclusive = true)
          if genes[0] != nil
           genes.each do |g|
             g.transcripts.each do |t|
@@ -197,7 +193,7 @@ module Ensembl
                         
               # if no consequence type is found, then variation is inside an exon. 
               # Check the codon change
-              b.report("AA CHANGE ") {(tv.consequence_type,tv.peptide_allele_string) = check_aa_change(vf,t) if tv.consequence_type == ""}
+              (tv.consequence_type,tv.peptide_allele_string) = check_aa_change(vf,t) if tv.consequence_type == ""
                 
               
               if tv.methods.include?("transcript_stable_id") then # This changed from release 58
@@ -219,7 +215,6 @@ module Ensembl
          end
 
          return tvs
-        end # end Benchmark 
        end
       
       ## CONSEQUENCE CALCULATION FUNCTIONS ##
@@ -296,21 +291,23 @@ module Ensembl
       end
       
       def check_aa_change(vf,t)
-          alleles = vf.allele_string.split('/') # get the different alleles for this variation
-          
+          alleles = vf.allele_string.split('/') # get the different alleles for this variation          
           # if the variation is an InDel then it produces a frameshift
           if vf.seq_region_start != vf.seq_region_end or alleles.include?("-") then
             return "FRAMESHIFT_CODING",nil
           end
 
           # Find the position inside the CDS
+          
           mutation_position = t.genomic2cds(vf.seq_region_start)
+          
           mutation_base = Bio::Sequence::NA.new(alleles[1])
           if t.seq_region_strand == -1
              mutation_base.reverse_complement!
           end
           # The rank of the codon 
           target_codon = (mutation_position)/3 + 1
+          cds_sequence = nil
           cds_sequence = t.cds_seq
           mut_sequence = cds_sequence.dup
           # Replace base with the variant allele
