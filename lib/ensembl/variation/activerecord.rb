@@ -28,6 +28,7 @@ module Ensembl
       belongs_to :sample
       belongs_to :variation
       belongs_to :population
+      belongs_to :subsnp_handle
     end
 
     # = DESCRIPTION
@@ -61,6 +62,71 @@ module Ensembl
       belongs_to :variation
       belongs_to :allele_group
     end
+    
+    # = DESCRIPTION
+    # Store information on attributes types
+    #
+    # This class uses ActiveRecord to access data in the Ensembl database.
+    # See the general documentation of the Ensembl module for
+    # more information on what this means and what methods are available.    
+    class AttribType < DBConnection
+      set_primary_key "attrib_type_id"
+    end 
+    
+    
+    # = DESCRIPTION
+    # 
+    # This class uses ActiveRecord to access data in the Ensembl database.
+    # See the general documentation of the Ensembl module for
+    # more information on what this means and what methods are available.    
+    class ConsequenceMapping < DBConnection
+    
+    end
+
+    # = DESCRIPTION
+    # 
+    # This class uses ActiveRecord to access data in the Ensembl database.
+    # See the general documentation of the Ensembl module for
+    # more information on what this means and what methods are available.    
+    class FailedDescription < DBConnection
+      set_primary_key "failed_description_id"
+      has_many :failed_variations
+    end
+    
+    # = DESCRIPTION
+    # 
+    # This class uses ActiveRecord to access data in the Ensembl database.
+    # See the general documentation of the Ensembl module for
+    # more information on what this means and what methods are available.    
+    class FailedVariation < DBConnection
+      set_primary_key "failed_variation_id"
+      belongs_to :failed_description
+      belongs_to :variation
+    end    
+    
+    # = DESCRIPTION
+    # 
+    # This class uses ActiveRecord to access data in the Ensembl database.
+    # See the general documentation of the Ensembl module for
+    # more information on what this means and what methods are available.    
+    class FeatureType < DBConnection
+      set_primary_key "feature_type_id"
+    end
+        
+    class Meta < DBConnection
+      set_primary_key "meta_id"
+    end
+    
+    class MetaCoord < DBConnection
+     
+    end
+    
+    class Phenotype < DBConnection
+      set_primary_key "phenotype_id"
+      belongs_to :variation_annotation
+    end
+    
+    
     
     # = DESCRIPTION
     # The Sample class gives information about the biological samples stored in the database. 
@@ -100,16 +166,25 @@ module Ensembl
     # more information on what this means and what methods are available.
     class Individual < DBConnection
       belongs_to :sample
-      # FIXME
+      has_one :individual_type
+      has_many :individual_populations
+      has_many :populations, :through => :individual_populations
     end
     
     class IndividualGenotypeMultipleBp < DBConnection
       belongs_to :sample
       belongs_to :variation
+      belongs_to :subsnp_handle
     end
+   
+    class IndividualType < DBConnection
+      set_primary_key "invidual_type_id"
+      belongs_to :individual
+    end    
+    
     
     class CompressedGenotypeSingleBp < DBConnection
-      belongs_to :sample
+      belongs_to :population_genotype, :foreign_key => "sample_id"
     end  
     
     class ReadCoverage < DBConnection
@@ -118,10 +193,19 @@ module Ensembl
     
     class Population < DBConnection
       belongs_to :sample
+      set_primary_key "sample_id"
+      has_many :population_genotypes
+      has_many :individual_populations
+      has_many :individuals, :through => :individual_populations
+      has_many :sample_synonyms
+      has_one :population_structure
+      has_many :tagged_variation_features
+      has_many :alleles
+      has_many :allele_groups
     end
     
     class PopulationStructure < DBConnection
-      # FIXME
+      
     end
     
     # = DESCRIPTION
@@ -135,6 +219,8 @@ module Ensembl
       set_primary_key "population_genotype_id"
       belongs_to :variation
       belongs_to :population
+      belongs_to :subsnp_handle
+      has_many :compressed_genotype_single_bps
     end
     
     # = DESCRIPTION
@@ -166,6 +252,29 @@ module Ensembl
       has_many :variation_groups
       has_many :httags
       has_many :variation_synonyms
+      has_many :variation_annotations
+      has_many :structural_variations
+    end
+    
+    class StructuralVariation < DBConnection
+      set_primary_key "structural_variation_id"
+      belongs_to :source
+      has_many :seq_regions
+    end
+    
+        
+    class SeqRegion < DBConnection
+      set_primary_key "seq_region_id"
+      belongs_to :variation_feature
+      belongs_to :structural_variation
+    end
+    
+    class SubsnpHandle < DBConnection
+      set_primary_key "subsnp_id"
+      has_many :individual_genotype_multiple_bps
+      has_many :population_genotypes
+      has_many :alleles
+      has_many :variation_synonyms
     end
     
     # = DESCRIPTION
@@ -179,6 +288,7 @@ module Ensembl
       set_primary_key "variation_synonym_id"
       belongs_to :variation
       belongs_to :source
+      belongs_to :subsnp_handle
     end
         
     # = DESCRIPTION
@@ -221,6 +331,14 @@ module Ensembl
       belongs_to :variation_group
     end
     
+    class VariationAnnotation < DBConnection
+      set_primary_key "variaion_annotation_id"
+      belongs_to :variation
+      belongs_to :phenotype
+      belongs_to :source
+    end
+    
+    
     # = DESCRIPTION
     # The FlankingSequence class gives information about the genomic coordinates 
     # of the flanking sequences, for a single VariationFeature. 
@@ -248,10 +366,6 @@ module Ensembl
       set_primary_key "httag_id"
       belongs_to :variation_group
       belongs_to :source
-    end
-    
-    class SeqRegion < DBConnection
-      set_primary_key "seq_region_id"
     end
     
   end
