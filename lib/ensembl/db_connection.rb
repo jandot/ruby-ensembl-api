@@ -74,11 +74,11 @@ module Ensembl
             dummy_db.disconnect! # close the generic connection with the host
             args[:database] = db_name
             dummy_db = DummyDBConnection.connect(args) # open a new connection directly with the collection database
-            others = ''
-            words.each do |w|
-              others << " #{w}"
-            end
-            species_name = "#{first}#{others}" # transform the species name, so it can match the species names stored in the collection database
+            #others = ''
+            #words.each do |w|
+            #  others << " #{w}"
+            #end
+            species_name = species.gsub(first,first[0..0]) # transform the species name, so it can match the species names stored in the collection database
             Ensembl::SESSION.collection_species = species_name # set the species used for this session, so it's easier to fetch slices from the genome of that species
             
             # check that the species passed is present in the collection database, otherwise returns a warning
