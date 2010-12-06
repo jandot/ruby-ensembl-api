@@ -39,10 +39,10 @@ module Ensembl
 
   module DBRegistry 
     # = DESCRIPTION
-    # The Ensembl::Registry::Base is a generic super class providing general methods 
+    # The Ensembl::Registry::Base is a super class providing general methods 
     # to get database and connection info.
-    #
     class Base < ActiveRecord::Base
+        
       self.abstract_class = true
       self.pluralize_table_names = false
       def self.get_info
@@ -52,32 +52,25 @@ module Ensembl
         return host,user,password,db_name,port,species,release.to_i
       end
       # = DESCRIPTION
-      # Class method to retrieve the name of a database, using species, release and connection parameters
-      # passed by the user.
-      #      
-      def self.get_name_from_db(match,species,release,args)
+      # Method to retrieve the name of a database, using species, release and connection parameters
+      # passed by the user.    
+      def self.get_name_from_db(db_type,species,release,args)
         species = species.underscore # Always in lowercase. This keeps things simple when dealing with complex species names like in Ensembl Genomes database
-        dummy_db = DummyDBConnection.connect(args) 
+        dummy_db = DummyDBConnection.connect(args)
         dummy_connection = dummy_db.connection
-        
         # check if a database exists with exactly the species name passed (regular way)
-        db_name = dummy_connection.select_values("SHOW DATABASES LIKE '%#{species}_#{match}_#{release.to_s}%'")[0]
-        
+        db_name = dummy_connection.select_values("SHOW DATABASES LIKE '%#{species}_#{db_type}_#{release.to_s}%'")[0]
         # if a database is not found and we are working on Ensembl Genomes database...
         if db_name.nil? and args[:ensembl_genomes] then
           words = species.split(/_/)
           first = words.shift
           # ...try to find a collection database using the first name of the species passed (convention used for collection databases)
-          db_name = dummy_connection.select_values("SHOW DATABASES").select {|d| d=~/#{first}.*_collection_#{match}_#{release.to_s}/}[0]
+          db_name = dummy_connection.select_values("SHOW DATABASES").select {|d| d=~/#{first}.*_collection_#{db_type}_#{release.to_s}/}[0]
           # if a collection database match is found, then look inside to find the species
           if db_name != nil then
             dummy_db.disconnect! # close the generic connection with the host
             args[:database] = db_name
             dummy_db = DummyDBConnection.connect(args) # open a new connection directly with the collection database
-            #others = ''
-            #words.each do |w|
-            #  others << " #{w}"
-            #end
             species_name = species.gsub(first,first[0..0]) # transform the species name, so it can match the species names stored in the collection database
             Ensembl::SESSION.collection_species = species_name # set the species used for this session, so it's easier to fetch slices from the genome of that species
             
@@ -90,6 +83,33 @@ module Ensembl
         return db_name
       end
       
+      def self.generic_connect(db_type, species, release, args = {})
+        Ensembl::SESSION.reset
+        db_name = nil
+        # if the connection is established with Ensembl Genomes, set the default port and host
+        if args[:ensembl_genomes] then
+          args[:port] = EG_PORT
+          args[:host] = EG_HOST
+        end    
+        if args[:port].nil? then
+          args[:port] = ( release > 47 ) ? 5306 : 3306
+        end
+        if args[:database]
+          db_name = args[:database]
+        else 
+          db_name = self.get_name_from_db(db_type,species,release,args) # try to find the corresponding database 
+        end 
+        establish_connection(
+                            :adapter => args[:adapter] || Ensembl::DB_ADAPTER,
+                            :host => args[:host] || Ensembl::DB_HOST,
+                            :database => db_name,
+                            :username => args[:username] || Ensembl::DB_USERNAME,
+                            :password => args[:password] || Ensembl::DB_PASSWORD,
+                            :port => args[:port]
+                          )
+        
+        self.retrieve_connection # Check if the connection is working       
+      end      
       
     end
     
@@ -120,44 +140,16 @@ module Ensembl
       # *Arguments*:
       # * species:: species to connect to. Arguments should be in snake_case
       # * ensembl_release:: the release of the database to connect to
-      #  (default = 50)
+      #  (default = 50)      
       def self.connect(species, release = Ensembl::ENSEMBL_RELEASE, args = {})
-        Ensembl::SESSION.reset
-        db_name = nil
-        # if the connection is established with Ensembl Genomes, set the default port and host
-        if args[:ensembl_genomes]
-          args[:port] = EG_PORT
-          args[:host] = EG_HOST
-        end    
-        if args[:port].nil? then
-          args[:port] = ( release > 47 ) ? 5306 : 3306
-        end
-        if args[:database]
-          db_name = args[:database]
-        else 
-          db_name = self.get_name_from_db('core',species,release,args) # try to find the corresponding core database
-        end 
-        establish_connection(
-                            :adapter => args[:adapter] || Ensembl::DB_ADAPTER,
-                            :host => args[:host] || Ensembl::DB_HOST,
-                            :database => db_name,
-                            :username => args[:username] || Ensembl::DB_USERNAME,
-                            :password => args[:password] || Ensembl::DB_PASSWORD,
-                            :port => args[:port]
-                          )
-        
-        self.retrieve_connection # Checkout that the connection is working       
+        self.generic_connect('core',species, release,args)
       end
       
-      
-      # = DESCRIPTION
-      # Simple wrapper for the normal DBConnection.connect() method. This is used to set the connection directly
-      # with the Ensembl Genomes database host
-      #
-      def self.ensemblgenomes_connect(species, release = Ensembl::ENSEMBL_RELEASE, args = {})
+      def self.ensemblgenomes_connect(species, release = Ensembl::ENSEMBL_RELEASE, args={})
         args[:ensembl_genomes] = true
-        self.connect(species,release,args)
+        self.generic_connect('core',species,release,args)
       end
+
       
     end # Core::DBConnection
 
@@ -189,29 +181,13 @@ module Ensembl
       # * ensembl_release:: the release of the database to connect to
       #  (default = 50)
       def self.connect(species, release = Ensembl::ENSEMBL_RELEASE, args = {})
-        Ensembl::SESSION.reset
-        args[:species] = species
-        if args[:port].nil? then
-          args[:port] = ( release > 47 ) ? 5306 : 3306
-        end
-        db_name = nil
-        if args[:database]
-          db_name = args[:database]
-        else
-          db_name = self.get_name_from_db('variation',species,release,args)  # try to find the corresponding variation database
-        end
-        establish_connection(
-                            :adapter => args[:adapter] || Ensembl::DB_ADAPTER,
-                            :host => args[:host] || Ensembl::DB_HOST,
-                            :database => db_name,
-                            :username => args[:username] || Ensembl::DB_USERNAME,
-                            :password => args[:password] || Ensembl::DB_PASSWORD,
-                            :port => args[:port]
-                          )
-          
-        self.retrieve_connection # Checkout that the connection is working
-        
+        self.generic_connect('variation',species, release, args)
       end
+      
+      def self.ensemblgenomes_connect(species, release = Ensembl::ENSEMBL_RELEASE, args={})
+        args[:ensembl_genomes] = true
+        self.generic_connect('variation',species,release,args)
+      end      
 
     end # Variation::DBConnection
     

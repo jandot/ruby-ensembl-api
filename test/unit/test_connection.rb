@@ -52,13 +52,13 @@ class TestConnection < Test::Unit::TestCase
   
   def test_connection_ensembl_genomes
     assert_nothing_raised do 
-      Ensembl::Core::DBConnection.ensemblgenomes_connect('Staphylococcus_aureus_MRSA252',3)
+      Ensembl::Core::DBConnection.ensemblgenomes_connect('Staphylococcus_aureus_MRSA252',7)
     end
   end
   
   def test_manual_connection_ensembl_genomes
     assert_nothing_raised do
-      Ensembl::Core::DBConnection.connect("bacillus_collection",3,:host => "mysql.ebi.ac.uk", :port => 4157)
+      Ensembl::Core::DBConnection.connect("bacillus_collection",7, :host => "mysql.ebi.ac.uk", :port => 4157)
     end
   end
   
