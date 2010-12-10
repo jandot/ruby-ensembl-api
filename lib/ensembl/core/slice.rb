@@ -642,17 +642,17 @@ SQL
         Ensembl::Variation::VariationFeature.find(:all,:conditions => ["flags = 'genotyped' AND seq_region_id = ? AND seq_region_start >= ? AND seq_region_end <= ?",self.seq_region.seq_region_id,self.start,self.stop])
       end
       
+      def get_structural_variations
+        variation_connection()
+        Ensembl::Variation::StructuralVariation.find(:all,:conditions => ["seq_region_id = ? AND seq_region_start >= ? AND seq_region_end <= ?",self.seq_region.seq_region_id,self.start,self.stop])
+      end
+      
       private 
       
       def variation_connection()
         if !Ensembl::Variation::DBConnection.connected?  
-          host,user,password,db_name,port = Ensembl::Core::DBConnection.get_info
-          if db_name =~/(\w+_\w+)_\w+_(\d+)_\S+/ then
-            species,release = $1,$2
-            Ensembl::Variation::DBConnection.connect(species,release.to_i,:username => user, :password => password,:host => host, :port => port)
-          else
-            raise NameError, "Can't get Variation Database name from #{db_name}. Are you using non conventional names?"
-          end
+          host,user,password,db_name,port,species,release = Ensembl::Core::DBConnection.get_info
+          Ensembl::Variation::DBConnection.connect(species,release.to_i,:username => user, :password => password,:host => host, :port => port)
         end
         
       end  
