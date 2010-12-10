@@ -49,7 +49,11 @@ module Ensembl
         host,user,password,db_name,port = self.retrieve_connection.instance_values["connection_options"]
         db_name =~/(\w+_\w+)_(core|variation|funcgen|compara)_(\d+)_\S+/
         species,release = $1,$3 # just works for standard Ensembl database names
-        return host,user,password,db_name,port,species,release.to_i
+        if species.nil? and release.nil? then
+          raise NameError, "Can't get database name from #{db_name}. Are you using non conventional names?"
+        else
+          return host,user,password,db_name,port,species,release.to_i
+        end
       end
       # = DESCRIPTION
       # Method to retrieve the name of a database, using species, release and connection parameters
