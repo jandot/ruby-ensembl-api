@@ -278,8 +278,8 @@ module Ensembl
         
     class SeqRegion < DBConnection
       set_primary_key "seq_region_id"
-      has_many :variation_feature
-      has_many :structural_variation
+      has_many :variation_features
+      has_many :structural_variations
     end
     
     class SubsnpHandle < DBConnection

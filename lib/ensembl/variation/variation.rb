@@ -81,7 +81,7 @@ module Ensembl
       belongs_to :variation
       has_many :tagged_variation_features
       has_many :samples, :through => :tagged_variation_features
-      has_many :seq_regions
+      belongs_to :seq_region
       validates_inclusion_of :consequence_type, :in => ['ESSENTIAL_SPLICE_SITE',
                                                         'STOP_GAINED',
                                                         'STOP_LOST',
