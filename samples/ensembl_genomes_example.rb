@@ -3,7 +3,7 @@
 require 'lib/ensembl'
 include Ensembl::Core
 
-DBConnection.ensemblgenomes_connect('bacillus_cereus_ZK',1) # Connect to the Ensembl Genomes MySQL server and fetch the data for 'bacillus_cereus_ZK'
+DBConnection.ensemblgenomes_connect('bacillus_cereus_ZK',7) # Connect to the Ensembl Genomes MySQL server and fetch the data for 'bacillus_cereus_ZK'
 slice = Slice.fetch_by_region('chromosome',"Chromosome",4791870,4799024) # retrieve a slice for this specie
 
 puts "\nConnecting to 'bacillus_cereus_ZK' database..."
@@ -30,7 +30,7 @@ end
 # CHANGE DATABASE
 
 puts "\n########################\nConnecting to 'mycobacterium_collection' database..."
-DBConnection.ensemblgenomes_connect('mycobacterium_collection',1) # connect directly to a collection database
+DBConnection.ensemblgenomes_connect('mycobacterium_collection',7) # connect directly to a collection database
 slice = Slice.fetch_by_region('chromosome',"Chromosome",752908,759374,1,"Mycobacterium tuberculosis H37Rv") # manually set the species to fetch the slice from
 
 # show all the species inside the collection

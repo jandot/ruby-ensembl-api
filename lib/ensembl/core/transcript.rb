@@ -284,7 +284,7 @@ module Ensembl
       # The Transcript#exon_for_position identifies the exon that covers a given
       # genomic position. Returns the exon object, or nil if in intron.
       def exon_for_genomic_position(pos)
-        if pos < coding_region_genomic_start or pos > coding_region_genomic_end
+        if pos < self.seq_region_start or pos > self.seq_region_end
           raise RuntimeError, "Position has to be within transcript"
         end
         self.exons.each do |exon|
@@ -321,12 +321,17 @@ module Ensembl
         exon_with_target = self.exon_for_cdna_position(pos)
         
         accumulated_position = 0
-        self.exons.each do |exon|
+        ex = self.exons.sort_by {|e| e.seq_region_start}
+        ex.reverse! if self.strand == -1
+        ex.each do |exon|  
           if exon == exon_with_target
-            answer = exon.start + ( pos - accumulated_position )
-            return answer
+            if self.strand == -1
+              return exon.seq_region_end - (pos - accumulated_position) +1
+            else
+              return exon.seq_region_start + ( pos - accumulated_position ) -1
+            end
           else
-            accumulated_position += exon.length
+            accumulated_position += exon.length 
           end
         end
       end
@@ -360,12 +365,18 @@ module Ensembl
         exon_with_target = self.exon_for_genomic_position(pos)
         
         accumulated_position = 0
-        self.exons.each do |exon|
-          if exon == exon_with_target
-            accumulated_position += ( pos - exon.start )
+        ex = self.exons.sort_by {|e| e.seq_region_start}
+        ex.reverse! if self.strand == -1
+        ex.each do |exon|
+          if exon.stable_id == exon_with_target.stable_id
+            if self.strand == 1
+              accumulated_position += ( pos - exon.start) +1
+            else
+              accumulated_position += ( exon.stop - pos ) +1
+            end  
             return accumulated_position
           else
-            accumulated_position += exon.length
+              accumulated_position += exon.length 
           end
         end
         return RuntimeError, "Position outside of cDNA scope"

@@ -17,7 +17,7 @@ include Ensembl::Variation
 class TestVariation < Test::Unit::TestCase
   
   def setup
-    DBConnection.connect('homo_sapiens',56)
+    DBConnection.connect('homo_sapiens',60)
   end
   
   def teardown
@@ -39,13 +39,13 @@ class TestVariation < Test::Unit::TestCase
   def test_flanking_seq
     vf = Variation.find_by_name('rs2076175').variation_features[0]
     up,down = vf.flanking_seq
-    assert_equal(29713371,up.start)
-    assert_equal(29713770,up.stop)
-    assert_equal(29712970,down.start)
-    assert_equal(29713369,down.stop)
-    assert_equal('GGGCCCTGCCCTGCCTTTCTGCCTGTCACAGAGCAGGAAGAGCTGACCATCCAGATGTCCCTCAGCGAGAAACCCTGACTGCACAGATCCATCCTGGGACAGCACCGTGAGGTTGTAACAAAGACTGTGGGGCTCTGGGGAAGAGGAAATCACAGATGAAACTTCTTCCTGGAAGTAACTTCACATCAATGTTTAACACACAGGTCTGCTGTCCCGACCTTCCTGAGGAGGCAGGAAATGCACACGGGCAAAGGGACAAGAATGAGGATTTCAGACGCAAGGAAAACTGGGAAGGTGGGAGGATAGAGGAGGGGACTGAGGAACAGAAGAAGGGGGAATGGGGATGGCAAACTTGTAGGCCAGGTGCCAGGGCAGGGCAGCCACAGGCCCCCTCAGGATA',
-                  up.seq.upcase)
+    assert_equal(29712970,up.start)
+    assert_equal(29713369,up.stop)
+    assert_equal(29713371,down.start)
+    assert_equal(29713770,down.stop)
     assert_equal('TCCTGATCTCACAAACCCTAATCTCCTGGAGGGAATGCAAGGCTGCCTGCCCCTACCCAGCAGTGACTTCTCCATTCCAGTCCAAGTGAGGAACTCGGACCAGGAAGGACCCCTCCCTGGCCCTCTTCCATCCCTCCCTGTGTGGGCTGAGCCCCGCTGAGCACCATTCCTCACCCCTACTCACAGCCAAATCCAGTGGGAAGAGACAGGTCCTGCTCTCTGCCCCCAACTCTCCTGGAAAAGGCCTCTCCCATTACTCTTGCCCACTGCCCACTCTCACCTCCTTTCTGGCCCTTGATATGAGCCAGGGTCCTCCTGAGCTCCTGCCCATTCTCTGTCAAGTCTTCAGTCTCTGTGTCCCAGGTCTCAGCTCCCAGGACTGCTTCTGCCCACTGTCCCC',
+                  up.seq.upcase)
+    assert_equal('GGGCCCTGCCCTGCCTTTCTGCCTGTCACAGAGCAGGAAGAGCTGACCATCCAGATGTCCCTCAGCGAGAAACCCTGACTGCACAGATCCATCCTGGGACAGCACCGTGAGGTTGTAACAAAGACTGTGGGGCTCTGGGGAAGAGGAAATCACAGATGAAACTTCTTCCTGGAAGTAACTTCACATCAATGTTTAACACACAGGTCTGCTGTCCCGACCTTCCTGAGGAGGCAGGAAATGCACACGGGCAAAGGGACAAGAATGAGGATTTCAGACGCAAGGAAAACTGGGAAGGTGGGAGGATAGAGGAGGGGACTGAGGAACAGAAGAAGGGGGAATGGGGATGGCAAACTTGTAGGCCAGGTGCCAGGGCAGGGCAGCCACAGGCCCCCTCAGGATA',
                 down.seq.upcase)
                               
   end
@@ -53,14 +53,15 @@ class TestVariation < Test::Unit::TestCase
   def test_slice_variation
     slice = Ensembl::Core::Slice.fetch_by_region('chromosome',1,100834,101331)
     variations = slice.get_variation_features
-    assert_equal(6,variations.size)
-    
-    assert_equal('rs3912703',variations[0].variation_name)
-    assert_equal('ENSSNP5435782',variations[1].variation_name)
-    assert_equal('ENSSNP3491774',variations[2].variation_name)
-    assert_equal('ENSSNP283782',variations[3].variation_name)
-    assert_equal('ENSSNP4578340',variations[4].variation_name)
-
+    assert_equal(1,variations.size)
+    assert_equal('rs78180088',variations[0].variation_name)
+  end
+  
+  def test_slice_structural_variation
+    slice = Ensembl::Core::Slice.fetch_by_region('chromosome',11,60125,320837)
+    sv = slice.get_structural_variations
+    assert_equal(16,sv.size)
+    assert_equal('nsv8753',sv[0].variation_name)
   end
   
   

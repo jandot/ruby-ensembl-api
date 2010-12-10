@@ -24,28 +24,52 @@ class TestCollection < Test::Unit::TestCase
   end
   
   def test_check_collection
-    DBConnection.ensemblgenomes_connect('bacillus_collection',3)
+    DBConnection.ensemblgenomes_connect('bacillus_collection',6)
     assert_equal(true,Collection.check)
     DBConnection.connect('homo_sapiens',56)
     assert_equal(false,Collection.check)
   end
   
   def test_check_species
-    DBConnection.ensemblgenomes_connect('bacillus_collection',3)
-    assert_equal(["Bacillus subtilis","Bacillus amyloliquefaciens","Bacillus anthracis Ames","Bacillus anthracis Ames ancestor","Bacillus anthracis Sterne","Bacillus cereus ATCC 10987","Bacillus cereus ATCC 14579","Bacillus cereus NVH 391-98","Bacillus cereus ZK","Bacillus clausii","Bacillus halodurans","Bacillus licheniformis Goettingen","Bacillus licheniformis Novozymes","Bacillus pumilus SAFR-032","Bacillus thuringiensis Al Hakam","Bacillus thuringiensis konkukian 97-27","Bacillus weihenstephanensis","Bacillus cereus AH820","Bacillus cereus AH187","Bacillus cereus Q1","Bacillus cereus G9842","Bacillus cereus B4264"],Collection.species)
+    DBConnection.ensemblgenomes_connect('bacillus_collection',6)
+    assert_equal(["b_subtilis",
+ "b_amyloliquefaciens",
+ "b_anthracis_ames",
+ "b_anthracis_ames_ancestor",
+ "b_anthracis_sterne",
+ "b_cereus_atcc_10987",
+ "b_cereus_atcc_14579",
+ "b_cereus_cytotoxis",
+ "b_cereus_zk",
+ "b_clausii",
+ "b_halodurans",
+ "b_licheniformis_goettingen",
+ "b_licheniformis_novozymes",
+ "b_pumilus",
+ "b_thuringiensis",
+ "b_thuringiensis_konkukian",
+ "b_weihenstephanensis",
+ "b_cereus_ah820",
+ "b_cereus_ah187",
+ "b_cereus_03bb102",
+ "b_cereus_q1",
+ "b_cereus_g9842",
+ "b_cereus_b4264",
+ "b_anthracis_cdc_684",
+ "b_anthracis_a0248"],Collection.species)
   end
   
   def test_get_species_id
-    DBConnection.ensemblgenomes_connect('bacillus_collection',3)
+    DBConnection.ensemblgenomes_connect('bacillus_collection',6)
     assert_equal(9,Collection.get_species_id("Bacillus cereus ZK"))
     assert_nil(Collection.get_species_id("Dummy specie"))  
   end
   
   def test_connection_with_a_species
     assert_nothing_raised do 
-      DBConnection.ensemblgenomes_connect('Bacillus_licheniformis_Goettingen',3)
+      DBConnection.ensemblgenomes_connect('b_licheniformis_goettingen',6)
     end
-    assert_equal('bacillus licheniformis goettingen', Ensembl::SESSION.collection_species)
+    assert_equal('b_licheniformis_goettingen', Ensembl::SESSION.collection_species)
   end
   
 end

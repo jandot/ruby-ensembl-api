@@ -32,7 +32,6 @@ namespace :gem do
   outfile.puts '  s.add_dependency("activerecord")'
   outfile.puts ''
   outfile.puts '  s.require_path = "lib"'
-  outfile.puts '  s.autorequire = "ensembl"'
   outfile.puts ''
   outfile.puts '  s.bindir = "bin"'
   outfile.puts '  s.executables = ["ensembl"]'
@@ -62,13 +61,13 @@ namespace :test do
  
  desc "Run Core tests (only release 56)"
  task :core do
-   Dir.glob("test/unit/release_53/core/*.rb").each do |name|
+   Dir.glob("test/unit/release_56/core/*.rb").each do |name|
      ruby name
    end
  end
  desc "Run Variation tests (only release 56)"
  task :variation do
-   Dir.glob("test/unit/release_53/variation/*.rb").each do |name|
+   Dir.glob("test/unit/release_56/variation/*.rb").each do |name|
      ruby name
    end
  end
