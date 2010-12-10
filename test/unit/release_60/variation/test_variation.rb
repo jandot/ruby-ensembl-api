@@ -54,12 +54,8 @@ class TestVariation < Test::Unit::TestCase
     slice = Ensembl::Core::Slice.fetch_by_region('chromosome',1,100834,101331)
     variations = slice.get_variation_features
     assert_equal(1,variations.size)
-    
     assert_equal('rs78180088',variations[0].variation_name)
-
-
   end
-  
   
   
 end

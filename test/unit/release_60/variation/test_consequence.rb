@@ -127,6 +127,7 @@ class TestVariation < Test::Unit::TestCase
     assert_equal(110,t.genomic2cdna(99057720))
   end
   
+  # THIS IS NOT WORKING SO FAR
   def test_cdna2genomic_rev # reverse strand (variation rs11545970)
     t = Ensembl::Core::Transcript.find_by_stable_id("ENST00000422429")
     assert_equal(99057720,t.cdna2genomic(110))

@@ -80,7 +80,7 @@ module Ensembl
     # See the general documentation of the Ensembl module for
     # more information on what this means and what methods are available.    
     class ConsequenceMapping < DBConnection
-    
+      
     end
 
     # = DESCRIPTION
@@ -123,7 +123,7 @@ module Ensembl
     
     class Phenotype < DBConnection
       set_primary_key "phenotype_id"
-      belongs_to :variation_annotation
+      has_many :variation_annotations
     end
     
     
@@ -153,8 +153,8 @@ module Ensembl
     # See the general documentation of the Ensembl module for
     # more information on what this means and what methods are available.    
     class IndividualPopulation < DBConnection
-      belongs_to :individual
-      belongs_to :population
+      belongs_to :individual, :foreign_key => "individual_sample_id"
+      belongs_to :population, :foreign_key => "population_sample_id"
     end
     
     # = DESCRIPTION
@@ -165,9 +165,10 @@ module Ensembl
     # See the general documentation of the Ensembl module for
     # more information on what this means and what methods are available.
     class Individual < DBConnection
+      set_primary_key "sample_id"
       belongs_to :sample
       has_one :individual_type
-      has_many :individual_populations
+      has_many :individual_populations, :foreign_key => "individual_sample_id"
       has_many :populations, :through => :individual_populations
     end
     
@@ -194,8 +195,8 @@ module Ensembl
     class Population < DBConnection
       belongs_to :sample
       set_primary_key "sample_id"
-      has_many :population_genotypes
-      has_many :individual_populations
+      has_many :population_genotypes, :foreign_key => "sample_id"
+      has_many :individual_populations, :foreign_key => "population_sample_id"
       has_many :individuals, :through => :individual_populations
       has_many :sample_synonyms
       has_one :population_structure
@@ -220,7 +221,7 @@ module Ensembl
       belongs_to :variation
       belongs_to :population
       belongs_to :subsnp_handle
-      has_many :compressed_genotype_single_bps
+      has_many :compressed_genotype_single_bps, :foreign_key => "sample_id"
     end
     
     # = DESCRIPTION
@@ -259,22 +260,34 @@ module Ensembl
     class StructuralVariation < DBConnection
       set_primary_key "structural_variation_id"
       belongs_to :source
-      has_many :seq_regions
+      belongs_to :seq_region
+      
+      class << self # Workaround for 'class' field, otherwise it creates a mess for AR
+        def instance_method_already_implemented?(method_name)
+          return true if method_name == 'class'
+          super
+        end
+      end
+      
+      def sv_class
+        self.attributes["class"]
+      end
+      
     end
     
         
     class SeqRegion < DBConnection
       set_primary_key "seq_region_id"
-      belongs_to :variation_feature
-      belongs_to :structural_variation
+      has_many :variation_feature
+      has_many :structural_variation
     end
     
     class SubsnpHandle < DBConnection
       set_primary_key "subsnp_id"
-      has_many :individual_genotype_multiple_bps
-      has_many :population_genotypes
-      has_many :alleles
-      has_many :variation_synonyms
+      has_many :individual_genotype_multiple_bps, :foreign_key => "subsnp_id"
+      has_many :population_genotypes, :foreign_key => "subsnp_id"
+      has_many :alleles, :foreign_key => "subsnp_id"
+      has_many :variation_synonyms,:foreign_key => "subsnp_id"
     end
     
     # = DESCRIPTION
@@ -332,7 +345,7 @@ module Ensembl
     end
     
     class VariationAnnotation < DBConnection
-      set_primary_key "variaion_annotation_id"
+      set_primary_key "variation_annotation_id"
       belongs_to :variation
       belongs_to :phenotype
       belongs_to :source

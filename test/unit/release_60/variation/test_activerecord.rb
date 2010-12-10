@@ -67,6 +67,9 @@ class ActiveRecordVariation < Test::Unit::TestCase
   def test_population
     n = Population.count(:all)
     assert_equal(11673,n)
+    p = Population.find(236)
+    ind = p.individuals
+    assert_equal(653,ind.size)
   end
   
   def test_variation
@@ -143,4 +146,68 @@ class ActiveRecordVariation < Test::Unit::TestCase
     ag = Source.find(1).allele_groups
     assert_nil ag[0]
   end
+  
+  def test_variation_annotation
+    va = VariationAnnotation.find(95)
+    assert_equal(1756227,va.variation_id)
+    assert_equal('EGAS00000000060',va.local_stable_id)
+    assert_equal('rs2306027',va.variation_names)
+    assert_equal(0.218132812399633,va.risk_allele_freq_in_controls.to_f)    
+  end
+  
+  def test_phenotype
+    pheno = Phenotype.find(1527)
+    va = pheno.variation_annotations
+    assert_equal(14,va.size)
+    assert_equal('GATA6,CTAGE1,RBBP8,CABLES1',va[5].associated_gene)
+  end
+  
+  def test_structural_variation
+    sv = StructuralVariation.find(171276)
+    assert_equal('nsv429550',sv.variation_name)
+    assert_equal(224676,sv.seq_region_start)
+    assert_equal(44780026,sv.seq_region_end)
+    assert_equal('11',sv.seq_region.name)
+  end
+  
+  def test_population_genotype
+    v = Variation.find(1082)
+    pg = v.population_genotypes
+    assert_equal(41,pg.size)
+    assert_equal(0.6,pg[0].frequency)
+    pop = Population.find(132)
+    pg = pop.population_genotypes
+    assert_equal(1070,pg.size)
+  end
+  
+  def test_subsnp_handle
+    s = SubsnpHandle.find(946)
+    assert_equal('WIAF',s.handle)
+    pg = s.population_genotypes
+    assert_equal(2,pg.size)
+    assert_equal(0.4,pg[0].frequency)
+    alleles = s.alleles
+    assert_equal(2,alleles.size)
+    assert_equal('A',alleles[0].allele)
+    s = SubsnpHandle.find(107935890)
+    vs = s.variation_synonyms
+    assert_equal(1,vs.size)
+    assert_equal('ENSSNP10154320',vs[0].name)
+  end
+  
+  def test_variation_synonym
+    v = Variation.find(12659557)
+    vs = v.variation_synonyms
+    assert_equal(1,vs.size)
+    assert_equal('rs66792216',vs[0].name)
+  end
+  
+  def test_failed_description
+    v = Variation.find(15005920)
+    fd = v.failed_descriptions
+    assert_equal(1,fd.size)
+    assert_equal('Variation maps to more than 3 different locations',fd[0].description)
+  end
+  
+  
 end

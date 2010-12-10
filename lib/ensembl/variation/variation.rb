@@ -47,6 +47,7 @@ module Ensembl
       has_many :variation_group_variations
       has_many :variation_groups, :through => :variation_group_variations
       has_many :individual_genotype_multiple_bps
+      has_many :failed_variations
       has_many :failed_descriptions, :through => :failed_variations
       
       def self.fetch_all_by_source(source)
@@ -381,11 +382,7 @@ module Ensembl
       def transcript
         host,user,password,db_name,port,species,release = Ensembl::Variation::DBConnection.get_info
         if !Ensembl::Core::DBConnection.connected? then     
-          begin
-            Ensembl::Core::DBConnection.connect(species,release.to_i,:username => user, :password => password,:host => host, :port => port)
-          rescue
-            raise NameError, "Can't get Core database name from #{db_name}. Perhaps you are using non conventional names"
-          end    
+            Ensembl::Core::DBConnection.connect(species,release.to_i,:username => user, :password => password,:host => host, :port => port)    
         end 
         return (self.methods.include?("transcript_id")) ? Ensembl::Core::Transcript.find(self.transcript_id) : Ensembl::Core::Transcript.find_by_stable_id(self.transcript_stable_id)
       end
