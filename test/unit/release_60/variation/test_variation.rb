@@ -57,5 +57,13 @@ class TestVariation < Test::Unit::TestCase
     assert_equal('rs78180088',variations[0].variation_name)
   end
   
+  def test_slice_structural_variation
+    slice = Ensembl::Core::Slice.fetch_by_region('chromosome',11,60125,320837)
+    sv = slice.get_structural_variations
+    assert_equal(16,sv.size)
+    assert_equal('nsv8753',sv[0].variation_name)
+  end
+  
+  
   
 end
