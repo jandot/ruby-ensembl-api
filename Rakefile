@@ -32,7 +32,6 @@ namespace :gem do
   outfile.puts '  s.add_dependency("activerecord")'
   outfile.puts ''
   outfile.puts '  s.require_path = "lib"'
-  outfile.puts '  s.autorequire = "ensembl"'
   outfile.puts ''
   outfile.puts '  s.bindir = "bin"'
   outfile.puts '  s.executables = ["ensembl"]'
