@@ -344,11 +344,13 @@ module Ensembl
         accumulated_position = 0
         ex = self.exons.sort_by {|e| e.seq_region_start}
         ex.reverse! if self.strand == -1
-        ex.each do |exon|
-          
+        ex.each do |exon|  
           if exon == exon_with_target
-            answer = exon.start + ( pos - accumulated_position ) -1
-            return answer
+            if self.strand == -1
+              return exon.seq_region_end - (pos - accumulated_position) +1
+            else
+              return exon.seq_region_start + ( pos - accumulated_position ) -1
+            end
           else
             accumulated_position += exon.length 
           end
