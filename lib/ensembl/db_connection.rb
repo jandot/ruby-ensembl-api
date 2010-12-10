@@ -47,8 +47,8 @@ module Ensembl
       self.pluralize_table_names = false
       def self.get_info
         host,user,password,db_name,port = self.retrieve_connection.instance_values["connection_options"]
-        db_name =~/(\w+_\w+)_\w+_(\d+)_\S+/
-        species,release = $1,$2 # just works for standard Ensembl database names
+        db_name =~/(\w+_\w+)_(core|variation|funcgen|compara)_(\d+)_\S+/
+        species,release = $1,$3 # just works for standard Ensembl database names
         return host,user,password,db_name,port,species,release.to_i
       end
       # = DESCRIPTION
