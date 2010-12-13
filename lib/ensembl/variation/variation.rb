@@ -199,9 +199,9 @@ module Ensembl
               (tv.consequence_type,tv.peptide_allele_string) = check_aa_change(vf,t) if tv.consequence_type == ""
                 
               
-              if tv.methods.include?("transcript_stable_id") then # This changed from release 58
+              begin # this changed from release 58
                  tv.transcript_stable_id = t.stable_id
-              else
+              rescue NoMethodError
                  tv.transcript_id = t.id
               end
               
@@ -384,8 +384,14 @@ module Ensembl
         host,user,password,db_name,port,species,release = Ensembl::Variation::DBConnection.get_info
         if !Ensembl::Core::DBConnection.connected? then     
             Ensembl::Core::DBConnection.connect(species,release.to_i,:username => user, :password => password,:host => host, :port => port)    
-        end 
-        return (self.methods.include?("transcript_id")) ? Ensembl::Core::Transcript.find(self.transcript_id) : Ensembl::Core::Transcript.find_by_stable_id(self.transcript_stable_id)
+        end
+        
+        begin # this changed from release 58
+          return Ensembl::Core::Transcript.find_by_stable_id(self.transcript_stable_id)
+        rescue NoMethodError  
+          return Ensembl::Core::Transcript.find(self.transcript_id)
+        end
+        
       end
       
     end
