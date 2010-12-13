@@ -34,7 +34,7 @@ namespace :gem do
   outfile.puts '  s.require_path = "lib"'
   outfile.puts ''
   outfile.puts '  s.bindir = "bin"'
-  outfile.puts '  s.executables = ["ensembl"]'
+  outfile.puts '  s.executables = ["ensembl","variation_effect_predictor"]'
   outfile.puts '  s.default_executable = "ensembl"'
   outfile.puts 'end'
   outfile.close

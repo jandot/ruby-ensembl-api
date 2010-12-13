@@ -14,12 +14,14 @@ def run_calculations(args)
 
   ### CHECKING INPUT FILE ###
   if params["-i"].nil? or params == {} then
+    show_help()
     puts "\nERROR: You must provide an input file!\n\n"
     exit
   end
 
   ### SETTING DEFAULT MySQL USER IF NOT SPECIFIED ###
   params["-u"] = "anonymous" if params["-u"].nil?
+  params["-P"] = params["-P"].to_i if params["-P"] != nil
 
   ### OPENING CONNECTION TO ENSEMBL DATABASE ###
   require 'rubygems'
@@ -31,12 +33,12 @@ def run_calculations(args)
     if params["-s"].nil? or params["-r"].nil? then
       puts "\nERROR: For Ensembl Genomes you must provide a valid species and release number!\n\n"
     end
-    DBConnection.ensemblgenomes_connect(params["-s"],params["-r"],:host => params["-d"], :username => params["-u"],:password => params["-p"],:port => params["-P"])
+    DBConnection.ensemblgenomes_connect(params["-s"],params["-r"].to_i,:host => params["-d"], :username => params["-u"],:password => params["-p"],:port => params["-P"])
   else
     params["-s"] = "homo_sapiens" if params["-s"].nil?
     params["-r"] = 60 if params["-r"].nil?
     params["-d"] = "ensembldb.ensembl.org" if params["-d"].nil?
-    DBConnection.connect(params["-s"],params["-r"],:host => params["-d"], :username => params["-u"],:password => params["-p"],:port => params["-P"])
+    DBConnection.connect(params["-s"],params["-r"].to_i,:host => params["-d"], :username => params["-u"],:password => params["-p"],:port => params["-P"])
   end
 
   ### STARTING VARIATIONS PREDICTIONS ###
@@ -46,7 +48,7 @@ def run_calculations(args)
       l.chomp!
       data = l.split("\t")
       get_consequence(data[0],data[1],data[2],data[3],data[4],data[5]).each do |tv|
-        puts l+"\t Effect: "+tv.consequence_type+" -- "+tv.transcript_stable_id
+        puts l+"\t Effect: "+tv.consequence_type+" -- "+tv.transcript_stable_id.to_s
       end                       
     end
   end 
