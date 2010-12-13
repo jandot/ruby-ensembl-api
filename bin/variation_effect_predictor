@@ -32,6 +32,7 @@ def run_calculations(args)
     params["-d"] = "mysql.ebi.ac.uk" if params["-d"].nil?
     if params["-s"].nil? or params["-r"].nil? then
       puts "\nERROR: For Ensembl Genomes you must provide a valid species and release number!\n\n"
+      exit
     end
     DBConnection.ensemblgenomes_connect(params["-s"],params["-r"].to_i,:host => params["-d"], :username => params["-u"],:password => params["-p"],:port => params["-P"])
   else
