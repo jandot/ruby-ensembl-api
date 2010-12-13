@@ -1,0 +1,103 @@
+#!/usr/bin/env ruby
+
+def run_calculations(args)
+  
+  ### GETTING COMMAND LINE PARAMETERS ###
+  args.each_index {|x| args.insert(x+1,1) if args[x] == '-h' or args[x] == '-g' } # to have always an even number of parameters
+  params = Hash[*args]
+
+  ### PRINT HELP ###
+  if params.key?("-h") then
+    show_help()
+    exit
+  end
+
+  ### CHECKING INPUT FILE ###
+  if params["-i"].nil? or params == {} then
+    puts "\nERROR: You must provide an input file!\n\n"
+    exit
+  end
+
+  ### SETTING DEFAULT MySQL USER IF NOT SPECIFIED ###
+  params["-u"] = "anonymous" if params["-u"].nil?
+
+  ### OPENING CONNECTION TO ENSEMBL DATABASE ###
+  require 'rubygems'
+  require 'ensembl'
+  include Ensembl::Variation
+
+  if params.key?("-g") then
+    params["-d"] = "mysql.ebi.ac.uk" if params["-d"].nil?
+    if params["-s"].nil? or params["-r"].nil? then
+      puts "\nERROR: For Ensembl Genomes you must provide a valid species and release number!\n\n"
+    end
+    DBConnection.ensemblgenomes_connect(params["-s"],params["-r"],:host => params["-d"], :username => params["-u"],:password => params["-p"],:port => params["-P"])
+  else
+    params["-s"] = "homo_sapiens" if params["-s"].nil?
+    params["-r"] = 60 if params["-r"].nil?
+    params["-d"] = "ensembldb.ensembl.org" if params["-d"].nil?
+    DBConnection.connect(params["-s"],params["-r"],:host => params["-d"], :username => params["-u"],:password => params["-p"],:port => params["-P"])
+  end
+
+  ### STARTING VARIATIONS PREDICTIONS ###
+  File.open(params["-i"]) do |f|
+    f.each_line do |l|
+      next if l =~ /^#/
+      l.chomp!
+      data = l.split("\t")
+      get_consequence(data[0],data[1],data[2],data[3],data[4],data[5]).each do |tv|
+        puts l+"\t Effect: "+tv.consequence_type+" -- "+tv.transcript_stable_id
+      end                       
+    end
+  end 
+end
+
+
+def show_help()
+  puts "\nRuby Ensembl API -- Variation Effects Predictor"
+  puts "\n\tUSAGE: variation_effect_predictor -i variations.txt [OPTIONS]\n\n"
+  puts "\tOPTIONS:\n"
+  puts "\t\t-i\t Input file (Tab separated) REQUIRED"
+  puts "\t\t-s\t Species in snake case (default is 'homo_sapiens')"
+  puts "\t\t-r\t Ensembl Database release (default is 60)"
+  puts "\t\t-d\t Ensembl Database Server (default is 'ensembldb.ensembl.org')"
+  puts "\t\t-u\t Ensembl Database username (default is 'anonymous')"
+  puts "\t\t-p\t Ensembl Database password (only required for local Ensembl database)"
+  puts "\t\t-P\t Ensembl Database MySQL port connection (only required for local Ensembl database)"
+  puts "\t\t-g\t Connects to Ensembl Genomes Server (default is 'mysql.ebi.ac.uk')"
+  puts "\t\t-h\t Show this help"
+  puts "\n\n"
+end
+
+
+def get_consequence(chr,start,stop,alleles,strand,name)
+  variation = VariationFeature.new(:seq_region_id => SeqRegion.find_by_name(chr).seq_region_id,
+                                   :seq_region_start => start, 
+                                   :seq_region_end => stop, 
+                                   :allele_string => alleles, 
+                                   :seq_region_strand => strand, 
+                                   :variation_name => name
+                                   )
+  return variation.transcript_variations
+end
+
+
+if __FILE__ == $PROGRAM_NAME
+  run_calculations(ARGV)
+end
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
