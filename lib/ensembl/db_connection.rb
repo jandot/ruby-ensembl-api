@@ -20,9 +20,7 @@ module Ensembl
   EG_PORT = 4157
 
 
-  # = DESCRIPTION
   # Generic class to perform dynamic connections to the Ensembl database and retrieve database names
-  #
   class DummyDBConnection < ActiveRecord::Base
     self.abstract_class = true
     def self.connect(args)
@@ -38,11 +36,9 @@ module Ensembl
   end
 
   module DBRegistry 
-    # = DESCRIPTION
     # The Ensembl::Registry::Base is a super class providing general methods 
     # to get database and connection info.
     class Base < ActiveRecord::Base
-        
       self.abstract_class = true
       self.pluralize_table_names = false
       def self.get_info
@@ -55,7 +51,7 @@ module Ensembl
           return host,user,password,db_name,port,species,release.to_i
         end
       end
-      # = DESCRIPTION
+      
       # Method to retrieve the name of a database, using species, release and connection parameters
       # passed by the user.    
       def self.get_name_from_db(db_type,species,release,args)
@@ -121,30 +117,25 @@ module Ensembl
   
   
   module Core
-    # = DESCRIPTION
     # The Ensembl::Core::DBConnection is the actual connection established
     # with the Ensembl server.
     class DBConnection < Ensembl::DBRegistry::Base
       self.abstract_class = true
       self.pluralize_table_names = false
-      # = DESCRIPTION
       # The Ensembl::Core::DBConnection#connect method makes the connection
       # to the Ensembl core database for a given species. By default, it connects
       # to release 50 for that species. You _could_ use a lower number, but
       # some parts of the API might not work, or worse: give the wrong results.
       #
-      # = USAGE
+      # @example
       #  # Connect to release 50 of human
       #  Ensembl::Core::DBConnection.connect('homo_sapiens')
       #
       #  # Connect to release 42 of chicken
       #  Ensembl::Core::DBConnection.connect('gallus_gallus')
       #
-      # ---
-      # *Arguments*:
-      # * species:: species to connect to. Arguments should be in snake_case
-      # * ensembl_release:: the release of the database to connect to
-      #  (default = 50)      
+      # @param [String] species Species to connect to. Must be in snake_case
+      # @param [Integer] ensembl_release. Release to connect to (default = 60)
       def self.connect(species, release = Ensembl::ENSEMBL_RELEASE, args = {})
         self.generic_connect('core',species, release,args)
       end
@@ -160,30 +151,25 @@ module Ensembl
   end # Core
 
   module Variation
-    # = DESCRIPTION
     # The Ensembl::Variation::DBConnection is the actual connection established
     # with the Ensembl server.
     class DBConnection < Ensembl::DBRegistry::Base
       self.abstract_class = true
       self.pluralize_table_names = false
-      # = DESCRIPTION
       # The Ensembl::Variation::DBConnection#connect method makes the connection
       # to the Ensembl variation database for a given species. By default, it connects
       # to release 50 for that species. You _could_ use a lower number, but
       # some parts of the API might not work, or worse: give the wrong results.
       #
-      # = USAGE
+      # @example
       #  # Connect to release 50 of human
       #  Ensembl::Variation::DBConnection.connect('homo_sapiens')
       #
       #  # Connect to release 42 of chicken
       #  Ensembl::Variation::DBConnection.connect('gallus_gallus')
       #
-      # ---
-      # *Arguments*:
-      # * species:: species to connect to. Arguments should be in snake_case
-      # * ensembl_release:: the release of the database to connect to
-      #  (default = 50)
+      # @param [String] species Species to connect to. Must be in snake_case
+      # @param [Integer] ensembl_release. Release to connect to (default = 60)
       def self.connect(species, release = Ensembl::ENSEMBL_RELEASE, args = {})
         self.generic_connect('variation',species, release, args)
       end

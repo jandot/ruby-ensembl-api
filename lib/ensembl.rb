@@ -6,6 +6,8 @@
 #                           
 # License::     The Ruby License
 #
+# @author Jan Aerts
+# @author Francesco Strozzi
 
 module Ensembl
   ENSEMBL_RELEASE = 60

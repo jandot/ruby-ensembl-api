@@ -593,12 +593,12 @@ SQL
       
       # Method to retrieve Variation features from Ensembl::Core::Slice objects
       # @example
-      # slice = Slice.fetch_by_region('chromosome',1,50000,51000)
-      # variations = slice.get_variation_features
-      # variations.each do |vf|
-      #  puts vf.variation_name, vf.allele_string
-      #  puts vf.variation.ancestral_allele
-      # end
+      #   slice = Slice.fetch_by_region('chromosome',1,50000,51000)
+      #   variations = slice.get_variation_features
+      #   variations.each do |vf|
+      #    puts vf.variation_name, vf.allele_string
+      #    puts vf.variation.ancestral_allele
+      #   end
       def get_variation_features
         variation_connection()
         Ensembl::Variation::VariationFeature.find(:all,:conditions => ["seq_region_id = ? AND seq_region_start >= ? AND seq_region_end <= ?",self.seq_region.seq_region_id,self.start,self.stop])
