@@ -325,10 +325,11 @@ module Ensembl
         ex.reverse! if self.strand == -1
         ex.each do |exon|  
           if exon == exon_with_target
+            length_to_be_taken_from_exon = pos - (accumulated_position + 1)
             if self.strand == -1
-              return exon.seq_region_end - (pos - accumulated_position) +1
+              return exon.seq_region_end - length_to_be_taken_from_exon
             else
-              return exon.seq_region_start + ( pos - accumulated_position ) -1
+              return exon.seq_region_start + length_to_be_taken_from_exon
             end
           else
             accumulated_position += exon.length 
