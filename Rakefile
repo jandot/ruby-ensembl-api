@@ -44,40 +44,37 @@ end
 
 namespace :test do
   
- desc "Run all tests for release 56"
- task :run => :base do
-    Dir.glob("test/unit/release_56/**/*.rb").each do |name|
-      ruby name
-    end
- end
+ desc "Run all tests for release 60"
+ task :run => [:base,:release60]
  
  desc "Run base tests (only connection and releases)"
  task :base do 
    Dir.glob("test/unit/*.rb").each do |name|
      ruby name
    end
-   
  end
  
- desc "Run Core tests (only release 56)"
- task :core do
-   Dir.glob("test/unit/release_56/core/*.rb").each do |name|
-     ruby name
-   end
- end
- desc "Run Variation tests (only release 56)"
- task :variation do
-   Dir.glob("test/unit/release_56/variation/*.rb").each do |name|
-     ruby name
-   end
- end
  desc "Run Ensembl Genomes tests"
  task :genomes do
    Dir.glob("test/unit/ensembl_genomes/*.rb").each do |name|
      ruby name
    end
  end
- 
+
+ desc "Run tests for release 60"
+ task :release60 do
+   Dir.glob("test/unit/release_60/**/*.rb").each do |name|
+     ruby name
+   end
+ end
+
+ desc "Run tests for release 56"
+ task :release56 do
+   Dir.glob("test/unit/release_56/**/*.rb").each do |name|
+     ruby name
+   end
+ end
+  
  desc "Run tests for release 53"
  task :release53 do
    Dir.glob("test/unit/release_53/**/*.rb").each do |name|
