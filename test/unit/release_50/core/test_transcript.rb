@@ -56,6 +56,29 @@ class CodingPositions < Test::Unit::TestCase
 end
 
 class GenomicVsCDna < Test::Unit::TestCase
+  #From BioMart. Columns:
+  #  Ensembl_Transcript_ID
+  #  Chromosome
+  #  Gene_Start
+  #  Gene_End
+  #  Transcript_Start
+  #  Transcript_End
+  #  Strand
+  #  Gene
+  #  Exon_Chr_Start
+  #  Exon_Chr_End
+  #  Exon_Rank_in_Transcript
+  #  phase
+  #ENST00000215574	19	482733	493084	482733	493084	1	CDC34	482733	483108	1	-1
+  #ENST00000215574	19	482733	493084	482733	493084	1	CDC34	486837	486923	2	0
+  #ENST00000215574	19	482733	493084	482733	493084	1	CDC34	487243	487340	3	0
+  #ENST00000215574	19	482733	493084	482733	493084	1	CDC34	488013	488147	4	2
+  #ENST00000215574	19	482733	493084	482733	493084	1	CDC34	492339	493084	5	2
+  #
+  #ENST00000315489	19	414360	425983	414360	425983	-1	C19orf19	425621	425983	1	-1
+  #ENST00000315489	19	414360	425983	414360	425983	-1	C19orf19	423394	423501	2	1
+  #ENST00000315489	19	414360	425983	414360	425983	-1	C19orf19	418649	418762	3	1
+  #ENST00000315489	19	414360	425983	414360	425983	-1	C19orf19	414360	415364	4	1
   def setup
     # Transcript tr_fw is ENST00000215574
     @tr_fw = Transcript.find(73491)
@@ -71,23 +94,23 @@ class GenomicVsCDna < Test::Unit::TestCase
   end
   
   def test_cdna2genomic
-    assert_equal(488053, @tr_fw.cdna2genomic(601))
-    assert_equal(418719, @tr_rev.cdna2genomic(541))
+    assert_equal(488052, @tr_fw.cdna2genomic(601))
+    assert_equal(418693, @tr_rev.cdna2genomic(541))
   end
   
   def test_cds2genomic
-    assert_equal(488053, @tr_fw.cds2genomic(401))
-    assert_equal(418719, @tr_rev.cds2genomic(304))
+    assert_equal(488052, @tr_fw.cds2genomic(401))
+    assert_equal(418693, @tr_rev.cds2genomic(304))
   end
   
   def test_genomic2cdna
-    assert_equal(601, @tr_fw.genomic2cdna(488053))
-    assert_equal(541, @tr_rev.genomic2cdna(418719))
+    assert_equal(601, @tr_fw.genomic2cdna(488052))
+    assert_equal(541, @tr_rev.genomic2cdna(418693))
   end
   
   def test_genomic2cds
-    assert_equal(401, @tr_fw.genomic2cds(488053))
-    assert_equal(304, @tr_rev.genomic2cds(418719))
+    assert_equal(401, @tr_fw.genomic2cds(488052))
+    assert_equal(304, @tr_rev.genomic2cds(418693))
   end
 end
 
