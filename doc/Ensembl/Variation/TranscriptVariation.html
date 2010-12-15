@@ -1,0 +1,312 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+  <head>
+    <meta name="Content-Type" content="text/html; charset=utf-8" />
+<title>Class: Ensembl::Variation::TranscriptVariation</title>
+<link rel="stylesheet" href="../../css/style.css" type="text/css" media="screen" charset="utf-8" />
+<link rel="stylesheet" href="../../css/common.css" type="text/css" media="screen" charset="utf-8" />
+
+<script type="text/javascript" charset="utf-8">
+  relpath = '../..';
+  if (relpath != '') relpath += '/';
+</script>
+<script type="text/javascript" charset="utf-8" src="../../js/jquery.js"></script>
+<script type="text/javascript" charset="utf-8" src="../../js/app.js"></script>
+
+  </head>
+  <body>
+    <script type="text/javascript" charset="utf-8">
+      if (window.top.frames.main) document.body.className = 'frames';
+    </script>
+    
+    <div id="header">
+      <div id="menu">
+  
+    <a href="../../_index.html">Index (T)</a> &raquo; 
+    <span class='title'><span class='object_link'><a href="../../Ensembl.html" title="Ensembl (module)">Ensembl</a></span></span> &raquo; <span class='title'><span class='object_link'><a href="../Variation.html" title="Ensembl::Variation (module)">Variation</a></span></span>
+     &raquo; 
+    <span class="title">TranscriptVariation</span>
+  
+  
+  <div class="noframes"><span class="title">(</span><a href="." target="_top">no frames</a><span class="title">)</span></div>
+</div>
+
+      <div id="search">
+  <a id="class_list_link" href="#">Class List</a>
+  <a id="method_list_link" href="#">Method List</a>
+  <a id ="file_list_link" href="#">File List</a>
+</div>
+
+      <div class="clear"></div>
+    </div>
+    
+    <iframe id="search_frame"></iframe>
+    
+    <div id="content"><h1>Class: Ensembl::Variation::TranscriptVariation
+  
+  
+  
+</h1>
+
+<dl class="box">
+  
+    <dt class="r1">Inherits:</dt>
+    <dd class="r1">
+      <span class="inheritName"><span class='object_link'><a href="DBConnection.html" title="Ensembl::Variation::DBConnection (class)">DBConnection</a></span></span>
+      
+        <ul class="fullTree">
+          <li>Object</li>
+          
+            <li class="next">ActiveRecord::Base</li>
+          
+            <li class="next"><span class='object_link'><a href="../DBRegistry/Base.html" title="Ensembl::DBRegistry::Base (class)">DBRegistry::Base</a></span></li>
+          
+            <li class="next"><span class='object_link'><a href="DBConnection.html" title="Ensembl::Variation::DBConnection (class)">DBConnection</a></span></li>
+          
+            <li class="next">Ensembl::Variation::TranscriptVariation</li>
+          
+        </ul>
+        <a href="#" class="inheritanceTree">show all</a>
+      
+      </dd>
+    
+  
+  
+    
+  
+    
+  
+  
+  
+    <dt class="r2 last">Defined in:</dt>
+    <dd class="r2 last">lib/ensembl/variation/variation.rb</dd>
+  
+</dl>
+<div class="clear"></div>
+
+<h2>Overview</h2><div class="docstring">
+  <div class="discussion">
+    <p>
+The TranscriptVariation class gives information about the position of a
+VariationFeature, mapped on an annotated transcript.
+</p>
+<p>
+This class uses ActiveRecord to access data in the Ensembl database. See
+the general documentation of the Ensembl module for more information on
+what this means and what methods are available.
+</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+  <div class="examples">
+    <h3>Examples:</h3>
+    
+      <h4><div class='inline'></div></h4>
+      <pre class="example code"><span class='vf identifier id'>vf</span> <span class='assign token'>=</span> <span class='Variation constant id'>Variation</span><span class='dot token'>.</span><span class='find_by_name identifier id'>find_by_name</span><span class='lparen token'>(</span><span class='string val'>'rs10111'</span><span class='rparen token'>)</span><span class='dot token'>.</span><span class='variation_feature identifier id'>variation_feature</span>
+<span class='vf identifier id'>vf</span><span class='dot token'>.</span><span class='transcript_variations identifier id'>transcript_variations</span><span class='dot token'>.</span><span class='each identifier id'>each</span> <span class='do do kw'>do</span> <span class='bitor op'>|</span><span class='tv identifier id'>tv</span><span class='bitor op'>|</span>
+  <span class='puts identifier id'>puts</span> <span class='tv identifier id'>tv</span><span class='dot token'>.</span><span class='peptide_allele_string identifier id'>peptide_allele_string</span><span class='comma token'>,</span> <span class='tv identifier id'>tv</span><span class='dot token'>.</span><span class='transcript identifier id'>transcript</span><span class='dot token'>.</span><span class='stable_id identifier id'>stable_id</span>    
+<span class='end end kw'>end</span>
+</pre>
+    
+  </div>
+
+</div>
+
+  
+  
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <h2>
+      Instance Method Summary
+      <small>(<a href="#" class="summary_toggle">collapse</a>)</small>
+    </h2>
+
+    <ul class="summary">
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#consequence_type-instance_method" title="#consequence_type (instance method)">- (Object) <strong>consequence_type</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'><p>
+workaround as ActiveRecord do not parse SET field in MySQL.
+</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#transcript-instance_method" title="#transcript (instance method)">- (Object) <strong>transcript</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'></div></span>
+  
+</li>
+
+      
+    </ul>
+  
+
+
+  
+  
+  
+  
+  
+  
+  
+  <h3 class="inherited">Methods inherited from <span class='object_link'><a href="DBConnection.html" title="Ensembl::Variation::DBConnection (class)">DBConnection</a></span></h3>
+  <p class="inherited"><span class='object_link'><a href="DBConnection.html#connect-class_method" title="Ensembl::Variation::DBConnection.connect (method)">connect</a></span>, <span class='object_link'><a href="DBConnection.html#ensemblgenomes_connect-class_method" title="Ensembl::Variation::DBConnection.ensemblgenomes_connect (method)">ensemblgenomes_connect</a></span></p>
+
+  
+  
+  
+  
+  
+  
+  
+  <h3 class="inherited">Methods inherited from <span class='object_link'><a href="../DBRegistry/Base.html" title="Ensembl::DBRegistry::Base (class)">DBRegistry::Base</a></span></h3>
+  <p class="inherited"><span class='object_link'><a href="../DBRegistry/Base.html#generic_connect-class_method" title="Ensembl::DBRegistry::Base.generic_connect (method)">generic_connect</a></span>, <span class='object_link'><a href="../DBRegistry/Base.html#get_info-class_method" title="Ensembl::DBRegistry::Base.get_info (method)">get_info</a></span>, <span class='object_link'><a href="../DBRegistry/Base.html#get_name_from_db-class_method" title="Ensembl::DBRegistry::Base.get_name_from_db (method)">get_name_from_db</a></span></p>
+
+  
+
+  <div id="instance_method_details" class="method_details_list">
+    <h2>Instance Method Details</h2>
+    
+    
+      <div class="method_details first">
+  <p class="signature first" id="consequence_type-instance_method">
+  
+    - (<tt>Object</tt>) <strong>consequence_type</strong> 
+  
+
+  
+</p><div class="docstring">
+  <div class="discussion">
+    <p>
+workaround as ActiveRecord do not parse SET field in MySQL
+</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+379
+380
+381</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/ensembl/variation/variation.rb', line 379</span>
+
+<span class='def def kw'>def</span> <span class='consequence_type identifier id'>consequence_type</span> 
+  <span class='dstring node'>&quot;#{attributes_before_type_cast['consequence_type']}&quot;</span> 
+<span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <p class="signature " id="transcript-instance_method">
+  
+    - (<tt>Object</tt>) <strong>transcript</strong> 
+  
+
+  
+</p><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+383
+384
+385
+386
+387
+388
+389
+390
+391
+392
+393
+394
+395</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/ensembl/variation/variation.rb', line 383</span>
+
+<span class='def def kw'>def</span> <span class='transcript identifier id'>transcript</span>
+  <span class='host identifier id'>host</span><span class='comma token'>,</span><span class='user identifier id'>user</span><span class='comma token'>,</span><span class='password identifier id'>password</span><span class='comma token'>,</span><span class='db_name identifier id'>db_name</span><span class='comma token'>,</span><span class='port identifier id'>port</span><span class='comma token'>,</span><span class='species identifier id'>species</span><span class='comma token'>,</span><span class='release identifier id'>release</span> <span class='assign token'>=</span> <span class='Ensembl constant id'>Ensembl</span><span class='colon2 op'>::</span><span class='Variation constant id'>Variation</span><span class='colon2 op'>::</span><span class='DBConnection constant id'>DBConnection</span><span class='dot token'>.</span><span class='get_info identifier id'>get_info</span>
+  <span class='if if kw'>if</span> <span class='notop op'>!</span><span class='Ensembl constant id'>Ensembl</span><span class='colon2 op'>::</span><span class='Core constant id'>Core</span><span class='colon2 op'>::</span><span class='DBConnection constant id'>DBConnection</span><span class='dot token'>.</span><span class='connected? fid id'>connected?</span> <span class='then then kw'>then</span>     
+      <span class='Ensembl constant id'>Ensembl</span><span class='colon2 op'>::</span><span class='Core constant id'>Core</span><span class='colon2 op'>::</span><span class='DBConnection constant id'>DBConnection</span><span class='dot token'>.</span><span class='connect identifier id'>connect</span><span class='lparen token'>(</span><span class='species identifier id'>species</span><span class='comma token'>,</span><span class='release identifier id'>release</span><span class='dot token'>.</span><span class='to_i identifier id'>to_i</span><span class='comma token'>,</span><span class='symbol val'>:username</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='user identifier id'>user</span><span class='comma token'>,</span> <span class='symbol val'>:password</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='password identifier id'>password</span><span class='comma token'>,</span><span class='symbol val'>:host</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='host identifier id'>host</span><span class='comma token'>,</span> <span class='symbol val'>:port</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='port identifier id'>port</span><span class='rparen token'>)</span>    
+  <span class='end end kw'>end</span>
+  
+  <span class='begin begin kw'>begin</span> <span class='comment val'># this changed from release 58</span>
+    <span class='return return kw'>return</span> <span class='Ensembl constant id'>Ensembl</span><span class='colon2 op'>::</span><span class='Core constant id'>Core</span><span class='colon2 op'>::</span><span class='Transcript constant id'>Transcript</span><span class='dot token'>.</span><span class='find_by_stable_id identifier id'>find_by_stable_id</span><span class='lparen token'>(</span><span class='self self kw'>self</span><span class='dot token'>.</span><span class='transcript_stable_id identifier id'>transcript_stable_id</span><span class='rparen token'>)</span>
+  <span class='rescue rescue kw'>rescue</span> <span class='NoMethodError constant id'>NoMethodError</span>  
+    <span class='return return kw'>return</span> <span class='Ensembl constant id'>Ensembl</span><span class='colon2 op'>::</span><span class='Core constant id'>Core</span><span class='colon2 op'>::</span><span class='Transcript constant id'>Transcript</span><span class='dot token'>.</span><span class='find identifier id'>find</span><span class='lparen token'>(</span><span class='self self kw'>self</span><span class='dot token'>.</span><span class='transcript_id identifier id'>transcript_id</span><span class='rparen token'>)</span>
+  <span class='end end kw'>end</span>
+  
+<span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+  </div>
+
+</div>
+    
+    <div id="footer">
+  Generated on Wed Dec 15 19:18:19 2010 by 
+  <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
+  0.6.3 (ruby-1.8.7).
+</div>
+
+  </body>
+</html>

@@ -1,0 +1,10 @@
+lib/ensembl/core/activerecord.rb da960b751b0c988df7b9b1f7bec7a6b12dc9b96b
+lib/ensembl/core/transcript.rb c073337463077ec3f64edd228a0652b751632a6b
+lib/ensembl/core/slice.rb 235535e469b6cd82043516f8a6d409cc6b2a11be
+lib/ensembl.rb 3b666c259088d8711db637238643cbf8add4404f
+lib/ensembl/core/collection.rb 19861d9fd6040666a04651e3d32bb9a0139bc3ba
+lib/ensembl/variation/activerecord.rb 777568f182092a2842e8fd4d9fa441a67da02e29
+lib/ensembl/variation/variation.rb 2bfac62859277e6e0f22e66454c47bc25ee5e481
+lib/ensembl/core/project.rb add147bc1d7369dcf90513e9ee2a4f8c1db0919a
+lib/ensembl/core/transform.rb 781d3df77af615d80fd87a36d9f0b13c40fa4884
+lib/ensembl/db_connection.rb aa256a29469d75966e25da4d34c4bd78a5bb01c1

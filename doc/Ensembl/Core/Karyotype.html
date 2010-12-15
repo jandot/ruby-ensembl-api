@@ -1,0 +1,182 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+  <head>
+    <meta name="Content-Type" content="text/html; charset=utf-8" />
+<title>Class: Ensembl::Core::Karyotype</title>
+<link rel="stylesheet" href="../../css/style.css" type="text/css" media="screen" charset="utf-8" />
+<link rel="stylesheet" href="../../css/common.css" type="text/css" media="screen" charset="utf-8" />
+
+<script type="text/javascript" charset="utf-8">
+  relpath = '../..';
+  if (relpath != '') relpath += '/';
+</script>
+<script type="text/javascript" charset="utf-8" src="../../js/jquery.js"></script>
+<script type="text/javascript" charset="utf-8" src="../../js/app.js"></script>
+
+  </head>
+  <body>
+    <script type="text/javascript" charset="utf-8">
+      if (window.top.frames.main) document.body.className = 'frames';
+    </script>
+    
+    <div id="header">
+      <div id="menu">
+  
+    <a href="../../_index.html">Index (K)</a> &raquo; 
+    <span class='title'><span class='object_link'><a href="../../Ensembl.html" title="Ensembl (module)">Ensembl</a></span></span> &raquo; <span class='title'><span class='object_link'><a href="../Core.html" title="Ensembl::Core (module)">Core</a></span></span>
+     &raquo; 
+    <span class="title">Karyotype</span>
+  
+  
+  <div class="noframes"><span class="title">(</span><a href="." target="_top">no frames</a><span class="title">)</span></div>
+</div>
+
+      <div id="search">
+  <a id="class_list_link" href="#">Class List</a>
+  <a id="method_list_link" href="#">Method List</a>
+  <a id ="file_list_link" href="#">File List</a>
+</div>
+
+      <div class="clear"></div>
+    </div>
+    
+    <iframe id="search_frame"></iframe>
+    
+    <div id="content"><h1>Class: Ensembl::Core::Karyotype
+  
+  
+  
+</h1>
+
+<dl class="box">
+  
+    <dt class="r1">Inherits:</dt>
+    <dd class="r1">
+      <span class="inheritName"><span class='object_link'><a href="DBConnection.html" title="Ensembl::Core::DBConnection (class)">DBConnection</a></span></span>
+      
+        <ul class="fullTree">
+          <li>Object</li>
+          
+            <li class="next">ActiveRecord::Base</li>
+          
+            <li class="next"><span class='object_link'><a href="../DBRegistry/Base.html" title="Ensembl::DBRegistry::Base (class)">DBRegistry::Base</a></span></li>
+          
+            <li class="next"><span class='object_link'><a href="DBConnection.html" title="Ensembl::Core::DBConnection (class)">DBConnection</a></span></li>
+          
+            <li class="next">Ensembl::Core::Karyotype</li>
+          
+        </ul>
+        <a href="#" class="inheritanceTree">show all</a>
+      
+      </dd>
+    
+  
+  
+    
+  
+    
+      <dt class="r2">Includes:</dt>
+      <dd class="r2"><span class='object_link'><a href="Sliceable.html" title="Ensembl::Core::Sliceable (module)">Sliceable</a></span></dd>
+      
+    
+  
+  
+  
+    <dt class="r1 last">Defined in:</dt>
+    <dd class="r1 last">lib/ensembl/core/activerecord.rb</dd>
+  
+</dl>
+<div class="clear"></div>
+
+<h2>Overview</h2><div class="docstring">
+  <div class="discussion">
+    <p>
+The Karyotype class provides an interface to the karyotype table. This
+table contains &lt;&gt;.
+</p>
+<p>
+This class uses ActiveRecord to access data in the Ensembl database. See
+the general documentation of the Ensembl module for more information on
+what this means and what methods are available.
+</p>
+<p>
+This class includes the mixin Sliceable, which means that it is mapped to a
+SeqRegion object and a Slice can be created for objects of this class. See
+Sliceable and Slice for more information.
+</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+  <div class="examples">
+    <h3>Examples:</h3>
+    
+      <h4><div class='inline'></div></h4>
+      <pre class="example code"><span class='band identifier id'>band</span> <span class='assign token'>=</span> <span class='Karyotype constant id'>Karyotype</span><span class='dot token'>.</span><span class='find_by_band identifier id'>find_by_band</span><span class='lparen token'>(</span><span class='string val'>'p36.32'</span><span class='rparen token'>)</span>
+<span class='puts identifier id'>puts</span> <span class='band identifier id'>band</span><span class='dot token'>.</span><span class='to_yaml identifier id'>to_yaml</span>
+</pre>
+    
+  </div>
+
+</div>
+
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+
+
+  
+  
+  
+  
+  
+  <h2>Method Summary</h2>
+  
+  <h3 class="inherited">Methods included from <span class='object_link'><a href="Sliceable.html" title="Ensembl::Core::Sliceable (module)">Sliceable</a></span></h3>
+  <p class="inherited"><span class='object_link'><a href="Sliceable.html#length-instance_method" title="Ensembl::Core::Sliceable#length (method)">#length</a></span>, <span class='object_link'><a href="Sliceable.html#project-instance_method" title="Ensembl::Core::Sliceable#project (method)">#project</a></span>, <span class='object_link'><a href="Sliceable.html#seq-instance_method" title="Ensembl::Core::Sliceable#seq (method)">#seq</a></span>, <span class='object_link'><a href="Sliceable.html#slice-instance_method" title="Ensembl::Core::Sliceable#slice (method)">#slice</a></span>, <span class='object_link'><a href="Sliceable.html#start-instance_method" title="Ensembl::Core::Sliceable#start (method)">#start</a></span>, <span class='object_link'><a href="Sliceable.html#stop-instance_method" title="Ensembl::Core::Sliceable#stop (method)">#stop</a></span>, <span class='object_link'><a href="Sliceable.html#strand-instance_method" title="Ensembl::Core::Sliceable#strand (method)">#strand</a></span>, <span class='object_link'><a href="Sliceable.html#transform-instance_method" title="Ensembl::Core::Sliceable#transform (method)">#transform</a></span></p>
+
+  
+  
+  
+  
+  
+  
+  
+  <h3 class="inherited">Methods inherited from <span class='object_link'><a href="DBConnection.html" title="Ensembl::Core::DBConnection (class)">DBConnection</a></span></h3>
+  <p class="inherited"><span class='object_link'><a href="DBConnection.html#connect-class_method" title="Ensembl::Core::DBConnection.connect (method)">connect</a></span>, <span class='object_link'><a href="DBConnection.html#ensemblgenomes_connect-class_method" title="Ensembl::Core::DBConnection.ensemblgenomes_connect (method)">ensemblgenomes_connect</a></span></p>
+
+  
+  
+  
+  
+  
+  
+  
+  <h3 class="inherited">Methods inherited from <span class='object_link'><a href="../DBRegistry/Base.html" title="Ensembl::DBRegistry::Base (class)">DBRegistry::Base</a></span></h3>
+  <p class="inherited"><span class='object_link'><a href="../DBRegistry/Base.html#generic_connect-class_method" title="Ensembl::DBRegistry::Base.generic_connect (method)">generic_connect</a></span>, <span class='object_link'><a href="../DBRegistry/Base.html#get_info-class_method" title="Ensembl::DBRegistry::Base.get_info (method)">get_info</a></span>, <span class='object_link'><a href="../DBRegistry/Base.html#get_name_from_db-class_method" title="Ensembl::DBRegistry::Base.get_name_from_db (method)">get_name_from_db</a></span></p>
+
+  
+
+</div>
+    
+    <div id="footer">
+  Generated on Wed Dec 15 19:18:12 2010 by 
+  <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
+  0.6.3 (ruby-1.8.7).
+</div>
+
+  </body>
+</html>

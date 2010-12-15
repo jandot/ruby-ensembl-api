@@ -1,0 +1,995 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+  <head>
+    <meta name="Content-Type" content="text/html; charset=utf-8" />
+<title>Module: Ensembl::Core::Sliceable</title>
+<link rel="stylesheet" href="../../css/style.css" type="text/css" media="screen" charset="utf-8" />
+<link rel="stylesheet" href="../../css/common.css" type="text/css" media="screen" charset="utf-8" />
+
+<script type="text/javascript" charset="utf-8">
+  relpath = '../..';
+  if (relpath != '') relpath += '/';
+</script>
+<script type="text/javascript" charset="utf-8" src="../../js/jquery.js"></script>
+<script type="text/javascript" charset="utf-8" src="../../js/app.js"></script>
+
+  </head>
+  <body>
+    <script type="text/javascript" charset="utf-8">
+      if (window.top.frames.main) document.body.className = 'frames';
+    </script>
+    
+    <div id="header">
+      <div id="menu">
+  
+    <a href="../../_index.html">Index (S)</a> &raquo; 
+    <span class='title'><span class='object_link'><a href="../../Ensembl.html" title="Ensembl (module)">Ensembl</a></span></span> &raquo; <span class='title'><span class='object_link'><a href="../Core.html" title="Ensembl::Core (module)">Core</a></span></span>
+     &raquo; 
+    <span class="title">Sliceable</span>
+  
+  
+  <div class="noframes"><span class="title">(</span><a href="." target="_top">no frames</a><span class="title">)</span></div>
+</div>
+
+      <div id="search">
+  <a id="class_list_link" href="#">Class List</a>
+  <a id="method_list_link" href="#">Method List</a>
+  <a id ="file_list_link" href="#">File List</a>
+</div>
+
+      <div class="clear"></div>
+    </div>
+    
+    <iframe id="search_frame"></iframe>
+    
+    <div id="content"><h1>Module: Ensembl::Core::Sliceable
+  
+  
+  
+</h1>
+
+<dl class="box">
+  
+  
+    
+  
+    
+  
+  
+    <dt class="r1">Included in:</dt>
+    <dd class="r1"><span class='object_link'><a href="AssemblyException.html" title="Ensembl::Core::AssemblyException (class)">AssemblyException</a></span>, <span class='object_link'><a href="DnaAlignFeature.html" title="Ensembl::Core::DnaAlignFeature (class)">DnaAlignFeature</a></span>, <span class='object_link'><a href="Exon.html" title="Ensembl::Core::Exon (class)">Exon</a></span>, <span class='object_link'><a href="Gene.html" title="Ensembl::Core::Gene (class)">Gene</a></span>, <span class='object_link'><a href="Intron.html" title="Ensembl::Core::Intron (class)">Intron</a></span>, <span class='object_link'><a href="Karyotype.html" title="Ensembl::Core::Karyotype (class)">Karyotype</a></span>, <span class='object_link'><a href="MarkerFeature.html" title="Ensembl::Core::MarkerFeature (class)">MarkerFeature</a></span>, <span class='object_link'><a href="MiscFeature.html" title="Ensembl::Core::MiscFeature (class)">MiscFeature</a></span>, <span class='object_link'><a href="OligoFeature.html" title="Ensembl::Core::OligoFeature (class)">OligoFeature</a></span>, <span class='object_link'><a href="PredictionExon.html" title="Ensembl::Core::PredictionExon (class)">PredictionExon</a></span>, <span class='object_link'><a href="PredictionTranscript.html" title="Ensembl::Core::PredictionTranscript (class)">PredictionTranscript</a></span>, <span class='object_link'><a href="ProteinAlignFeature.html" title="Ensembl::Core::ProteinAlignFeature (class)">ProteinAlignFeature</a></span>, <span class='object_link'><a href="ProteinFeature.html" title="Ensembl::Core::ProteinFeature (class)">ProteinFeature</a></span>, <span class='object_link'><a href="RegulatoryFeature.html" title="Ensembl::Core::RegulatoryFeature (class)">RegulatoryFeature</a></span>, <span class='object_link'><a href="RepeatFeature.html" title="Ensembl::Core::RepeatFeature (class)">RepeatFeature</a></span>, <span class='object_link'><a href="SimpleFeature.html" title="Ensembl::Core::SimpleFeature (class)">SimpleFeature</a></span>, <span class='object_link'><a href="Transcript.html" title="Ensembl::Core::Transcript (class)">Transcript</a></span></dd>
+    
+  
+  
+    <dt class="r2 last">Defined in:</dt>
+    <dd class="r2 last">lib/ensembl/core/activerecord.rb<span class="defines">,<br />
+  lib/ensembl/core/transform.rb</span>
+</dd>
+  
+</dl>
+<div class="clear"></div>
+
+<h2>Overview</h2><div class="docstring">
+  <div class="discussion">
+    <p>
+The Sliceable mixin holds the get_slice method and can be included in any
+class that lends itself to having a position on a SeqRegion.
+</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+</div>
+
+
+  
+    <h2>
+      Instance Method Summary
+      <small>(<a href="#" class="summary_toggle">collapse</a>)</small>
+    </h2>
+
+    <ul class="summary">
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#length-instance_method" title="#length (instance method)">- (Integer) <strong>length</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'><p>
+The Sliceable#length method returns the length of the feature (based on
+seq_region_start and seq_region_end..
+</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#project-instance_method" title="#project (instance method)">- (Array&lt;Slice,Gap&gt;) <strong>project</strong>(coord_system_name) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'><p>
+The Sliceable#project method is used to transfer coordinates from one
+coordinate system to another.
+</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#seq-instance_method" title="#seq (instance method)">- (String) <strong>seq</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'><p>
+The Sliceable#seq method takes the coordinates on a reference, transforms
+onto the seqlevel coordinate system if necessary, and retrieves the
+sequence.
+</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#slice-instance_method" title="#slice (instance method)">- (Ensembl::Core::Slice) <strong>slice</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'><p>
+The Sliceable#slice method takes the coordinates on a reference and creates
+a Ensembl::Core::Slice object.
+</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#start-instance_method" title="#start (instance method)">- (Integer) <strong>start</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'><p>
+The Sliceable#start method is a convenience method and returns
+self.seq_region_start.
+</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#stop-instance_method" title="#stop (instance method)">- (Integer) <strong>stop</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'><p>
+The Sliceable#stop method is a convenience method and returns
+self.seq_region_end.
+</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#strand-instance_method" title="#strand (instance method)">- (Numeric) <strong>strand</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'><p>
+The Sliceable#strand method is a convenience method and returns
+self.seq_region_strand.
+</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#transform-instance_method" title="#transform (instance method)">- (Object) <strong>transform</strong>(coord_system_name) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'><p>
+The #transform method is used to transfer coordinates for a feature from
+one coordinate system to another.
+</p>
+</div></span>
+  
+</li>
+
+      
+    </ul>
+  
+
+
+
+  <div id="instance_method_details" class="method_details_list">
+    <h2>Instance Method Details</h2>
+    
+    
+      <div class="method_details first">
+  <p class="signature first" id="length-instance_method">
+  
+    - (<tt>Integer</tt>) <strong>length</strong> 
+  
+
+  
+</p><div class="docstring">
+  <div class="discussion">
+    <p>
+The Sliceable#length method returns the length of the feature (based on
+seq_region_start and seq_region_end.
+</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  <h3>Returns:</h3>
+<ul class="return">
+  
+    <li>
+      
+        <span class='type'>(<tt>Integer</tt>)</span>
+      
+      
+      
+      
+        &mdash;
+        <div class='inline'><p>
+Length of the slice
+</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+141
+142
+143</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/ensembl/core/activerecord.rb', line 141</span>
+
+<span class='def def kw'>def</span> <span class='length identifier id'>length</span>
+  <span class='return return kw'>return</span> <span class='self self kw'>self</span><span class='dot token'>.</span><span class='stop identifier id'>stop</span> <span class='minus op'>-</span> <span class='self self kw'>self</span><span class='dot token'>.</span><span class='start identifier id'>start</span> <span class='plus op'>+</span> <span class='integer val'>1</span>
+<span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <p class="signature " id="project-instance_method">
+  
+    - (<tt>Array&lt;<span class='object_link'><a href="Slice.html" title="Ensembl::Core::Slice (class)">Slice</a></span>,<span class='object_link'><a href="Gap.html" title="Ensembl::Core::Gap (class)">Gap</a></span>&gt;</tt>) <strong>project</strong>(coord_system_name) 
+  
+
+  
+</p><div class="docstring">
+  <div class="discussion">
+    <p>
+The Sliceable#project method is used to transfer coordinates from one
+coordinate system to another. Suppose you have a feature on a contig in
+human (let&#8217;s say on contig AC000031.6.1.38703) and you want to know
+the coordinates on the chromosome. This is a projection of coordinates from
+a higher ranked coordinate system to a lower ranked coordinate system.
+Projections can also be done from a chromosome to the contig level.
+However, it might be possible that more than one contig has to be included
+and that there exist gaps between the contigs. The output of this method
+therefore is an <em>array</em> of Slice and Gap objects.
+</p>
+<p>
+At the moment, projections can only be done if the two coordinate systems
+are linked directly in the &#8216;assembly&#8217; table.
+</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+  <div class="examples">
+    <h3>Examples:</h3>
+    
+      <h4><div class='inline'></div></h4>
+      <pre class="example code"><span class='comment val'># Get a contig slice in cow and project to scaffold level</span>
+<span class='comment val'># (i.e. going from a high rank coord system to a lower rank coord</span>
+<span class='comment val'># system)</span>
+<span class='original_feature identifier id'>original_feature</span> <span class='assign token'>=</span> <span class='Gene constant id'>Gene</span><span class='dot token'>.</span><span class='find identifier id'>find</span><span class='lparen token'>(</span><span class='integer val'>85743</span><span class='rparen token'>)</span>
+<span class='target_slices identifier id'>target_slices</span> <span class='assign token'>=</span> <span class='original_feature identifier id'>original_feature</span><span class='dot token'>.</span><span class='project identifier id'>project</span><span class='lparen token'>(</span><span class='string val'>'scaffold'</span><span class='rparen token'>)</span>
+</pre>
+    
+  </div>
+<h3>Parameters:</h3>
+<ul class="param">
+  
+    <li>
+      
+        <span class='type'>(<tt>String</tt>)</span>
+      
+      
+        <span class='name'>coord_system_name</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'><p>
+Name of coordinate system to project coordinates to
+</p>
+</div>
+      
+    </li>
+  
+</ul>
+<h3>Returns:</h3>
+<ul class="return">
+  
+    <li>
+      
+        <span class='type'>(<tt>Array&lt;<span class='object_link'><a href="Slice.html" title="Ensembl::Core::Slice (class)">Slice</a></span>,<span class='object_link'><a href="Gap.html" title="Ensembl::Core::Gap (class)">Gap</a></span>&gt;</tt>)</span>
+      
+      
+      
+      
+        &mdash;
+        <div class='inline'><p>
+an array consisting of Slices and, if necessary, Gaps
+</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+168
+169
+170</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/ensembl/core/activerecord.rb', line 168</span>
+
+<span class='def def kw'>def</span> <span class='project identifier id'>project</span><span class='lparen token'>(</span><span class='coord_system_name identifier id'>coord_system_name</span><span class='rparen token'>)</span>
+  <span class='return return kw'>return</span> <span class='self self kw'>self</span><span class='dot token'>.</span><span class='slice identifier id'>slice</span><span class='dot token'>.</span><span class='project identifier id'>project</span><span class='lparen token'>(</span><span class='coord_system_name identifier id'>coord_system_name</span><span class='rparen token'>)</span>
+<span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <p class="signature " id="seq-instance_method">
+  
+    - (<tt>String</tt>) <strong>seq</strong> 
+  
+
+  
+</p><div class="docstring">
+  <div class="discussion">
+    <p>
+The Sliceable#seq method takes the coordinates on a reference, transforms
+onto the seqlevel coordinate system if necessary, and retrieves the
+sequence.
+</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  <h3>Returns:</h3>
+<ul class="return">
+  
+    <li>
+      
+        <span class='type'>(<tt>String</tt>)</span>
+      
+      
+      
+      
+        &mdash;
+        <div class='inline'><p>
+sequence
+</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+109
+110
+111</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/ensembl/core/activerecord.rb', line 109</span>
+
+<span class='def def kw'>def</span> <span class='seq identifier id'>seq</span>
+  <span class='return return kw'>return</span> <span class='self self kw'>self</span><span class='dot token'>.</span><span class='slice identifier id'>slice</span><span class='dot token'>.</span><span class='seq identifier id'>seq</span>
+<span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <p class="signature " id="slice-instance_method">
+  
+    - (<tt><span class='object_link'><a href="Slice.html" title="Ensembl::Core::Slice (class)">Ensembl::Core::Slice</a></span></tt>) <strong>slice</strong> 
+  
+
+  
+</p><div class="docstring">
+  <div class="discussion">
+    <p>
+The Sliceable#slice method takes the coordinates on a reference and creates
+a Ensembl::Core::Slice object.
+</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  <h3>Returns:</h3>
+<ul class="return">
+  
+    <li>
+      
+        <span class='type'>(<tt><span class='object_link'><a href="Slice.html" title="Ensembl::Core::Slice (class)">Ensembl::Core::Slice</a></span></tt>)</span>
+      
+      
+      
+      
+        &mdash;
+        <div class='inline'><p>
+Ensembl::Core::Slice object
+</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+86
+87
+88
+89
+90
+91
+92
+93
+94
+95
+96
+97
+98
+99
+100
+101
+102</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/ensembl/core/activerecord.rb', line 86</span>
+
+<span class='def def kw'>def</span> <span class='slice identifier id'>slice</span>
+  <span class='start identifier id'>start</span><span class='comma token'>,</span> <span class='stop identifier id'>stop</span><span class='comma token'>,</span> <span class='strand identifier id'>strand</span> <span class='assign token'>=</span> <span class='nil nil kw'>nil</span><span class='comma token'>,</span> <span class='nil nil kw'>nil</span><span class='comma token'>,</span> <span class='nil nil kw'>nil</span>
+  
+  <span class='if if kw'>if</span> <span class='self self kw'>self</span><span class='dot token'>.</span><span class='class identifier id'>class</span> <span class='eq op'>==</span> <span class='Ensembl constant id'>Ensembl</span><span class='colon2 op'>::</span><span class='Core constant id'>Core</span><span class='colon2 op'>::</span><span class='Intron constant id'>Intron</span> <span class='or or kw'>or</span> <span class='self self kw'>self</span><span class='dot token'>.</span><span class='class identifier id'>class</span><span class='dot token'>.</span><span class='column_names identifier id'>column_names</span><span class='dot token'>.</span><span class='include? fid id'>include?</span><span class='lparen token'>(</span><span class='string val'>'seq_region_start'</span><span class='rparen token'>)</span>
+    <span class='start identifier id'>start</span> <span class='assign token'>=</span> <span class='self self kw'>self</span><span class='dot token'>.</span><span class='seq_region_start identifier id'>seq_region_start</span>
+  <span class='end end kw'>end</span>
+  <span class='if if kw'>if</span> <span class='self self kw'>self</span><span class='dot token'>.</span><span class='class identifier id'>class</span> <span class='eq op'>==</span> <span class='Ensembl constant id'>Ensembl</span><span class='colon2 op'>::</span><span class='Core constant id'>Core</span><span class='colon2 op'>::</span><span class='Intron constant id'>Intron</span> <span class='or or kw'>or</span> <span class='self self kw'>self</span><span class='dot token'>.</span><span class='class identifier id'>class</span><span class='dot token'>.</span><span class='column_names identifier id'>column_names</span><span class='dot token'>.</span><span class='include? fid id'>include?</span><span class='lparen token'>(</span><span class='string val'>'seq_region_end'</span><span class='rparen token'>)</span>
+    <span class='stop identifier id'>stop</span> <span class='assign token'>=</span> <span class='self self kw'>self</span><span class='dot token'>.</span><span class='seq_region_end identifier id'>seq_region_end</span>
+  <span class='end end kw'>end</span>
+  <span class='if if kw'>if</span> <span class='self self kw'>self</span><span class='dot token'>.</span><span class='class identifier id'>class</span> <span class='eq op'>==</span> <span class='Ensembl constant id'>Ensembl</span><span class='colon2 op'>::</span><span class='Core constant id'>Core</span><span class='colon2 op'>::</span><span class='Intron constant id'>Intron</span> <span class='or or kw'>or</span> <span class='self self kw'>self</span><span class='dot token'>.</span><span class='class identifier id'>class</span><span class='dot token'>.</span><span class='column_names identifier id'>column_names</span><span class='dot token'>.</span><span class='include? fid id'>include?</span><span class='lparen token'>(</span><span class='string val'>'seq_region_strand'</span><span class='rparen token'>)</span>
+    <span class='strand identifier id'>strand</span> <span class='assign token'>=</span> <span class='self self kw'>self</span><span class='dot token'>.</span><span class='seq_region_strand identifier id'>seq_region_strand</span>
+  <span class='else else kw'>else</span> <span class='comment val'>#FIXME: we shouldn't do this, but can't #project if no strand given</span>
+    <span class='strand identifier id'>strand</span> <span class='assign token'>=</span> <span class='integer val'>1</span>
+  <span class='end end kw'>end</span>
+
+  <span class='return return kw'>return</span> <span class='Ensembl constant id'>Ensembl</span><span class='colon2 op'>::</span><span class='Core constant id'>Core</span><span class='colon2 op'>::</span><span class='Slice constant id'>Slice</span><span class='dot token'>.</span><span class='new identifier id'>new</span><span class='lparen token'>(</span><span class='self self kw'>self</span><span class='dot token'>.</span><span class='seq_region identifier id'>seq_region</span><span class='comma token'>,</span> <span class='start identifier id'>start</span><span class='comma token'>,</span> <span class='stop identifier id'>stop</span><span class='comma token'>,</span> <span class='strand identifier id'>strand</span><span class='rparen token'>)</span>
+<span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <p class="signature " id="start-instance_method">
+  
+    - (<tt>Integer</tt>) <strong>start</strong> 
+  
+
+  
+</p><div class="docstring">
+  <div class="discussion">
+    <p>
+The Sliceable#start method is a convenience method and returns
+self.seq_region_start.
+</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  <h3>Returns:</h3>
+<ul class="return">
+  
+    <li>
+      
+        <span class='type'>(<tt>Integer</tt>)</span>
+      
+      
+      
+      
+        &mdash;
+        <div class='inline'><p>
+seq_region_start
+</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+117
+118
+119</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/ensembl/core/activerecord.rb', line 117</span>
+
+<span class='def def kw'>def</span> <span class='start identifier id'>start</span>
+  <span class='return return kw'>return</span> <span class='self self kw'>self</span><span class='dot token'>.</span><span class='seq_region_start identifier id'>seq_region_start</span>
+<span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <p class="signature " id="stop-instance_method">
+  
+    - (<tt>Integer</tt>) <strong>stop</strong> 
+  
+
+  
+</p><div class="docstring">
+  <div class="discussion">
+    <p>
+The Sliceable#stop method is a convenience method and returns
+self.seq_region_end.
+</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  <h3>Returns:</h3>
+<ul class="return">
+  
+    <li>
+      
+        <span class='type'>(<tt>Integer</tt>)</span>
+      
+      
+      
+      
+        &mdash;
+        <div class='inline'><p>
+seq_region_end
+</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+125
+126
+127</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/ensembl/core/activerecord.rb', line 125</span>
+
+<span class='def def kw'>def</span> <span class='stop identifier id'>stop</span>
+  <span class='return return kw'>return</span> <span class='self self kw'>self</span><span class='dot token'>.</span><span class='seq_region_end identifier id'>seq_region_end</span>
+<span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <p class="signature " id="strand-instance_method">
+  
+    - (<tt>Numeric</tt>) <strong>strand</strong> 
+  
+
+  
+</p><div class="docstring">
+  <div class="discussion">
+    <p>
+The Sliceable#strand method is a convenience method and returns
+self.seq_region_strand.
+</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  <h3>Returns:</h3>
+<ul class="return">
+  
+    <li>
+      
+        <span class='type'>(<tt>Numeric</tt>)</span>
+      
+      
+      
+      
+        &mdash;
+        <div class='inline'><p>
+seq_region_strand
+</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+133
+134
+135</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/ensembl/core/activerecord.rb', line 133</span>
+
+<span class='def def kw'>def</span> <span class='strand identifier id'>strand</span>
+  <span class='return return kw'>return</span> <span class='self self kw'>self</span><span class='dot token'>.</span><span class='seq_region_strand identifier id'>seq_region_strand</span>
+<span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <p class="signature " id="transform-instance_method">
+  
+    - (<tt>Object</tt>) <strong>transform</strong>(coord_system_name) 
+  
+
+  
+</p><div class="docstring">
+  <div class="discussion">
+    <p>
+The #transform method is used to transfer coordinates for a feature from
+one coordinate system to another. It basically creates a clone of the
+original feature and changes the seq_region, start position, stop position
+and strand.
+</p>
+<p>
+Suppose you have a feature on a contig in human (let&#8217;s say on contig
+AC000031.6.1.38703) and you want to know the coordinates on the chromosome.
+This is a transformation of coordinates from a higher ranked coordinate
+system to a lower ranked coordinate system. Transformations can also be
+done from a chromosome to the contig level.
+</p>
+<p>
+In contrast to the #project method of Sliceables, the coordinates of a
+feature can only transformed to the target coordinate system if there is no
+ambiguity to which SeqRegion.
+</p>
+<p>
+For example, gene A can be transferred from the chromosome system to the
+clone coordinate system, whereas gene B can not.
+</p>
+<pre class="code">
+      <span class='gene identifier id'>gene</span> <span class='A constant id'>A</span>                     <span class='gene identifier id'>gene</span> <span class='B constant id'>B</span>
+ <span class='bitor op'>|</span><span class='minus op'>-</span><span class='minus op'>-</span><span class='minus op'>-</span><span class='leq op'>&lt;=</span><span class='eqq op'>===</span><span class='assign token'>=</span><span class='gt op'>&gt;</span><span class='minus op'>-</span><span class='minus op'>-</span><span class='minus op'>-</span><span class='minus op'>-</span><span class='minus op'>-</span><span class='minus op'>-</span><span class='minus op'>-</span><span class='minus op'>-</span><span class='minus op'>-</span><span class='minus op'>-</span><span class='minus op'>-</span><span class='minus op'>-</span><span class='minus op'>-</span><span class='minus op'>-</span><span class='minus op'>-</span><span class='minus op'>-</span><span class='minus op'>-</span><span class='minus op'>-</span><span class='minus op'>-</span><span class='minus op'>-</span><span class='leq op'>&lt;=</span><span class='eqq op'>===</span><span class='assign token'>=</span><span class='gt op'>&gt;</span><span class='minus op'>-</span><span class='minus op'>-</span><span class='minus op'>-</span><span class='minus op'>-</span><span class='minus op'>-</span><span class='minus op'>-</span><span class='minus op'>-</span><span class='minus op'>-</span><span class='minus op'>-</span><span class='minus op'>-</span><span class='minus op'>-</span><span class='minus op'>-</span><span class='minus op'>-</span><span class='minus op'>-</span><span class='minus op'>-</span><span class='minus op'>-</span><span class='bitor op'>|</span> <span class='chromosome identifier id'>chromosome</span>
+
+  <span class='bitor op'>|</span><span class='minus op'>-</span><span class='minus op'>-</span><span class='minus op'>-</span><span class='minus op'>-</span><span class='minus op'>-</span><span class='minus op'>-</span><span class='minus op'>-</span><span class='minus op'>-</span><span class='minus op'>-</span><span class='minus op'>-</span><span class='minus op'>-</span><span class='bitor op'>|</span>     <span class='bitor op'>|</span><span class='minus op'>-</span><span class='minus op'>-</span><span class='minus op'>-</span><span class='minus op'>-</span><span class='minus op'>-</span><span class='minus op'>-</span><span class='minus op'>-</span><span class='bitor op'>|</span>  <span class='bitor op'>|</span><span class='minus op'>-</span><span class='minus op'>-</span><span class='minus op'>-</span><span class='minus op'>-</span><span class='minus op'>-</span><span class='minus op'>-</span><span class='minus op'>-</span><span class='minus op'>-</span><span class='minus op'>-</span><span class='bitor op'>|</span>               <span class='clones identifier id'>clones</span>
+             <span class='bitor op'>|</span><span class='minus op'>-</span><span class='minus op'>-</span><span class='minus op'>-</span><span class='minus op'>-</span><span class='minus op'>-</span><span class='minus op'>-</span><span class='minus op'>-</span><span class='minus op'>-</span><span class='minus op'>-</span><span class='minus op'>-</span><span class='minus op'>-</span><span class='bitor op'>|</span> <span class='bitor op'>|</span><span class='minus op'>-</span><span class='minus op'>-</span><span class='minus op'>-</span><span class='minus op'>-</span><span class='minus op'>-</span><span class='minus op'>-</span><span class='minus op'>-</span><span class='bitor op'>|</span>    <span class='bitor op'>|</span><span class='minus op'>-</span><span class='minus op'>-</span><span class='minus op'>-</span><span class='minus op'>-</span><span class='minus op'>-</span><span class='minus op'>-</span><span class='minus op'>-</span><span class='minus op'>-</span><span class='bitor op'>|</span>
+
+  <span class='gene_a identifier id'>gene_a</span><span class='dot token'>.</span><span class='transform identifier id'>transform</span><span class='lparen token'>(</span><span class='string val'>'clone'</span><span class='rparen token'>)</span> <span class='minus op'>-</span><span class='minus op'>-</span><span class='gt op'>&gt;</span> <span class='gene identifier id'>gene</span>
+  <span class='gene_b identifier id'>gene_b</span><span class='dot token'>.</span><span class='transform identifier id'>transform</span><span class='lparen token'>(</span><span class='string val'>'clone'</span><span class='rparen token'>)</span> <span class='minus op'>-</span><span class='minus op'>-</span><span class='gt op'>&gt;</span> <span class='nil nil kw'>nil</span>
+</pre>
+<p>
+At the moment, transformations can only be done if the two coordinate
+systems are linked directly in the &#8216;assembly&#8217; table.
+</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+  <div class="examples">
+    <h3>Examples:</h3>
+    
+      <h4><div class='inline'></div></h4>
+      <pre class="example code"><span class='comment val'># Get a gene in cow and transform to scaffold level</span>
+<span class='comment val'># (i.e. going from a high rank coord system to a lower rank coord</span>
+<span class='comment val'># system)</span>
+<span class='comment val'># Cow scaffold Chr4.10 lies on Chr4 from 8030345 to 10087277 on the</span>
+<span class='comment val'># reverse strand</span>
+<span class='source_gene identifier id'>source_gene</span> <span class='assign token'>=</span> <span class='Gene constant id'>Gene</span><span class='dot token'>.</span><span class='find identifier id'>find</span><span class='lparen token'>(</span><span class='integer val'>2408</span><span class='rparen token'>)</span>
+<span class='target_gene identifier id'>target_gene</span> <span class='assign token'>=</span> <span class='source_gene identifier id'>source_gene</span><span class='dot token'>.</span><span class='transform identifier id'>transform</span><span class='lparen token'>(</span><span class='string val'>'scaffold'</span><span class='rparen token'>)</span>
+<span class='puts identifier id'>puts</span> <span class='source_gene identifier id'>source_gene</span><span class='dot token'>.</span><span class='seq_region identifier id'>seq_region</span><span class='dot token'>.</span><span class='name identifier id'>name</span>   <span class='comment val'>#--&gt; 4</span>
+<span class='puts identifier id'>puts</span> <span class='source_gene identifier id'>source_gene</span><span class='dot token'>.</span><span class='seq_region_start identifier id'>seq_region_start</span>  <span class='comment val'>#--&gt; 8104409</span>
+<span class='puts identifier id'>puts</span> <span class='source_gene identifier id'>source_gene</span><span class='dot token'>.</span><span class='seq_region_end identifier id'>seq_region_end</span>    <span class='comment val'>#--&gt; 8496477</span>
+<span class='puts identifier id'>puts</span> <span class='source_gene identifier id'>source_gene</span><span class='dot token'>.</span><span class='seq_region_strand identifier id'>seq_region_strand</span> <span class='comment val'>#--&gt; -1</span>
+<span class='puts identifier id'>puts</span> <span class='target_gene identifier id'>target_gene</span><span class='dot token'>.</span><span class='seq_region identifier id'>seq_region</span><span class='dot token'>.</span><span class='name identifier id'>name</span>   <span class='comment val'>#--&gt; Chr4.003.10</span>
+<span class='puts identifier id'>puts</span> <span class='target_gene identifier id'>target_gene</span><span class='dot token'>.</span><span class='seq_region_start identifier id'>seq_region_start</span>  <span class='comment val'>#--&gt; 1590800</span>
+<span class='puts identifier id'>puts</span> <span class='target_gene identifier id'>target_gene</span><span class='dot token'>.</span><span class='seq_region_end identifier id'>seq_region_end</span>    <span class='comment val'>#--&gt; 1982868</span>
+<span class='puts identifier id'>puts</span> <span class='target_gene identifier id'>target_gene</span><span class='dot token'>.</span><span class='seq_region_strand identifier id'>seq_region_strand</span> <span class='comment val'>#--&gt; 1</span>
+</pre>
+    
+  </div>
+<h3>Parameters:</h3>
+<ul class="param">
+  
+    <li>
+      
+        <span class='type'>(<tt>String</tt>)</span>
+      
+      
+        <span class='name'>coord_system_name</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'><p>
+Name of the coordinate system to transform the coordinates to
+</p>
+</div>
+      
+    </li>
+  
+</ul>
+<h3>Returns:</h3>
+<ul class="return">
+  
+    <li>
+      
+        <span class='type'></span>
+      
+      
+      
+      
+        
+        <div class='inline'><p>
+Nil or an object of the same class as self
+</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+66
+67
+68
+69
+70
+71
+72
+73
+74
+75
+76
+77
+78
+79
+80
+81
+82
+83
+84
+85
+86
+87
+88
+89
+90
+91
+92</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/ensembl/core/transform.rb', line 66</span>
+
+<span class='def def kw'>def</span> <span class='transform identifier id'>transform</span><span class='lparen token'>(</span><span class='coord_system_name identifier id'>coord_system_name</span><span class='rparen token'>)</span>
+  <span class='comment val'>#-</span>
+  <span class='comment val'># There are two things I can do:</span>
+  <span class='comment val'># (1) just use project</span>
+  <span class='comment val'># (2) avoid doing all the calculations in project if the source slice</span>
+  <span class='comment val'>#     covers multiple target slices, and _then_ go for project.</span>
+  <span class='comment val'># Let's go for nr 1 for the moment and optimize later.</span>
+  <span class='comment val'>#+</span>
+
+  <span class='if if kw'>if</span> <span class='self self kw'>self</span><span class='dot token'>.</span><span class='slice identifier id'>slice</span><span class='dot token'>.</span><span class='seq_region identifier id'>seq_region</span><span class='dot token'>.</span><span class='coord_system identifier id'>coord_system</span><span class='dot token'>.</span><span class='name identifier id'>name</span> <span class='eq op'>==</span> <span class='coord_system_name identifier id'>coord_system_name</span>
+    <span class='return return kw'>return</span> <span class='self self kw'>self</span>
+  <span class='end end kw'>end</span>
+
+  <span class='target_slices identifier id'>target_slices</span> <span class='assign token'>=</span> <span class='self self kw'>self</span><span class='dot token'>.</span><span class='slice identifier id'>slice</span><span class='dot token'>.</span><span class='project identifier id'>project</span><span class='lparen token'>(</span><span class='coord_system_name identifier id'>coord_system_name</span><span class='rparen token'>)</span>
+  <span class='if if kw'>if</span> <span class='target_slices identifier id'>target_slices</span><span class='dot token'>.</span><span class='length identifier id'>length</span> <span class='gt op'>&gt;</span> <span class='integer val'>1</span>
+    <span class='return return kw'>return</span> <span class='nil nil kw'>nil</span>
+  <span class='else else kw'>else</span>
+    <span class='clone identifier id'>clone</span> <span class='assign token'>=</span> <span class='self self kw'>self</span><span class='dot token'>.</span><span class='clone identifier id'>clone</span>
+    <span class='clone identifier id'>clone</span><span class='dot token'>.</span><span class='seq_region_id identifier id'>seq_region_id</span> <span class='assign token'>=</span> <span class='target_slices identifier id'>target_slices</span><span class='lbrack token'>[</span><span class='integer val'>0</span><span class='rbrack token'>]</span><span class='dot token'>.</span><span class='seq_region identifier id'>seq_region</span><span class='dot token'>.</span><span class='id identifier id'>id</span>
+    <span class='clone identifier id'>clone</span><span class='dot token'>.</span><span class='seq_region_start identifier id'>seq_region_start</span> <span class='assign token'>=</span> <span class='target_slices identifier id'>target_slices</span><span class='lbrack token'>[</span><span class='integer val'>0</span><span class='rbrack token'>]</span><span class='dot token'>.</span><span class='start identifier id'>start</span>
+    <span class='clone identifier id'>clone</span><span class='dot token'>.</span><span class='seq_region_end identifier id'>seq_region_end</span> <span class='assign token'>=</span> <span class='target_slices identifier id'>target_slices</span><span class='lbrack token'>[</span><span class='integer val'>0</span><span class='rbrack token'>]</span><span class='dot token'>.</span><span class='stop identifier id'>stop</span>
+
+    <span class='clone identifier id'>clone</span><span class='dot token'>.</span><span class='seq_region_strand identifier id'>seq_region_strand</span> <span class='assign token'>=</span> <span class='target_slices identifier id'>target_slices</span><span class='lbrack token'>[</span><span class='integer val'>0</span><span class='rbrack token'>]</span><span class='dot token'>.</span><span class='strand identifier id'>strand</span> <span class='mult op'>*</span> <span class='self self kw'>self</span><span class='dot token'>.</span><span class='strand identifier id'>strand</span>
+
+    <span class='return return kw'>return</span> <span class='clone identifier id'>clone</span>
+  <span class='end end kw'>end</span>
+<span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+  </div>
+
+</div>
+    
+    <div id="footer">
+  Generated on Wed Dec 15 19:18:16 2010 by 
+  <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
+  0.6.3 (ruby-1.8.7).
+</div>
+
+  </body>
+</html>

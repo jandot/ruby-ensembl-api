@@ -1,0 +1,1251 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+  <head>
+    <meta name="Content-Type" content="text/html; charset=utf-8" />
+<title>Class: Ensembl::Variation::VariationFeature</title>
+<link rel="stylesheet" href="../../css/style.css" type="text/css" media="screen" charset="utf-8" />
+<link rel="stylesheet" href="../../css/common.css" type="text/css" media="screen" charset="utf-8" />
+
+<script type="text/javascript" charset="utf-8">
+  relpath = '../..';
+  if (relpath != '') relpath += '/';
+</script>
+<script type="text/javascript" charset="utf-8" src="../../js/jquery.js"></script>
+<script type="text/javascript" charset="utf-8" src="../../js/app.js"></script>
+
+  </head>
+  <body>
+    <script type="text/javascript" charset="utf-8">
+      if (window.top.frames.main) document.body.className = 'frames';
+    </script>
+    
+    <div id="header">
+      <div id="menu">
+  
+    <a href="../../_index.html">Index (V)</a> &raquo; 
+    <span class='title'><span class='object_link'><a href="../../Ensembl.html" title="Ensembl (module)">Ensembl</a></span></span> &raquo; <span class='title'><span class='object_link'><a href="../Variation.html" title="Ensembl::Variation (module)">Variation</a></span></span>
+     &raquo; 
+    <span class="title">VariationFeature</span>
+  
+  
+  <div class="noframes"><span class="title">(</span><a href="." target="_top">no frames</a><span class="title">)</span></div>
+</div>
+
+      <div id="search">
+  <a id="class_list_link" href="#">Class List</a>
+  <a id="method_list_link" href="#">Method List</a>
+  <a id ="file_list_link" href="#">File List</a>
+</div>
+
+      <div class="clear"></div>
+    </div>
+    
+    <iframe id="search_frame"></iframe>
+    
+    <div id="content"><h1>Class: Ensembl::Variation::VariationFeature
+  
+  
+  
+</h1>
+
+<dl class="box">
+  
+    <dt class="r1">Inherits:</dt>
+    <dd class="r1">
+      <span class="inheritName"><span class='object_link'><a href="DBConnection.html" title="Ensembl::Variation::DBConnection (class)">DBConnection</a></span></span>
+      
+        <ul class="fullTree">
+          <li>Object</li>
+          
+            <li class="next">ActiveRecord::Base</li>
+          
+            <li class="next"><span class='object_link'><a href="../DBRegistry/Base.html" title="Ensembl::DBRegistry::Base (class)">DBRegistry::Base</a></span></li>
+          
+            <li class="next"><span class='object_link'><a href="DBConnection.html" title="Ensembl::Variation::DBConnection (class)">DBConnection</a></span></li>
+          
+            <li class="next">Ensembl::Variation::VariationFeature</li>
+          
+        </ul>
+        <a href="#" class="inheritanceTree">show all</a>
+      
+      </dd>
+    
+  
+  
+    
+  
+    
+  
+  
+  
+    <dt class="r2 last">Defined in:</dt>
+    <dd class="r2 last">lib/ensembl/variation/variation.rb</dd>
+  
+</dl>
+<div class="clear"></div>
+
+<h2>Overview</h2><div class="docstring">
+  <div class="discussion">
+    <p>
+The VariationFeature class gives information about the genomic position of
+each Variation, including also validation status and consequence type.
+</p>
+<p>
+This class uses ActiveRecord to access data in the Ensembl database. See
+the general documentation of the Ensembl module for more information on
+what this means and what methods are available.
+</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+  <div class="examples">
+    <h3>Examples:</h3>
+    
+      <h4><div class='inline'></div></h4>
+      <pre class="example code"><span class='comment val'># SLOWER QUERY</span>
+<span class='vf identifier id'>vf</span> <span class='assign token'>=</span> <span class='VariationFeature constant id'>VariationFeature</span><span class='dot token'>.</span><span class='find_by_variation_name identifier id'>find_by_variation_name</span><span class='lparen token'>(</span><span class='string val'>'rs10111'</span><span class='rparen token'>)</span>
+<span class='comment val'># FASTER QUERY</span>
+<span class='vf identifier id'>vf</span> <span class='assign token'>=</span> <span class='Variation constant id'>Variation</span><span class='dot token'>.</span><span class='find_by_name identifier id'>find_by_name</span><span class='lparen token'>(</span><span class='string val'>'rs10111'</span><span class='rparen token'>)</span><span class='dot token'>.</span><span class='variation_feature identifier id'>variation_feature</span>
+
+<span class='puts identifier id'>puts</span> <span class='vf identifier id'>vf</span><span class='dot token'>.</span><span class='seq_region_start identifier id'>seq_region_start</span><span class='comma token'>,</span> <span class='vf identifier id'>vf</span><span class='dot token'>.</span><span class='seq_region_end identifier id'>seq_region_end</span><span class='comma token'>,</span> <span class='vf identifier id'>vf</span><span class='dot token'>.</span><span class='allele_string identifier id'>allele_string</span>
+<span class='puts identifier id'>puts</span> <span class='vf identifier id'>vf</span><span class='dot token'>.</span><span class='variation identifier id'>variation</span><span class='dot token'>.</span><span class='ancestral_allele identifier id'>ancestral_allele</span>
+<span class='genomic_region identifier id'>genomic_region</span> <span class='assign token'>=</span> <span class='vf identifier id'>vf</span><span class='dot token'>.</span><span class='fetch_region identifier id'>fetch_region</span> <span class='lparen token'>(</span><span class='returns identifier id'>returns</span> <span class='an identifier id'>an</span> <span class='Ensembl constant id'>Ensembl</span><span class='colon2 op'>::</span><span class='Core constant id'>Core</span><span class='colon2 op'>::</span><span class='Slice constant id'>Slice</span><span class='rparen token'>)</span>
+<span class='genomic_region identifier id'>genomic_region</span><span class='dot token'>.</span><span class='genes identifier id'>genes</span>
+<span class='up_region identifier id'>up_region</span><span class='comma token'>,</span><span class='down_region identifier id'>down_region</span> <span class='assign token'>=</span> <span class='vf identifier id'>vf</span><span class='dot token'>.</span><span class='flanking_seq identifier id'>flanking_seq</span> <span class='lparen token'>(</span><span class='returns identifier id'>returns</span> <span class='two identifier id'>two</span> <span class='Ensembl constant id'>Ensembl</span><span class='colon2 op'>::</span><span class='Core constant id'>Core</span><span class='colon2 op'>::</span><span class='Slice constant id'>Slice</span><span class='rparen token'>)</span>
+</pre>
+    
+  </div>
+
+</div>
+
+  
+  
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <h2>
+      Instance Method Summary
+      <small>(<a href="#" class="summary_toggle">collapse</a>)</small>
+    </h2>
+
+    <ul class="summary">
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#check_aa_change-instance_method" title="#check_aa_change (instance method)">- (Object) <strong>check_aa_change</strong>(vf, t) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'></div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#check_intergenic-instance_method" title="#check_intergenic (instance method)">- (Object) <strong>check_intergenic</strong>(vf, t) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'><p>
+CONSEQUENCE CALCULATION FUNCTIONS ##.
+</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#check_non_coding-instance_method" title="#check_non_coding (instance method)">- (Object) <strong>check_non_coding</strong>(vf, t) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'></div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#check_splice_site-instance_method" title="#check_splice_site (instance method)">- (Object) <strong>check_splice_site</strong>(vf, t) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'></div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#check_upstream_downstream-instance_method" title="#check_upstream_downstream (instance method)">- (Object) <strong>check_upstream_downstream</strong>(vf, t) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'></div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#check_utr-instance_method" title="#check_utr (instance method)">- (Object) <strong>check_utr</strong>(vf, t) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'></div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#consequence_type-instance_method" title="#consequence_type (instance method)">- (Object) <strong>consequence_type</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'><p>
+workaround as ActiveRecord do not parse SET field in MySQL.
+</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#core_connection-instance_method" title="#core_connection (instance method)">- (Object) <strong>core_connection</strong>(seq_region_id) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'></div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#custom_transcript_variation-instance_method" title="#custom_transcript_variation (instance method)">- (Object) <strong>custom_transcript_variation</strong>(vf, sr) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'><p>
+Calculate a consequence type for a user-defined variation.
+</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#fetch_region-instance_method" title="#fetch_region (instance method)">- (Slice) <strong>fetch_region</strong>(up = 5000, down = 5000) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'><p>
+Based on Perl API &#8216;get_all_Genes&#8217; method for Variation class.
+</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#flanking_seq-instance_method" title="#flanking_seq (instance method)">- (Object) <strong>flanking_seq</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'></div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#transcript_variations-instance_method" title="#transcript_variations (instance method)">- (Object) <strong>transcript_variations</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'></div></span>
+  
+</li>
+
+      
+    </ul>
+  
+
+
+  
+  
+  
+  
+  
+  
+  
+  <h3 class="inherited">Methods inherited from <span class='object_link'><a href="DBConnection.html" title="Ensembl::Variation::DBConnection (class)">DBConnection</a></span></h3>
+  <p class="inherited"><span class='object_link'><a href="DBConnection.html#connect-class_method" title="Ensembl::Variation::DBConnection.connect (method)">connect</a></span>, <span class='object_link'><a href="DBConnection.html#ensemblgenomes_connect-class_method" title="Ensembl::Variation::DBConnection.ensemblgenomes_connect (method)">ensemblgenomes_connect</a></span></p>
+
+  
+  
+  
+  
+  
+  
+  
+  <h3 class="inherited">Methods inherited from <span class='object_link'><a href="../DBRegistry/Base.html" title="Ensembl::DBRegistry::Base (class)">DBRegistry::Base</a></span></h3>
+  <p class="inherited"><span class='object_link'><a href="../DBRegistry/Base.html#generic_connect-class_method" title="Ensembl::DBRegistry::Base.generic_connect (method)">generic_connect</a></span>, <span class='object_link'><a href="../DBRegistry/Base.html#get_info-class_method" title="Ensembl::DBRegistry::Base.get_info (method)">get_info</a></span>, <span class='object_link'><a href="../DBRegistry/Base.html#get_name_from_db-class_method" title="Ensembl::DBRegistry::Base.get_name_from_db (method)">get_name_from_db</a></span></p>
+
+  
+
+  <div id="instance_method_details" class="method_details_list">
+    <h2>Instance Method Details</h2>
+    
+    
+      <div class="method_details first">
+  <p class="signature first" id="check_aa_change-instance_method">
+  
+    - (<tt>Object</tt>) <strong>check_aa_change</strong>(vf, t) 
+  
+
+  
+</p><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+296
+297
+298
+299
+300
+301
+302
+303
+304
+305
+306
+307
+308
+309
+310
+311
+312
+313
+314
+315
+316
+317
+318
+319
+320
+321
+322
+323
+324
+325
+326
+327
+328
+329
+330
+331
+332
+333
+334
+335
+336
+337</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/ensembl/variation/variation.rb', line 296</span>
+
+<span class='def def kw'>def</span> <span class='check_aa_change identifier id'>check_aa_change</span><span class='lparen token'>(</span><span class='vf identifier id'>vf</span><span class='comma token'>,</span><span class='t identifier id'>t</span><span class='rparen token'>)</span>
+   <span class='alleles identifier id'>alleles</span> <span class='assign token'>=</span> <span class='vf identifier id'>vf</span><span class='dot token'>.</span><span class='allele_string identifier id'>allele_string</span><span class='dot token'>.</span><span class='split identifier id'>split</span><span class='lparen token'>(</span><span class='string val'>'/'</span><span class='rparen token'>)</span> <span class='comment val'># get the different alleles for this variation          </span>
+   <span class='comment val'># if the variation is an InDel then it produces a frameshift</span>
+   <span class='if if kw'>if</span> <span class='vf identifier id'>vf</span><span class='dot token'>.</span><span class='seq_region_start identifier id'>seq_region_start</span> <span class='neq op'>!=</span> <span class='vf identifier id'>vf</span><span class='dot token'>.</span><span class='seq_region_end identifier id'>seq_region_end</span> <span class='or or kw'>or</span> <span class='alleles identifier id'>alleles</span><span class='dot token'>.</span><span class='include? fid id'>include?</span><span class='lparen token'>(</span><span class='string val'>&quot;-&quot;</span><span class='rparen token'>)</span> <span class='then then kw'>then</span>
+     <span class='return return kw'>return</span> <span class='string val'>&quot;FRAMESHIFT_CODING&quot;</span><span class='comma token'>,</span><span class='nil nil kw'>nil</span>
+   <span class='end end kw'>end</span>
+
+   <span class='comment val'># Find the position inside the CDS</span>
+   
+   <span class='mutation_position identifier id'>mutation_position</span> <span class='assign token'>=</span> <span class='t identifier id'>t</span><span class='dot token'>.</span><span class='genomic2cds identifier id'>genomic2cds</span><span class='lparen token'>(</span><span class='vf identifier id'>vf</span><span class='dot token'>.</span><span class='seq_region_start identifier id'>seq_region_start</span><span class='rparen token'>)</span>
+   
+   <span class='mutation_base identifier id'>mutation_base</span> <span class='assign token'>=</span> <span class='Bio constant id'>Bio</span><span class='colon2 op'>::</span><span class='Sequence constant id'>Sequence</span><span class='colon2 op'>::</span><span class='NA constant id'>NA</span><span class='dot token'>.</span><span class='new identifier id'>new</span><span class='lparen token'>(</span><span class='alleles identifier id'>alleles</span><span class='lbrack token'>[</span><span class='integer val'>1</span><span class='rbrack token'>]</span><span class='rparen token'>)</span>
+   <span class='if if kw'>if</span> <span class='t identifier id'>t</span><span class='dot token'>.</span><span class='seq_region_strand identifier id'>seq_region_strand</span> <span class='eq op'>==</span> <span class='integer val'>-1</span>
+      <span class='mutation_base identifier id'>mutation_base</span><span class='dot token'>.</span><span class='reverse_complement! fid id'>reverse_complement!</span>
+   <span class='end end kw'>end</span>
+   <span class='comment val'># The rank of the codon </span>
+   <span class='target_codon identifier id'>target_codon</span> <span class='assign token'>=</span> <span class='lparen token'>(</span><span class='mutation_position identifier id'>mutation_position</span><span class='rparen token'>)</span><span class='div op'>/</span><span class='integer val'>3</span> <span class='plus op'>+</span> <span class='integer val'>1</span>
+   <span class='cds_sequence identifier id'>cds_sequence</span> <span class='assign token'>=</span> <span class='nil nil kw'>nil</span>
+   <span class='cds_sequence identifier id'>cds_sequence</span> <span class='assign token'>=</span> <span class='t identifier id'>t</span><span class='dot token'>.</span><span class='cds_seq identifier id'>cds_seq</span>
+   <span class='mut_sequence identifier id'>mut_sequence</span> <span class='assign token'>=</span> <span class='cds_sequence identifier id'>cds_sequence</span><span class='dot token'>.</span><span class='dup identifier id'>dup</span>
+   <span class='comment val'># Replace base with the variant allele</span>
+   <span class='mut_sequence identifier id'>mut_sequence</span><span class='lbrack token'>[</span><span class='mutation_position identifier id'>mutation_position</span><span class='rbrack token'>]</span> <span class='assign token'>=</span> <span class='mutation_base identifier id'>mutation_base</span><span class='dot token'>.</span><span class='seq identifier id'>seq</span>
+   <span class='refcodon identifier id'>refcodon</span> <span class='assign token'>=</span>  <span class='cds_sequence identifier id'>cds_sequence</span><span class='lbrack token'>[</span><span class='lparen token'>(</span><span class='target_codon identifier id'>target_codon</span><span class='mult op'>*</span><span class='integer val'>3</span> <span class='minus op'>-</span><span class='integer val'>3</span><span class='rparen token'>)</span><span class='dot2 op'>..</span><span class='lparen token'>(</span><span class='target_codon identifier id'>target_codon</span><span class='mult op'>*</span><span class='integer val'>3</span><span class='minus op'>-</span><span class='integer val'>1</span><span class='rparen token'>)</span><span class='rbrack token'>]</span>
+   <span class='mutcodon identifier id'>mutcodon</span> <span class='assign token'>=</span>  <span class='mut_sequence identifier id'>mut_sequence</span><span class='lbrack token'>[</span><span class='lparen token'>(</span><span class='target_codon identifier id'>target_codon</span><span class='mult op'>*</span><span class='integer val'>3</span> <span class='minus op'>-</span><span class='integer val'>3</span><span class='rparen token'>)</span><span class='dot2 op'>..</span><span class='lparen token'>(</span><span class='target_codon identifier id'>target_codon</span><span class='mult op'>*</span><span class='integer val'>3</span><span class='minus op'>-</span><span class='integer val'>1</span><span class='rparen token'>)</span><span class='rbrack token'>]</span>
+   <span class='codontable identifier id'>codontable</span> <span class='assign token'>=</span> <span class='Bio constant id'>Bio</span><span class='colon2 op'>::</span><span class='CodonTable constant id'>CodonTable</span><span class='lbrack token'>[</span><span class='integer val'>1</span><span class='rbrack token'>]</span>
+   <span class='refaa identifier id'>refaa</span> <span class='assign token'>=</span> <span class='codontable identifier id'>codontable</span><span class='lbrack token'>[</span><span class='refcodon identifier id'>refcodon</span><span class='rbrack token'>]</span>
+   <span class='mutaa identifier id'>mutaa</span> <span class='assign token'>=</span> <span class='codontable identifier id'>codontable</span><span class='lbrack token'>[</span><span class='mutcodon identifier id'>mutcodon</span><span class='dot token'>.</span><span class='downcase identifier id'>downcase</span><span class='rbrack token'>]</span>
+   <span class='if if kw'>if</span> <span class='mutaa identifier id'>mutaa</span> <span class='eq op'>==</span> <span class='nil nil kw'>nil</span>
+     <span class='raise identifier id'>raise</span> <span class='RuntimeError constant id'>RuntimeError</span> <span class='dstring node'>&quot;Codon #{mutcodon.downcase} wasn't recognized.&quot;</span>
+   <span class='end end kw'>end</span>
+   <span class='pep_string identifier id'>pep_string</span> <span class='assign token'>=</span> <span class='refaa identifier id'>refaa</span><span class='plus op'>+</span><span class='string val'>&quot;/&quot;</span><span class='plus op'>+</span><span class='mutaa identifier id'>mutaa</span>
+   <span class='if if kw'>if</span> <span class='mutaa identifier id'>mutaa</span> <span class='eq op'>==</span> <span class='string val'>&quot;*&quot;</span> <span class='and and kw'>and</span> <span class='refaa identifier id'>refaa</span> <span class='neq op'>!=</span> <span class='string val'>&quot;*&quot;</span>
+     <span class='return return kw'>return</span> <span class='string val'>&quot;STOP_GAINED&quot;</span><span class='comma token'>,</span><span class='pep_string identifier id'>pep_string</span>
+   <span class='elsif elsif kw'>elsif</span> <span class='mutaa identifier id'>mutaa</span> <span class='neq op'>!=</span> <span class='string val'>&quot;*&quot;</span> <span class='and and kw'>and</span> <span class='refaa identifier id'>refaa</span> <span class='eq op'>==</span> <span class='string val'>&quot;*&quot;</span>
+     <span class='return return kw'>return</span> <span class='string val'>&quot;STOP_LOST&quot;</span><span class='comma token'>,</span><span class='pep_string identifier id'>pep_string</span>
+   <span class='elsif elsif kw'>elsif</span> <span class='mutaa identifier id'>mutaa</span> <span class='neq op'>!=</span> <span class='refaa identifier id'>refaa</span>
+     <span class='return return kw'>return</span> <span class='string val'>&quot;NON_SYNONYMOUS_CODING&quot;</span><span class='comma token'>,</span><span class='pep_string identifier id'>pep_string</span> 
+   <span class='elsif elsif kw'>elsif</span> <span class='mutaa identifier id'>mutaa</span> <span class='eq op'>==</span> <span class='refaa identifier id'>refaa</span>
+     <span class='return return kw'>return</span> <span class='string val'>&quot;SYNONYMOUS_CODING&quot;</span><span class='comma token'>,</span><span class='pep_string identifier id'>pep_string</span> 
+   <span class='end end kw'>end</span>
+    
+<span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <p class="signature " id="check_intergenic-instance_method">
+  
+    - (<tt>Object</tt>) <strong>check_intergenic</strong>(vf, t) 
+  
+
+  
+</p><div class="docstring">
+  <div class="discussion">
+    <p>
+CONSEQUENCE CALCULATION FUNCTIONS ##
+</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+225
+226
+227
+228
+229
+230
+231
+232</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/ensembl/variation/variation.rb', line 225</span>
+
+<span class='def def kw'>def</span> <span class='check_intergenic identifier id'>check_intergenic</span><span class='lparen token'>(</span><span class='vf identifier id'>vf</span><span class='comma token'>,</span><span class='t identifier id'>t</span><span class='rparen token'>)</span>
+  <span class='if if kw'>if</span> <span class='vf identifier id'>vf</span><span class='dot token'>.</span><span class='seq_region_end identifier id'>seq_region_end</span> <span class='lt op'>&lt;</span> <span class='t identifier id'>t</span><span class='dot token'>.</span><span class='seq_region_start identifier id'>seq_region_start</span> <span class='and and kw'>and</span> <span class='lparen token'>(</span><span class='lparen token'>(</span><span class='t identifier id'>t</span><span class='dot token'>.</span><span class='seq_region_start identifier id'>seq_region_start</span> <span class='minus op'>-</span> <span class='vf identifier id'>vf</span><span class='dot token'>.</span><span class='seq_region_end identifier id'>seq_region_end</span><span class='rparen token'>)</span> <span class='plus op'>+</span><span class='integer val'>1</span><span class='rparen token'>)</span> <span class='gt op'>&gt;</span> <span class='integer val'>5000</span> <span class='then then kw'>then</span>
+     <span class='return return kw'>return</span> <span class='string val'>&quot;INTERGENIC&quot;</span>
+  <span class='elsif elsif kw'>elsif</span> <span class='vf identifier id'>vf</span><span class='dot token'>.</span><span class='seq_region_start identifier id'>seq_region_start</span> <span class='gt op'>&gt;</span> <span class='t identifier id'>t</span><span class='dot token'>.</span><span class='seq_region_end identifier id'>seq_region_end</span> <span class='and and kw'>and</span> <span class='lparen token'>(</span><span class='lparen token'>(</span><span class='vf identifier id'>vf</span><span class='dot token'>.</span><span class='seq_region_start identifier id'>seq_region_start</span> <span class='minus op'>-</span> <span class='t identifier id'>t</span><span class='dot token'>.</span><span class='seq_region_end identifier id'>seq_region_end</span><span class='rparen token'>)</span> <span class='plus op'>+</span><span class='integer val'>1</span><span class='rparen token'>)</span> <span class='gt op'>&gt;</span> <span class='integer val'>5000</span> <span class='then then kw'>then</span>
+     <span class='return return kw'>return</span> <span class='string val'>&quot;INTERGENIC&quot;</span>      
+  <span class='end end kw'>end</span>
+  <span class='return return kw'>return</span> <span class='nil nil kw'>nil</span>        
+<span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <p class="signature " id="check_non_coding-instance_method">
+  
+    - (<tt>Object</tt>) <strong>check_non_coding</strong>(vf, t) 
+  
+
+  
+</p><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+249
+250
+251
+252
+253
+254
+255
+256
+257
+258</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/ensembl/variation/variation.rb', line 249</span>
+
+<span class='def def kw'>def</span> <span class='check_non_coding identifier id'>check_non_coding</span><span class='lparen token'>(</span><span class='vf identifier id'>vf</span><span class='comma token'>,</span><span class='t identifier id'>t</span><span class='rparen token'>)</span>
+    <span class='if if kw'>if</span> <span class='t identifier id'>t</span><span class='dot token'>.</span><span class='biotype identifier id'>biotype</span> <span class='eq op'>==</span> <span class='string val'>&quot;miRNA&quot;</span> <span class='then then kw'>then</span> 
+       <span class='return return kw'>return</span> <span class='lparen token'>(</span><span class='vf identifier id'>vf</span><span class='dot token'>.</span><span class='seq_region_start identifier id'>seq_region_start</span> <span class='eq op'>==</span> <span class='vf identifier id'>vf</span><span class='dot token'>.</span><span class='seq_region_end identifier id'>seq_region_end</span><span class='rparen token'>)</span> <span class='question op'>?</span> <span class='string val'>&quot;WITHIN_MATURE_miRNA&quot;</span> <span class='colon op'>:</span> <span class='string val'>&quot;COMPLEX_INDEL&quot;</span>
+    <span class='elsif elsif kw'>elsif</span> <span class='t identifier id'>t</span><span class='dot token'>.</span><span class='biotype identifier id'>biotype</span> <span class='eq op'>==</span> <span class='string val'>&quot;nonsense_mediated_decay&quot;</span>
+       <span class='return return kw'>return</span> <span class='lparen token'>(</span><span class='vf identifier id'>vf</span><span class='dot token'>.</span><span class='seq_region_start identifier id'>seq_region_start</span> <span class='eq op'>==</span> <span class='vf identifier id'>vf</span><span class='dot token'>.</span><span class='seq_region_end identifier id'>seq_region_end</span><span class='rparen token'>)</span> <span class='question op'>?</span> <span class='string val'>&quot;NMD_TRANSCRIPT&quot;</span> <span class='colon op'>:</span> <span class='string val'>&quot;COMPLEX_INDEL&quot;</span>
+    <span class='else else kw'>else</span>
+       <span class='return return kw'>return</span> <span class='lparen token'>(</span><span class='vf identifier id'>vf</span><span class='dot token'>.</span><span class='seq_region_start identifier id'>seq_region_start</span> <span class='eq op'>==</span> <span class='vf identifier id'>vf</span><span class='dot token'>.</span><span class='seq_region_end identifier id'>seq_region_end</span><span class='rparen token'>)</span> <span class='question op'>?</span> <span class='string val'>&quot;WITHIN_NON_CODING_GENE&quot;</span> <span class='colon op'>:</span> <span class='string val'>&quot;COMPLEX_INDEL&quot;</span>
+    <span class='end end kw'>end</span>
+    <span class='return return kw'>return</span> <span class='nil nil kw'>nil</span>
+<span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <p class="signature " id="check_splice_site-instance_method">
+  
+    - (<tt>Object</tt>) <strong>check_splice_site</strong>(vf, t) 
+  
+
+  
+</p><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+269
+270
+271
+272
+273
+274
+275
+276
+277
+278
+279
+280
+281
+282
+283
+284
+285
+286
+287
+288
+289
+290
+291
+292
+293
+294</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/ensembl/variation/variation.rb', line 269</span>
+
+<span class='def def kw'>def</span> <span class='check_splice_site identifier id'>check_splice_site</span><span class='lparen token'>(</span><span class='vf identifier id'>vf</span><span class='comma token'>,</span><span class='t identifier id'>t</span><span class='rparen token'>)</span>
+    <span class='exon_up identifier id'>exon_up</span> <span class='assign token'>=</span> <span class='t identifier id'>t</span><span class='dot token'>.</span><span class='exon_for_genomic_position identifier id'>exon_for_genomic_position</span><span class='lparen token'>(</span><span class='vf identifier id'>vf</span><span class='dot token'>.</span><span class='seq_region_start identifier id'>seq_region_start</span><span class='rparen token'>)</span>
+    <span class='exon_down identifier id'>exon_down</span> <span class='assign token'>=</span> <span class='t identifier id'>t</span><span class='dot token'>.</span><span class='exon_for_genomic_position identifier id'>exon_for_genomic_position</span><span class='lparen token'>(</span><span class='vf identifier id'>vf</span><span class='dot token'>.</span><span class='seq_region_end identifier id'>seq_region_end</span><span class='rparen token'>)</span>
+    <span class='if if kw'>if</span> <span class='exon_up identifier id'>exon_up</span><span class='dot token'>.</span><span class='nil? fid id'>nil?</span> <span class='and and kw'>and</span> <span class='exon_down identifier id'>exon_down</span><span class='dot token'>.</span><span class='nil? fid id'>nil?</span> <span class='comment val'># we are inside an intron</span>
+       <span class='comment val'># checking boundaries</span>
+       <span class='near_exon_up_2bp identifier id'>near_exon_up_2bp</span> <span class='assign token'>=</span> <span class='t identifier id'>t</span><span class='dot token'>.</span><span class='exon_for_genomic_position identifier id'>exon_for_genomic_position</span><span class='lparen token'>(</span><span class='vf identifier id'>vf</span><span class='dot token'>.</span><span class='seq_region_start identifier id'>seq_region_start</span><span class='minus op'>-</span><span class='integer val'>2</span><span class='rparen token'>)</span>
+       <span class='near_exon_down_2bp identifier id'>near_exon_down_2bp</span> <span class='assign token'>=</span> <span class='t identifier id'>t</span><span class='dot token'>.</span><span class='exon_for_genomic_position identifier id'>exon_for_genomic_position</span><span class='lparen token'>(</span><span class='vf identifier id'>vf</span><span class='dot token'>.</span><span class='seq_region_end identifier id'>seq_region_end</span><span class='plus op'>+</span><span class='integer val'>2</span><span class='rparen token'>)</span>
+       <span class='near_exon_up_8bp identifier id'>near_exon_up_8bp</span> <span class='assign token'>=</span> <span class='t identifier id'>t</span><span class='dot token'>.</span><span class='exon_for_genomic_position identifier id'>exon_for_genomic_position</span><span class='lparen token'>(</span><span class='vf identifier id'>vf</span><span class='dot token'>.</span><span class='seq_region_start identifier id'>seq_region_start</span><span class='minus op'>-</span><span class='integer val'>8</span><span class='rparen token'>)</span>
+       <span class='near_exon_down_8bp identifier id'>near_exon_down_8bp</span> <span class='assign token'>=</span> <span class='t identifier id'>t</span><span class='dot token'>.</span><span class='exon_for_genomic_position identifier id'>exon_for_genomic_position</span><span class='lparen token'>(</span><span class='vf identifier id'>vf</span><span class='dot token'>.</span><span class='seq_region_end identifier id'>seq_region_end</span><span class='plus op'>+</span><span class='integer val'>8</span><span class='rparen token'>)</span>
+       <span class='if if kw'>if</span> <span class='near_exon_up_2bp identifier id'>near_exon_up_2bp</span> <span class='or or kw'>or</span> <span class='near_exon_down_2bp identifier id'>near_exon_down_2bp</span> <span class='then then kw'>then</span>
+          <span class='return return kw'>return</span> <span class='string val'>&quot;ESSENTIAL_SPLICE_SITE&quot;</span>
+       <span class='elsif elsif kw'>elsif</span> <span class='near_exon_up_8bp identifier id'>near_exon_up_8bp</span> <span class='or or kw'>or</span> <span class='near_exon_down_8bp identifier id'>near_exon_down_8bp</span> <span class='then then kw'>then</span>
+          <span class='return return kw'>return</span> <span class='string val'>&quot;SPLICE_SITE&quot;</span>
+       <span class='else else kw'>else</span>
+          <span class='return return kw'>return</span> <span class='string val'>&quot;INTRONIC&quot;</span>   
+       <span class='end end kw'>end</span>
+    <span class='elsif elsif kw'>elsif</span> <span class='exon_up identifier id'>exon_up</span> <span class='and and kw'>and</span> <span class='exon_down identifier id'>exon_down</span> <span class='comment val'># the variation is inside an exon</span>
+          <span class='comment val'># check if it is a splice site</span>
+          <span class='if if kw'>if</span> <span class='lparen token'>(</span><span class='vf identifier id'>vf</span><span class='dot token'>.</span><span class='seq_region_start identifier id'>seq_region_start</span><span class='minus op'>-</span><span class='exon_up identifier id'>exon_up</span><span class='dot token'>.</span><span class='seq_region_start identifier id'>seq_region_start</span><span class='rparen token'>)</span> <span class='leq op'>&lt;=</span> <span class='integer val'>3</span> <span class='or or kw'>or</span> <span class='lparen token'>(</span><span class='exon_down identifier id'>exon_down</span><span class='dot token'>.</span><span class='seq_region_end identifier id'>seq_region_end</span><span class='minus op'>-</span><span class='vf identifier id'>vf</span><span class='dot token'>.</span><span class='seq_region_end identifier id'>seq_region_end</span><span class='rparen token'>)</span> <span class='leq op'>&lt;=</span> <span class='integer val'>3</span> <span class='then then kw'>then</span>
+              <span class='return return kw'>return</span> <span class='string val'>&quot;SPLICE_SITE&quot;</span>                   
+          <span class='end end kw'>end</span>
+    <span class='else else kw'>else</span> <span class='comment val'># a complex indel spanning intron/exon boundary</span>
+         <span class='return return kw'>return</span> <span class='string val'>&quot;COMPLEX_INDEL&quot;</span>
+    <span class='end end kw'>end</span>
+    <span class='return return kw'>return</span> <span class='nil nil kw'>nil</span>      
+<span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <p class="signature " id="check_upstream_downstream-instance_method">
+  
+    - (<tt>Object</tt>) <strong>check_upstream_downstream</strong>(vf, t) 
+  
+
+  
+</p><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+234
+235
+236
+237
+238
+239
+240
+241
+242
+243
+244
+245
+246
+247</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/ensembl/variation/variation.rb', line 234</span>
+
+<span class='def def kw'>def</span> <span class='check_upstream_downstream identifier id'>check_upstream_downstream</span><span class='lparen token'>(</span><span class='vf identifier id'>vf</span><span class='comma token'>,</span><span class='t identifier id'>t</span><span class='rparen token'>)</span>
+  <span class='if if kw'>if</span> <span class='vf identifier id'>vf</span><span class='dot token'>.</span><span class='seq_region_end identifier id'>seq_region_end</span> <span class='lt op'>&lt;</span> <span class='t identifier id'>t</span><span class='dot token'>.</span><span class='seq_region_start identifier id'>seq_region_start</span> <span class='and and kw'>and</span> <span class='lparen token'>(</span><span class='lparen token'>(</span><span class='t identifier id'>t</span><span class='dot token'>.</span><span class='seq_region_start identifier id'>seq_region_start</span> <span class='minus op'>-</span> <span class='vf identifier id'>vf</span><span class='dot token'>.</span><span class='seq_region_end identifier id'>seq_region_end</span><span class='rparen token'>)</span> <span class='plus op'>+</span><span class='integer val'>1</span><span class='rparen token'>)</span> <span class='leq op'>&lt;=</span> <span class='integer val'>5000</span> <span class='then then kw'>then</span>
+     <span class='return return kw'>return</span> <span class='lparen token'>(</span><span class='t identifier id'>t</span><span class='dot token'>.</span><span class='strand identifier id'>strand</span> <span class='eq op'>==</span> <span class='integer val'>1</span><span class='rparen token'>)</span> <span class='question op'>?</span> <span class='string val'>&quot;UPSTREAM&quot;</span> <span class='colon op'>:</span> <span class='string val'>&quot;DOWNSTREAM&quot;</span>
+  <span class='elsif elsif kw'>elsif</span> <span class='vf identifier id'>vf</span><span class='dot token'>.</span><span class='seq_region_start identifier id'>seq_region_start</span> <span class='gt op'>&gt;</span> <span class='t identifier id'>t</span><span class='dot token'>.</span><span class='seq_region_end identifier id'>seq_region_end</span> <span class='and and kw'>and</span> <span class='lparen token'>(</span><span class='lparen token'>(</span><span class='vf identifier id'>vf</span><span class='dot token'>.</span><span class='seq_region_start identifier id'>seq_region_start</span> <span class='minus op'>-</span> <span class='t identifier id'>t</span><span class='dot token'>.</span><span class='seq_region_end identifier id'>seq_region_end</span><span class='rparen token'>)</span><span class='plus op'>+</span><span class='integer val'>1</span><span class='rparen token'>)</span> <span class='leq op'>&lt;=</span> <span class='integer val'>5000</span> <span class='then then kw'>then</span>
+     <span class='return return kw'>return</span> <span class='lparen token'>(</span><span class='t identifier id'>t</span><span class='dot token'>.</span><span class='strand identifier id'>strand</span> <span class='eq op'>==</span> <span class='integer val'>1</span><span class='rparen token'>)</span> <span class='question op'>?</span> <span class='string val'>&quot;DOWNSTREAM&quot;</span> <span class='colon op'>:</span> <span class='string val'>&quot;UPSTREAM&quot;</span>
+  
+  <span class='comment val'># check if it's an InDel and if overlaps the transcript start / end   </span>
+  <span class='elsif elsif kw'>elsif</span> <span class='t identifier id'>t</span><span class='dot token'>.</span><span class='seq_region_start identifier id'>seq_region_start</span> <span class='gt op'>&gt;</span> <span class='vf identifier id'>vf</span><span class='dot token'>.</span><span class='seq_region_start identifier id'>seq_region_start</span> <span class='and and kw'>and</span> <span class='t identifier id'>t</span><span class='dot token'>.</span><span class='seq_region_start identifier id'>seq_region_start</span> <span class='lt op'>&lt;</span> <span class='vf identifier id'>vf</span><span class='dot token'>.</span><span class='seq_region_end identifier id'>seq_region_end</span> <span class='then then kw'>then</span>
+      <span class='return return kw'>return</span> <span class='string val'>&quot;COMPLEX_INDEL&quot;</span>
+  <span class='elsif elsif kw'>elsif</span> <span class='t identifier id'>t</span><span class='dot token'>.</span><span class='seq_region_end identifier id'>seq_region_end</span> <span class='gt op'>&gt;</span> <span class='vf identifier id'>vf</span><span class='dot token'>.</span><span class='seq_region_start identifier id'>seq_region_start</span> <span class='and and kw'>and</span> <span class='t identifier id'>t</span><span class='dot token'>.</span><span class='seq_region_end identifier id'>seq_region_end</span> <span class='lt op'>&lt;</span> <span class='vf identifier id'>vf</span><span class='dot token'>.</span><span class='seq_region_end identifier id'>seq_region_end</span> <span class='then then kw'>then</span>
+      <span class='return return kw'>return</span> <span class='string val'>&quot;COMPLEX_INDEL&quot;</span>                
+  <span class='end end kw'>end</span>
+  <span class='return return kw'>return</span> <span class='nil nil kw'>nil</span>
+<span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <p class="signature " id="check_utr-instance_method">
+  
+    - (<tt>Object</tt>) <strong>check_utr</strong>(vf, t) 
+  
+
+  
+</p><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+260
+261
+262
+263
+264
+265
+266
+267</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/ensembl/variation/variation.rb', line 260</span>
+
+<span class='def def kw'>def</span> <span class='check_utr identifier id'>check_utr</span><span class='lparen token'>(</span><span class='vf identifier id'>vf</span><span class='comma token'>,</span><span class='t identifier id'>t</span><span class='rparen token'>)</span>
+    <span class='if if kw'>if</span> <span class='vf identifier id'>vf</span><span class='dot token'>.</span><span class='seq_region_start identifier id'>seq_region_start</span> <span class='gt op'>&gt;</span> <span class='t identifier id'>t</span><span class='dot token'>.</span><span class='seq_region_start identifier id'>seq_region_start</span> <span class='and and kw'>and</span> <span class='vf identifier id'>vf</span><span class='dot token'>.</span><span class='seq_region_end identifier id'>seq_region_end</span> <span class='lt op'>&lt;</span> <span class='t identifier id'>t</span><span class='dot token'>.</span><span class='coding_region_genomic_start identifier id'>coding_region_genomic_start</span> <span class='then then kw'>then</span>
+       <span class='return return kw'>return</span> <span class='lparen token'>(</span><span class='t identifier id'>t</span><span class='dot token'>.</span><span class='strand identifier id'>strand</span> <span class='eq op'>==</span> <span class='integer val'>1</span><span class='rparen token'>)</span> <span class='question op'>?</span> <span class='string val'>&quot;5PRIME_UTR&quot;</span> <span class='colon op'>:</span> <span class='string val'>&quot;3PRIME_UTR&quot;</span>
+    <span class='elsif elsif kw'>elsif</span> <span class='vf identifier id'>vf</span><span class='dot token'>.</span><span class='seq_region_start identifier id'>seq_region_start</span> <span class='gt op'>&gt;</span> <span class='t identifier id'>t</span><span class='dot token'>.</span><span class='coding_region_genomic_end identifier id'>coding_region_genomic_end</span> <span class='and and kw'>and</span> <span class='vf identifier id'>vf</span><span class='dot token'>.</span><span class='seq_region_end identifier id'>seq_region_end</span> <span class='lt op'>&lt;</span> <span class='t identifier id'>t</span><span class='dot token'>.</span><span class='seq_region_end identifier id'>seq_region_end</span> <span class='then then kw'>then</span>
+       <span class='return return kw'>return</span> <span class='lparen token'>(</span><span class='t identifier id'>t</span><span class='dot token'>.</span><span class='strand identifier id'>strand</span> <span class='eq op'>==</span> <span class='integer val'>1</span><span class='rparen token'>)</span> <span class='question op'>?</span> <span class='string val'>&quot;3PRIME_UTR&quot;</span> <span class='colon op'>:</span> <span class='string val'>&quot;5PRIME_UTR&quot;</span>   
+    <span class='end end kw'>end</span>
+    <span class='return return kw'>return</span> <span class='nil nil kw'>nil</span>   
+<span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <p class="signature " id="consequence_type-instance_method">
+  
+    - (<tt>Object</tt>) <strong>consequence_type</strong> 
+  
+
+  
+</p><div class="docstring">
+  <div class="discussion">
+    <p>
+workaround as ActiveRecord do not parse SET field in MySQL
+</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+105
+106
+107</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/ensembl/variation/variation.rb', line 105</span>
+
+<span class='def def kw'>def</span> <span class='consequence_type identifier id'>consequence_type</span> 
+  <span class='dstring node'>&quot;#{attributes_before_type_cast['consequence_type']}&quot;</span> 
+<span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <p class="signature " id="core_connection-instance_method">
+  
+    - (<tt>Object</tt>) <strong>core_connection</strong>(seq_region_id) 
+  
+
+  
+</p><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+142
+143
+144
+145
+146
+147
+148
+149
+150
+151
+152
+153
+154
+155
+156
+157
+158
+159
+160</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/ensembl/variation/variation.rb', line 142</span>
+
+<span class='def def kw'>def</span> <span class='core_connection identifier id'>core_connection</span><span class='lparen token'>(</span><span class='seq_region_id identifier id'>seq_region_id</span><span class='rparen token'>)</span> 
+  <span class='if if kw'>if</span> <span class='notop op'>!</span><span class='Ensembl constant id'>Ensembl</span><span class='colon2 op'>::</span><span class='Core constant id'>Core</span><span class='colon2 op'>::</span><span class='DBConnection constant id'>DBConnection</span><span class='dot token'>.</span><span class='connected? fid id'>connected?</span> <span class='then then kw'>then</span>  
+    <span class='host identifier id'>host</span><span class='comma token'>,</span><span class='user identifier id'>user</span><span class='comma token'>,</span><span class='password identifier id'>password</span><span class='comma token'>,</span><span class='db_name identifier id'>db_name</span><span class='comma token'>,</span><span class='port identifier id'>port</span><span class='comma token'>,</span><span class='species identifier id'>species</span><span class='comma token'>,</span><span class='release identifier id'>release</span> <span class='assign token'>=</span> <span class='Ensembl constant id'>Ensembl</span><span class='colon2 op'>::</span><span class='Variation constant id'>Variation</span><span class='colon2 op'>::</span><span class='DBConnection constant id'>DBConnection</span><span class='dot token'>.</span><span class='get_info identifier id'>get_info</span>
+    <span class='begin begin kw'>begin</span>
+      <span class='Ensembl constant id'>Ensembl</span><span class='colon2 op'>::</span><span class='Core constant id'>Core</span><span class='colon2 op'>::</span><span class='DBConnection constant id'>DBConnection</span><span class='dot token'>.</span><span class='connect identifier id'>connect</span><span class='lparen token'>(</span><span class='species identifier id'>species</span><span class='comma token'>,</span><span class='release identifier id'>release</span><span class='dot token'>.</span><span class='to_i identifier id'>to_i</span><span class='comma token'>,</span><span class='symbol val'>:username</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='user identifier id'>user</span><span class='comma token'>,</span> <span class='symbol val'>:password</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='password identifier id'>password</span><span class='comma token'>,</span><span class='symbol val'>:host</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='host identifier id'>host</span><span class='comma token'>,</span> <span class='symbol val'>:port</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='port identifier id'>port</span><span class='rparen token'>)</span>
+    <span class='rescue rescue kw'>rescue</span>
+      <span class='raise identifier id'>raise</span> <span class='NameError constant id'>NameError</span><span class='comma token'>,</span> <span class='dstring node'>&quot;Can't derive Core database name from #{db_name}. Are you using non conventional names?&quot;</span>
+    <span class='end end kw'>end</span>
+  <span class='end end kw'>end</span>
+  <span class='comment val'># Check if SeqRegion already exists in Ensembl::SESSION</span>
+  <span class='seq_region identifier id'>seq_region</span> <span class='assign token'>=</span> <span class='nil nil kw'>nil</span>
+  <span class='if if kw'>if</span> <span class='Ensembl constant id'>Ensembl</span><span class='colon2 op'>::</span><span class='SESSION constant id'>SESSION</span><span class='dot token'>.</span><span class='seq_regions identifier id'>seq_regions</span><span class='dot token'>.</span><span class='has_key? fid id'>has_key?</span><span class='lparen token'>(</span><span class='seq_region_id identifier id'>seq_region_id</span><span class='rparen token'>)</span>
+    <span class='seq_region identifier id'>seq_region</span> <span class='assign token'>=</span> <span class='Ensembl constant id'>Ensembl</span><span class='colon2 op'>::</span><span class='SESSION constant id'>SESSION</span><span class='dot token'>.</span><span class='seq_regions identifier id'>seq_regions</span><span class='lbrack token'>[</span><span class='seq_region_id identifier id'>seq_region_id</span><span class='rbrack token'>]</span>
+  <span class='else else kw'>else</span>
+    <span class='seq_region identifier id'>seq_region</span> <span class='assign token'>=</span> <span class='Ensembl constant id'>Ensembl</span><span class='colon2 op'>::</span><span class='Core constant id'>Core</span><span class='colon2 op'>::</span><span class='SeqRegion constant id'>SeqRegion</span><span class='dot token'>.</span><span class='find identifier id'>find</span><span class='lparen token'>(</span><span class='seq_region_id identifier id'>seq_region_id</span><span class='rparen token'>)</span>
+    <span class='Ensembl constant id'>Ensembl</span><span class='colon2 op'>::</span><span class='SESSION constant id'>SESSION</span><span class='dot token'>.</span><span class='seq_regions identifier id'>seq_regions</span><span class='lbrack token'>[</span><span class='seq_region identifier id'>seq_region</span><span class='dot token'>.</span><span class='id identifier id'>id</span><span class='rbrack token'>]</span> <span class='assign token'>=</span> <span class='seq_region identifier id'>seq_region</span>
+  <span class='end end kw'>end</span>
+  <span class='return return kw'>return</span> <span class='seq_region identifier id'>seq_region</span>
+<span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <p class="signature " id="custom_transcript_variation-instance_method">
+  
+    - (<tt>Object</tt>) <strong>custom_transcript_variation</strong>(vf, sr) 
+  
+
+  
+</p><div class="docstring">
+  <div class="discussion">
+    <p>
+Calculate a consequence type for a user-defined variation
+</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+163
+164
+165
+166
+167
+168
+169
+170
+171
+172
+173
+174
+175
+176
+177
+178
+179
+180
+181
+182
+183
+184
+185
+186
+187
+188
+189
+190
+191
+192
+193
+194
+195
+196
+197
+198
+199
+200
+201
+202
+203
+204
+205
+206
+207
+208
+209
+210
+211
+212
+213
+214
+215
+216
+217
+218
+219
+220
+221</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/ensembl/variation/variation.rb', line 163</span>
+
+<span class='def def kw'>def</span> <span class='custom_transcript_variation identifier id'>custom_transcript_variation</span><span class='lparen token'>(</span><span class='vf identifier id'>vf</span><span class='comma token'>,</span><span class='sr identifier id'>sr</span><span class='rparen token'>)</span>
+         
+ <span class='@variation_name ivar id'>@variation_name</span> <span class='assign token'>=</span> <span class='vf identifier id'>vf</span><span class='dot token'>.</span><span class='variation_name identifier id'>variation_name</span>
+ <span class='@seq_region ivar id'>@seq_region</span> <span class='assign token'>=</span> <span class='sr identifier id'>sr</span>
+
+ <span class='downstream identifier id'>downstream</span> <span class='assign token'>=</span> <span class='integer val'>5000</span>
+ <span class='upstream identifier id'>upstream</span> <span class='assign token'>=</span> <span class='integer val'>5000</span>
+ <span class='tvs identifier id'>tvs</span> <span class='assign token'>=</span> <span class='lbrack token'>[</span><span class='rbrack token'>]</span> <span class='comment val'># store all the calculated TranscriptVariations</span>
+  <span class='comment val'># retrieve the slice of the genomic region where the variation is located</span>
+  <span class='region identifier id'>region</span> <span class='assign token'>=</span> <span class='Ensembl constant id'>Ensembl</span><span class='colon2 op'>::</span><span class='Core constant id'>Core</span><span class='colon2 op'>::</span><span class='Slice constant id'>Slice</span><span class='dot token'>.</span><span class='fetch_by_region identifier id'>fetch_by_region</span><span class='lparen token'>(</span><span class='Ensembl constant id'>Ensembl</span><span class='colon2 op'>::</span><span class='Core constant id'>Core</span><span class='colon2 op'>::</span><span class='CoordSystem constant id'>CoordSystem</span><span class='dot token'>.</span><span class='find identifier id'>find</span><span class='lparen token'>(</span><span class='sr identifier id'>sr</span><span class='dot token'>.</span><span class='coord_system_id identifier id'>coord_system_id</span><span class='rparen token'>)</span><span class='dot token'>.</span><span class='name identifier id'>name</span><span class='comma token'>,</span><span class='sr identifier id'>sr</span><span class='dot token'>.</span><span class='name identifier id'>name</span><span class='comma token'>,</span><span class='vf identifier id'>vf</span><span class='dot token'>.</span><span class='seq_region_start identifier id'>seq_region_start</span><span class='minus op'>-</span><span class='upstream identifier id'>upstream</span><span class='comma token'>,</span><span class='vf identifier id'>vf</span><span class='dot token'>.</span><span class='seq_region_end identifier id'>seq_region_end</span><span class='plus op'>+</span><span class='downstream identifier id'>downstream</span><span class='minus op'>-</span><span class='integer val'>1</span><span class='rparen token'>)</span>
+  <span class='comment val'># iterate through all the transcripts present in the region</span>
+ <span class='genes identifier id'>genes</span> <span class='assign token'>=</span> <span class='region identifier id'>region</span><span class='dot token'>.</span><span class='genes identifier id'>genes</span><span class='lparen token'>(</span><span class='inclusive identifier id'>inclusive</span> <span class='assign token'>=</span> <span class='true true kw'>true</span><span class='rparen token'>)</span>
+  <span class='if if kw'>if</span> <span class='genes identifier id'>genes</span><span class='lbrack token'>[</span><span class='integer val'>0</span><span class='rbrack token'>]</span> <span class='neq op'>!=</span> <span class='nil nil kw'>nil</span>
+   <span class='genes identifier id'>genes</span><span class='dot token'>.</span><span class='each identifier id'>each</span> <span class='do do kw'>do</span> <span class='bitor op'>|</span><span class='g identifier id'>g</span><span class='bitor op'>|</span>
+     <span class='g identifier id'>g</span><span class='dot token'>.</span><span class='transcripts identifier id'>transcripts</span><span class='dot token'>.</span><span class='each identifier id'>each</span> <span class='do do kw'>do</span> <span class='bitor op'>|</span><span class='t identifier id'>t</span><span class='bitor op'>|</span>
+       <span class='tv identifier id'>tv</span> <span class='assign token'>=</span> <span class='TranscriptVariation constant id'>TranscriptVariation</span><span class='dot token'>.</span><span class='new identifier id'>new</span><span class='lparen token'>(</span><span class='rparen token'>)</span> <span class='comment val'># create a new TranscriptVariation object for every transcript present</span>
+       <span class='comment val'># do the calculations</span>
+       
+       <span class='comment val'># check if the variation is intergenic for this transcript (no effects)</span>
+       <span class='tv identifier id'>tv</span><span class='dot token'>.</span><span class='consequence_type identifier id'>consequence_type</span> <span class='assign token'>=</span> <span class='check_intergenic identifier id'>check_intergenic</span><span class='lparen token'>(</span><span class='vf identifier id'>vf</span><span class='comma token'>,</span><span class='t identifier id'>t</span><span class='rparen token'>)</span>
+       
+       <span class='comment val'># check if the variation is upstram or downstram the transcript</span>
+       <span class='tv identifier id'>tv</span><span class='dot token'>.</span><span class='consequence_type identifier id'>consequence_type</span> <span class='assign token'>=</span> <span class='check_upstream_downstream identifier id'>check_upstream_downstream</span><span class='lparen token'>(</span><span class='vf identifier id'>vf</span><span class='comma token'>,</span><span class='t identifier id'>t</span><span class='rparen token'>)</span> <span class='if if_mod kw'>if</span> <span class='tv identifier id'>tv</span><span class='dot token'>.</span><span class='consequence_type identifier id'>consequence_type</span> <span class='eq op'>==</span> <span class='string val'>&quot;&quot;</span>
+       
+       <span class='comment val'># if no consequence type is found, then the variation is inside the transcript         </span>
+       <span class='comment val'># check for non coding gene</span>
+       <span class='tv identifier id'>tv</span><span class='dot token'>.</span><span class='consequence_type identifier id'>consequence_type</span> <span class='assign token'>=</span> <span class='check_non_coding identifier id'>check_non_coding</span><span class='lparen token'>(</span><span class='vf identifier id'>vf</span><span class='comma token'>,</span><span class='t identifier id'>t</span><span class='rparen token'>)</span> <span class='if if_mod kw'>if</span> <span class='tv identifier id'>tv</span><span class='dot token'>.</span><span class='consequence_type identifier id'>consequence_type</span> <span class='eq op'>==</span> <span class='string val'>&quot;&quot;</span> <span class='and and kw'>and</span> <span class='t identifier id'>t</span><span class='dot token'>.</span><span class='biotype identifier id'>biotype</span> <span class='neq op'>!=</span> <span class='string val'>'protein_coding'</span>
+
+       <span class='comment val'># if no consequence type is found, then check intron / exon boundaries</span>
+       <span class='tv identifier id'>tv</span><span class='dot token'>.</span><span class='consequence_type identifier id'>consequence_type</span> <span class='assign token'>=</span> <span class='check_splice_site identifier id'>check_splice_site</span><span class='lparen token'>(</span><span class='vf identifier id'>vf</span><span class='comma token'>,</span><span class='t identifier id'>t</span><span class='rparen token'>)</span> <span class='if if_mod kw'>if</span> <span class='tv identifier id'>tv</span><span class='dot token'>.</span><span class='consequence_type identifier id'>consequence_type</span> <span class='eq op'>==</span> <span class='string val'>&quot;&quot;</span>
+
+       <span class='comment val'># if no consequence type is found, check if the variation is inside UTRs</span>
+       <span class='tv identifier id'>tv</span><span class='dot token'>.</span><span class='consequence_type identifier id'>consequence_type</span> <span class='assign token'>=</span> <span class='check_utr identifier id'>check_utr</span><span class='lparen token'>(</span><span class='vf identifier id'>vf</span><span class='comma token'>,</span><span class='t identifier id'>t</span><span class='rparen token'>)</span> <span class='if if_mod kw'>if</span> <span class='tv identifier id'>tv</span><span class='dot token'>.</span><span class='consequence_type identifier id'>consequence_type</span> <span class='eq op'>==</span> <span class='string val'>&quot;&quot;</span>    
+                 
+       <span class='comment val'># if no consequence type is found, then variation is inside an exon. </span>
+       <span class='comment val'># Check the codon change</span>
+       <span class='lparen token'>(</span><span class='tv identifier id'>tv</span><span class='dot token'>.</span><span class='consequence_type identifier id'>consequence_type</span><span class='comma token'>,</span><span class='tv identifier id'>tv</span><span class='dot token'>.</span><span class='peptide_allele_string identifier id'>peptide_allele_string</span><span class='rparen token'>)</span> <span class='assign token'>=</span> <span class='check_aa_change identifier id'>check_aa_change</span><span class='lparen token'>(</span><span class='vf identifier id'>vf</span><span class='comma token'>,</span><span class='t identifier id'>t</span><span class='rparen token'>)</span> <span class='if if_mod kw'>if</span> <span class='tv identifier id'>tv</span><span class='dot token'>.</span><span class='consequence_type identifier id'>consequence_type</span> <span class='eq op'>==</span> <span class='string val'>&quot;&quot;</span>
+         
+       
+       <span class='begin begin kw'>begin</span> <span class='comment val'># this changed from release 58</span>
+          <span class='tv identifier id'>tv</span><span class='dot token'>.</span><span class='transcript_stable_id identifier id'>transcript_stable_id</span> <span class='assign token'>=</span> <span class='t identifier id'>t</span><span class='dot token'>.</span><span class='stable_id identifier id'>stable_id</span>
+       <span class='rescue rescue kw'>rescue</span> <span class='NoMethodError constant id'>NoMethodError</span>
+          <span class='tv identifier id'>tv</span><span class='dot token'>.</span><span class='transcript_id identifier id'>transcript_id</span> <span class='assign token'>=</span> <span class='t identifier id'>t</span><span class='dot token'>.</span><span class='id identifier id'>id</span>
+       <span class='end end kw'>end</span>
+       
+       <span class='tv identifier id'>tv</span><span class='dot token'>.</span><span class='consequence_type identifier id'>consequence_type</span> <span class='assign token'>=</span> <span class='string val'>&quot;INTERGENIC&quot;</span> <span class='if if_mod kw'>if</span> <span class='tv identifier id'>tv</span><span class='dot token'>.</span><span class='consequence_type identifier id'>consequence_type</span> <span class='eq op'>==</span> <span class='string val'>&quot;&quot;</span>
+       <span class='tvs identifier id'>tvs</span> <span class='lshft op'>&lt;&lt;</span> <span class='tv identifier id'>tv</span> 
+     <span class='end end kw'>end</span>   
+   <span class='end end kw'>end</span>
+  <span class='end end kw'>end</span>
+  <span class='comment val'># if there are no transcripts/genes within 5000 bases upstream and downstream set the variation as INTERGENIC (no effects)</span>
+  <span class='if if kw'>if</span> <span class='tvs identifier id'>tvs</span><span class='dot token'>.</span><span class='size identifier id'>size</span> <span class='eq op'>==</span> <span class='integer val'>0</span> <span class='then then kw'>then</span>
+   <span class='tv identifier id'>tv</span> <span class='assign token'>=</span> <span class='TranscriptVariation constant id'>TranscriptVariation</span><span class='dot token'>.</span><span class='new identifier id'>new</span><span class='lparen token'>(</span><span class='rparen token'>)</span>
+   <span class='tv identifier id'>tv</span><span class='dot token'>.</span><span class='consequence_type identifier id'>consequence_type</span> <span class='assign token'>=</span> <span class='string val'>&quot;INTERGENIC&quot;</span>
+   <span class='tvs identifier id'>tvs</span> <span class='lshft op'>&lt;&lt;</span> <span class='tv identifier id'>tv</span>
+  <span class='end end kw'>end</span>
+
+  <span class='return return kw'>return</span> <span class='tvs identifier id'>tvs</span>
+<span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <p class="signature " id="fetch_region-instance_method">
+  
+    - (<tt>Slice</tt>) <strong>fetch_region</strong>(up = 5000, down = 5000) 
+  
+
+  
+</p><div class="docstring">
+  <div class="discussion">
+    <p>
+Based on Perl API &#8216;get_all_Genes&#8217; method for Variation class.
+Get a genomic region starting from the Variation coordinates, expanding the
+region upstream and downstream.
+</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  <h3>Parameters:</h3>
+<ul class="param">
+  
+    <li>
+      
+        <span class='type'>(<tt>Integer</tt>)</span>
+      
+      
+        <span class='name'>up</span>
+      
+      
+        <em class="default">(defaults to: <tt>5000</tt>)</em>
+      
+      
+        &mdash;
+        <div class='inline'><p>
+Length of upstream flanking region
+</p>
+</div>
+      
+    </li>
+  
+    <li>
+      
+        <span class='type'>(<tt>Integer</tt>)</span>
+      
+      
+        <span class='name'>down</span>
+      
+      
+        <em class="default">(defaults to: <tt>5000</tt>)</em>
+      
+      
+        &mdash;
+        <div class='inline'><p>
+Length of downstream flanking region
+</p>
+</div>
+      
+    </li>
+  
+</ul>
+<h3>Returns:</h3>
+<ul class="return">
+  
+    <li>
+      
+        <span class='type'>(<tt>Slice</tt>)</span>
+      
+      
+      
+      
+        &mdash;
+        <div class='inline'><p>
+Slice object containing the variation
+</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+116
+117
+118
+119
+120</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/ensembl/variation/variation.rb', line 116</span>
+
+<span class='def def kw'>def</span> <span class='fetch_region identifier id'>fetch_region</span><span class='lparen token'>(</span><span class='up identifier id'>up</span> <span class='assign token'>=</span> <span class='integer val'>5000</span><span class='comma token'>,</span> <span class='down identifier id'>down</span> <span class='assign token'>=</span> <span class='integer val'>5000</span><span class='rparen token'>)</span>
+  <span class='sr identifier id'>sr</span> <span class='assign token'>=</span> <span class='core_connection identifier id'>core_connection</span><span class='lparen token'>(</span><span class='self self kw'>self</span><span class='dot token'>.</span><span class='seq_region_id identifier id'>seq_region_id</span><span class='rparen token'>)</span>
+  <span class='slice identifier id'>slice</span> <span class='assign token'>=</span> <span class='Ensembl constant id'>Ensembl</span><span class='colon2 op'>::</span><span class='Core constant id'>Core</span><span class='colon2 op'>::</span><span class='Slice constant id'>Slice</span><span class='dot token'>.</span><span class='fetch_by_region identifier id'>fetch_by_region</span><span class='lparen token'>(</span><span class='Ensembl constant id'>Ensembl</span><span class='colon2 op'>::</span><span class='Core constant id'>Core</span><span class='colon2 op'>::</span><span class='CoordSystem constant id'>CoordSystem</span><span class='dot token'>.</span><span class='find identifier id'>find</span><span class='lparen token'>(</span><span class='sr identifier id'>sr</span><span class='dot token'>.</span><span class='coord_system_id identifier id'>coord_system_id</span><span class='rparen token'>)</span><span class='dot token'>.</span><span class='name identifier id'>name</span><span class='comma token'>,</span><span class='sr identifier id'>sr</span><span class='dot token'>.</span><span class='name identifier id'>name</span><span class='comma token'>,</span><span class='self self kw'>self</span><span class='dot token'>.</span><span class='seq_region_start identifier id'>seq_region_start</span><span class='minus op'>-</span><span class='up identifier id'>up</span><span class='comma token'>,</span><span class='self self kw'>self</span><span class='dot token'>.</span><span class='seq_region_end identifier id'>seq_region_end</span><span class='plus op'>+</span><span class='down identifier id'>down</span><span class='rparen token'>)</span>
+  <span class='return return kw'>return</span> <span class='slice identifier id'>slice</span>
+<span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <p class="signature " id="flanking_seq-instance_method">
+  
+    - (<tt>Object</tt>) <strong>flanking_seq</strong> 
+  
+
+  
+</p><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+122
+123
+124
+125
+126
+127
+128</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/ensembl/variation/variation.rb', line 122</span>
+
+<span class='def def kw'>def</span> <span class='flanking_seq identifier id'>flanking_seq</span>
+  <span class='sr identifier id'>sr</span> <span class='assign token'>=</span> <span class='core_connection identifier id'>core_connection</span><span class='lparen token'>(</span><span class='self self kw'>self</span><span class='dot token'>.</span><span class='seq_region_id identifier id'>seq_region_id</span><span class='rparen token'>)</span>
+  <span class='f identifier id'>f</span> <span class='assign token'>=</span> <span class='Variation constant id'>Variation</span><span class='dot token'>.</span><span class='find identifier id'>find</span><span class='lparen token'>(</span><span class='self self kw'>self</span><span class='dot token'>.</span><span class='variation_id identifier id'>variation_id</span><span class='rparen token'>)</span><span class='dot token'>.</span><span class='flanking_sequence identifier id'>flanking_sequence</span>
+  <span class='slice_up identifier id'>slice_up</span> <span class='assign token'>=</span> <span class='Ensembl constant id'>Ensembl</span><span class='colon2 op'>::</span><span class='Core constant id'>Core</span><span class='colon2 op'>::</span><span class='Slice constant id'>Slice</span><span class='dot token'>.</span><span class='fetch_by_region identifier id'>fetch_by_region</span><span class='lparen token'>(</span><span class='Ensembl constant id'>Ensembl</span><span class='colon2 op'>::</span><span class='Core constant id'>Core</span><span class='colon2 op'>::</span><span class='CoordSystem constant id'>CoordSystem</span><span class='dot token'>.</span><span class='find identifier id'>find</span><span class='lparen token'>(</span><span class='sr identifier id'>sr</span><span class='dot token'>.</span><span class='coord_system_id identifier id'>coord_system_id</span><span class='rparen token'>)</span><span class='dot token'>.</span><span class='name identifier id'>name</span><span class='comma token'>,</span><span class='sr identifier id'>sr</span><span class='dot token'>.</span><span class='name identifier id'>name</span><span class='comma token'>,</span><span class='f identifier id'>f</span><span class='dot token'>.</span><span class='up_seq_region_start identifier id'>up_seq_region_start</span><span class='comma token'>,</span><span class='f identifier id'>f</span><span class='dot token'>.</span><span class='up_seq_region_end identifier id'>up_seq_region_end</span><span class='comma token'>,</span><span class='self self kw'>self</span><span class='dot token'>.</span><span class='seq_region_strand identifier id'>seq_region_strand</span><span class='rparen token'>)</span>
+  <span class='slice_down identifier id'>slice_down</span> <span class='assign token'>=</span> <span class='Ensembl constant id'>Ensembl</span><span class='colon2 op'>::</span><span class='Core constant id'>Core</span><span class='colon2 op'>::</span><span class='Slice constant id'>Slice</span><span class='dot token'>.</span><span class='fetch_by_region identifier id'>fetch_by_region</span><span class='lparen token'>(</span><span class='Ensembl constant id'>Ensembl</span><span class='colon2 op'>::</span><span class='Core constant id'>Core</span><span class='colon2 op'>::</span><span class='CoordSystem constant id'>CoordSystem</span><span class='dot token'>.</span><span class='find identifier id'>find</span><span class='lparen token'>(</span><span class='sr identifier id'>sr</span><span class='dot token'>.</span><span class='coord_system_id identifier id'>coord_system_id</span><span class='rparen token'>)</span><span class='dot token'>.</span><span class='name identifier id'>name</span><span class='comma token'>,</span><span class='sr identifier id'>sr</span><span class='dot token'>.</span><span class='name identifier id'>name</span><span class='comma token'>,</span><span class='f identifier id'>f</span><span class='dot token'>.</span><span class='down_seq_region_start identifier id'>down_seq_region_start</span><span class='comma token'>,</span><span class='f identifier id'>f</span><span class='dot token'>.</span><span class='down_seq_region_end identifier id'>down_seq_region_end</span><span class='comma token'>,</span><span class='self self kw'>self</span><span class='dot token'>.</span><span class='seq_region_strand identifier id'>seq_region_strand</span><span class='rparen token'>)</span>
+  <span class='return return kw'>return</span> <span class='slice_up identifier id'>slice_up</span><span class='comma token'>,</span><span class='slice_down identifier id'>slice_down</span>
+<span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <p class="signature " id="transcript_variations-instance_method">
+  
+    - (<tt>Object</tt>) <strong>transcript_variations</strong> 
+  
+
+  
+</p><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+130
+131
+132
+133
+134
+135
+136
+137
+138</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/ensembl/variation/variation.rb', line 130</span>
+
+<span class='def def kw'>def</span> <span class='transcript_variations identifier id'>transcript_variations</span>
+  <span class='tvs identifier id'>tvs</span> <span class='assign token'>=</span> <span class='TranscriptVariation constant id'>TranscriptVariation</span><span class='dot token'>.</span><span class='find_all_by_variation_feature_id identifier id'>find_all_by_variation_feature_id</span><span class='lparen token'>(</span><span class='self self kw'>self</span><span class='dot token'>.</span><span class='variation_feature_id identifier id'>variation_feature_id</span><span class='rparen token'>)</span>
+  <span class='if if kw'>if</span> <span class='tvs identifier id'>tvs</span><span class='lbrack token'>[</span><span class='integer val'>0</span><span class='rbrack token'>]</span><span class='dot token'>.</span><span class='nil? fid id'>nil?</span> <span class='then then kw'>then</span> <span class='comment val'># the variation is not stored in the database, so run the calculations</span>
+    <span class='sr identifier id'>sr</span> <span class='assign token'>=</span> <span class='core_connection identifier id'>core_connection</span><span class='lparen token'>(</span><span class='self self kw'>self</span><span class='dot token'>.</span><span class='seq_region_id identifier id'>seq_region_id</span><span class='rparen token'>)</span>
+    <span class='return return kw'>return</span> <span class='custom_transcript_variation identifier id'>custom_transcript_variation</span><span class='lparen token'>(</span><span class='self self kw'>self</span><span class='comma token'>,</span><span class='sr identifier id'>sr</span><span class='rparen token'>)</span>
+  <span class='else else kw'>else</span>
+    <span class='return return kw'>return</span> <span class='tvs identifier id'>tvs</span> <span class='comment val'># the variation is already present in the database</span>
+  <span class='end end kw'>end</span>  
+<span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+  </div>
+
+</div>
+    
+    <div id="footer">
+  Generated on Wed Dec 15 19:18:12 2010 by 
+  <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
+  0.6.3 (ruby-1.8.7).
+</div>
+
+  </body>
+</html>

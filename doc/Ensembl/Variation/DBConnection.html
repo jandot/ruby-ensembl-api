@@ -1,0 +1,320 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+  <head>
+    <meta name="Content-Type" content="text/html; charset=utf-8" />
+<title>Class: Ensembl::Variation::DBConnection</title>
+<link rel="stylesheet" href="../../css/style.css" type="text/css" media="screen" charset="utf-8" />
+<link rel="stylesheet" href="../../css/common.css" type="text/css" media="screen" charset="utf-8" />
+
+<script type="text/javascript" charset="utf-8">
+  relpath = '../..';
+  if (relpath != '') relpath += '/';
+</script>
+<script type="text/javascript" charset="utf-8" src="../../js/jquery.js"></script>
+<script type="text/javascript" charset="utf-8" src="../../js/app.js"></script>
+
+  </head>
+  <body>
+    <script type="text/javascript" charset="utf-8">
+      if (window.top.frames.main) document.body.className = 'frames';
+    </script>
+    
+    <div id="header">
+      <div id="menu">
+  
+    <a href="../../_index.html">Index (D)</a> &raquo; 
+    <span class='title'><span class='object_link'><a href="../../Ensembl.html" title="Ensembl (module)">Ensembl</a></span></span> &raquo; <span class='title'><span class='object_link'><a href="../Variation.html" title="Ensembl::Variation (module)">Variation</a></span></span>
+     &raquo; 
+    <span class="title">DBConnection</span>
+  
+  
+  <div class="noframes"><span class="title">(</span><a href="." target="_top">no frames</a><span class="title">)</span></div>
+</div>
+
+      <div id="search">
+  <a id="class_list_link" href="#">Class List</a>
+  <a id="method_list_link" href="#">Method List</a>
+  <a id ="file_list_link" href="#">File List</a>
+</div>
+
+      <div class="clear"></div>
+    </div>
+    
+    <iframe id="search_frame"></iframe>
+    
+    <div id="content"><h1>Class: Ensembl::Variation::DBConnection
+  
+  
+  
+</h1>
+
+<dl class="box">
+  
+    <dt class="r1">Inherits:</dt>
+    <dd class="r1">
+      <span class="inheritName"><span class='object_link'><a href="../DBRegistry/Base.html" title="Ensembl::DBRegistry::Base (class)">DBRegistry::Base</a></span></span>
+      
+        <ul class="fullTree">
+          <li>Object</li>
+          
+            <li class="next">ActiveRecord::Base</li>
+          
+            <li class="next"><span class='object_link'><a href="../DBRegistry/Base.html" title="Ensembl::DBRegistry::Base (class)">DBRegistry::Base</a></span></li>
+          
+            <li class="next">Ensembl::Variation::DBConnection</li>
+          
+        </ul>
+        <a href="#" class="inheritanceTree">show all</a>
+      
+      </dd>
+    
+  
+  
+    
+  
+    
+  
+  
+  
+    <dt class="r2 last">Defined in:</dt>
+    <dd class="r2 last">lib/ensembl/db_connection.rb</dd>
+  
+</dl>
+<div class="clear"></div>
+
+<h2>Overview</h2><div class="docstring">
+  <div class="discussion">
+    <p>
+The Ensembl::Variation::DBConnection is the actual connection established
+with the Ensembl server.
+</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+</div><div id="subclasses">
+  <h2>Direct Known Subclasses</h2>
+  <p class="children"><span class='object_link'><a href="Allele.html" title="Ensembl::Variation::Allele (class)">Allele</a></span>, <span class='object_link'><a href="AlleleGroup.html" title="Ensembl::Variation::AlleleGroup (class)">AlleleGroup</a></span>, <span class='object_link'><a href="AlleleGroupAllele.html" title="Ensembl::Variation::AlleleGroupAllele (class)">AlleleGroupAllele</a></span>, <span class='object_link'><a href="AttribType.html" title="Ensembl::Variation::AttribType (class)">AttribType</a></span>, <span class='object_link'><a href="CompressedGenotypeSingleBp.html" title="Ensembl::Variation::CompressedGenotypeSingleBp (class)">CompressedGenotypeSingleBp</a></span>, <span class='object_link'><a href="ConsequenceMapping.html" title="Ensembl::Variation::ConsequenceMapping (class)">ConsequenceMapping</a></span>, <span class='object_link'><a href="FailedDescription.html" title="Ensembl::Variation::FailedDescription (class)">FailedDescription</a></span>, <span class='object_link'><a href="FailedVariation.html" title="Ensembl::Variation::FailedVariation (class)">FailedVariation</a></span>, <span class='object_link'><a href="FeatureType.html" title="Ensembl::Variation::FeatureType (class)">FeatureType</a></span>, <span class='object_link'><a href="FlankingSequence.html" title="Ensembl::Variation::FlankingSequence (class)">FlankingSequence</a></span>, <span class='object_link'><a href="Httag.html" title="Ensembl::Variation::Httag (class)">Httag</a></span>, <span class='object_link'><a href="Individual.html" title="Ensembl::Variation::Individual (class)">Individual</a></span>, <span class='object_link'><a href="IndividualGenotypeMultipleBp.html" title="Ensembl::Variation::IndividualGenotypeMultipleBp (class)">IndividualGenotypeMultipleBp</a></span>, <span class='object_link'><a href="IndividualPopulation.html" title="Ensembl::Variation::IndividualPopulation (class)">IndividualPopulation</a></span>, <span class='object_link'><a href="IndividualType.html" title="Ensembl::Variation::IndividualType (class)">IndividualType</a></span>, <span class='object_link'><a href="Meta.html" title="Ensembl::Variation::Meta (class)">Meta</a></span>, <span class='object_link'><a href="MetaCoord.html" title="Ensembl::Variation::MetaCoord (class)">MetaCoord</a></span>, <span class='object_link'><a href="Phenotype.html" title="Ensembl::Variation::Phenotype (class)">Phenotype</a></span>, <span class='object_link'><a href="Population.html" title="Ensembl::Variation::Population (class)">Population</a></span>, <span class='object_link'><a href="PopulationGenotype.html" title="Ensembl::Variation::PopulationGenotype (class)">PopulationGenotype</a></span>, <span class='object_link'><a href="PopulationStructure.html" title="Ensembl::Variation::PopulationStructure (class)">PopulationStructure</a></span>, <span class='object_link'><a href="ReadCoverage.html" title="Ensembl::Variation::ReadCoverage (class)">ReadCoverage</a></span>, <span class='object_link'><a href="Sample.html" title="Ensembl::Variation::Sample (class)">Sample</a></span>, <span class='object_link'><a href="SampleSynonym.html" title="Ensembl::Variation::SampleSynonym (class)">SampleSynonym</a></span>, <span class='object_link'><a href="SeqRegion.html" title="Ensembl::Variation::SeqRegion (class)">SeqRegion</a></span>, <span class='object_link'><a href="Source.html" title="Ensembl::Variation::Source (class)">Source</a></span>, <span class='object_link'><a href="StructuralVariation.html" title="Ensembl::Variation::StructuralVariation (class)">StructuralVariation</a></span>, <span class='object_link'><a href="SubsnpHandle.html" title="Ensembl::Variation::SubsnpHandle (class)">SubsnpHandle</a></span>, <span class='object_link'><a href="TaggedVariationFeature.html" title="Ensembl::Variation::TaggedVariationFeature (class)">TaggedVariationFeature</a></span>, <span class='object_link'><a href="TranscriptVariation.html" title="Ensembl::Variation::TranscriptVariation (class)">TranscriptVariation</a></span>, <span class='object_link'><a href="Variation.html" title="Ensembl::Variation::Variation (class)">Variation</a></span>, <span class='object_link'><a href="VariationAnnotation.html" title="Ensembl::Variation::VariationAnnotation (class)">VariationAnnotation</a></span>, <span class='object_link'><a href="VariationFeature.html" title="Ensembl::Variation::VariationFeature (class)">VariationFeature</a></span>, <span class='object_link'><a href="VariationGroup.html" title="Ensembl::Variation::VariationGroup (class)">VariationGroup</a></span>, <span class='object_link'><a href="VariationGroupFeature.html" title="Ensembl::Variation::VariationGroupFeature (class)">VariationGroupFeature</a></span>, <span class='object_link'><a href="VariationGroupVariation.html" title="Ensembl::Variation::VariationGroupVariation (class)">VariationGroupVariation</a></span>, <span class='object_link'><a href="VariationSynonym.html" title="Ensembl::Variation::VariationSynonym (class)">VariationSynonym</a></span></p>
+</div>
+
+
+  
+  
+  
+  
+  
+
+  
+    <h2>
+      Class Method Summary
+      <small>(<a href="#" class="summary_toggle">collapse</a>)</small>
+    </h2>
+
+    <ul class="summary">
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#connect-class_method" title="connect (class method)">+ (Object) <strong>connect</strong>(species, release = Ensembl::ENSEMBL_RELEASE, args = {}) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'><p>
+The Ensembl::Variation::DBConnection#connect method makes the connection to
+the Ensembl variation database for a given species.
+</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#ensemblgenomes_connect-class_method" title="ensemblgenomes_connect (class method)">+ (Object) <strong>ensemblgenomes_connect</strong>(species, release = Ensembl::ENSEMBL_RELEASE, args = {}) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'></div></span>
+  
+</li>
+
+      
+    </ul>
+  
+
+
+  
+  
+  
+  
+  
+  
+  
+  <h3 class="inherited">Methods inherited from <span class='object_link'><a href="../DBRegistry/Base.html" title="Ensembl::DBRegistry::Base (class)">DBRegistry::Base</a></span></h3>
+  <p class="inherited"><span class='object_link'><a href="../DBRegistry/Base.html#generic_connect-class_method" title="Ensembl::DBRegistry::Base.generic_connect (method)">generic_connect</a></span>, <span class='object_link'><a href="../DBRegistry/Base.html#get_info-class_method" title="Ensembl::DBRegistry::Base.get_info (method)">get_info</a></span>, <span class='object_link'><a href="../DBRegistry/Base.html#get_name_from_db-class_method" title="Ensembl::DBRegistry::Base.get_name_from_db (method)">get_name_from_db</a></span></p>
+
+  
+
+  <div id="class_method_details" class="method_details_list">
+    <h2>Class Method Details</h2>
+    
+    
+      <div class="method_details first">
+  <p class="signature first" id="connect-class_method">
+  
+    + (<tt>Object</tt>) <strong>connect</strong>(species, release = Ensembl::ENSEMBL_RELEASE, args = {}) 
+  
+
+  
+</p><div class="docstring">
+  <div class="discussion">
+    <p>
+The Ensembl::Variation::DBConnection#connect method makes the connection to
+the Ensembl variation database for a given species. By default, it connects
+to release 50 for that species. You <em>could</em> use a lower number, but
+some parts of the API might not work, or worse: give the wrong results.
+</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+  <div class="examples">
+    <h3>Examples:</h3>
+    
+      <h4><div class='inline'></div></h4>
+      <pre class="example code"><span class='comment val'># Connect to release 50 of human</span>
+<span class='Ensembl constant id'>Ensembl</span><span class='colon2 op'>::</span><span class='Variation constant id'>Variation</span><span class='colon2 op'>::</span><span class='DBConnection constant id'>DBConnection</span><span class='dot token'>.</span><span class='connect identifier id'>connect</span><span class='lparen token'>(</span><span class='string val'>'homo_sapiens'</span><span class='rparen token'>)</span>
+
+<span class='comment val'># Connect to release 42 of chicken</span>
+<span class='Ensembl constant id'>Ensembl</span><span class='colon2 op'>::</span><span class='Variation constant id'>Variation</span><span class='colon2 op'>::</span><span class='DBConnection constant id'>DBConnection</span><span class='dot token'>.</span><span class='connect identifier id'>connect</span><span class='lparen token'>(</span><span class='string val'>'gallus_gallus'</span><span class='rparen token'>)</span>
+</pre>
+    
+  </div>
+<h3>Parameters:</h3>
+<ul class="param">
+  
+    <li>
+      
+        <span class='type'>(<tt>String</tt>)</span>
+      
+      
+        <span class='name'>species</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'><p>
+Species to connect to. Must be in snake_case
+</p>
+</div>
+      
+    </li>
+  
+    <li>
+      
+        <span class='type'>(<tt>Integer</tt>)</span>
+      
+      
+        <span class='name'>ensembl_release.</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'><p>
+Release to connect to (default = 60)
+</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+173
+174
+175</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/ensembl/db_connection.rb', line 173</span>
+
+<span class='def def kw'>def</span> <span class='self self kw'>self</span><span class='dot token'>.</span><span class='connect identifier id'>connect</span><span class='lparen token'>(</span><span class='species identifier id'>species</span><span class='comma token'>,</span> <span class='release identifier id'>release</span> <span class='assign token'>=</span> <span class='Ensembl constant id'>Ensembl</span><span class='colon2 op'>::</span><span class='ENSEMBL_RELEASE constant id'>ENSEMBL_RELEASE</span><span class='comma token'>,</span> <span class='args identifier id'>args</span> <span class='assign token'>=</span> <span class='lbrace token'>{</span><span class='rbrace token'>}</span><span class='rparen token'>)</span>
+  <span class='self self kw'>self</span><span class='dot token'>.</span><span class='generic_connect identifier id'>generic_connect</span><span class='lparen token'>(</span><span class='string val'>'variation'</span><span class='comma token'>,</span><span class='species identifier id'>species</span><span class='comma token'>,</span> <span class='release identifier id'>release</span><span class='comma token'>,</span> <span class='args identifier id'>args</span><span class='rparen token'>)</span>
+<span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <p class="signature " id="ensemblgenomes_connect-class_method">
+  
+    + (<tt>Object</tt>) <strong>ensemblgenomes_connect</strong>(species, release = Ensembl::ENSEMBL_RELEASE, args = {}) 
+  
+
+  
+</p><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+177
+178
+179
+180</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/ensembl/db_connection.rb', line 177</span>
+
+<span class='def def kw'>def</span> <span class='self self kw'>self</span><span class='dot token'>.</span><span class='ensemblgenomes_connect identifier id'>ensemblgenomes_connect</span><span class='lparen token'>(</span><span class='species identifier id'>species</span><span class='comma token'>,</span> <span class='release identifier id'>release</span> <span class='assign token'>=</span> <span class='Ensembl constant id'>Ensembl</span><span class='colon2 op'>::</span><span class='ENSEMBL_RELEASE constant id'>ENSEMBL_RELEASE</span><span class='comma token'>,</span> <span class='args identifier id'>args</span><span class='assign token'>=</span><span class='lbrace token'>{</span><span class='rbrace token'>}</span><span class='rparen token'>)</span>
+  <span class='args identifier id'>args</span><span class='lbrack token'>[</span><span class='symbol val'>:ensembl_genomes</span><span class='rbrack token'>]</span> <span class='assign token'>=</span> <span class='true true kw'>true</span>
+  <span class='self self kw'>self</span><span class='dot token'>.</span><span class='generic_connect identifier id'>generic_connect</span><span class='lparen token'>(</span><span class='string val'>'variation'</span><span class='comma token'>,</span><span class='species identifier id'>species</span><span class='comma token'>,</span><span class='release identifier id'>release</span><span class='comma token'>,</span><span class='args identifier id'>args</span><span class='rparen token'>)</span>
+<span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+  </div>
+
+</div>
+    
+    <div id="footer">
+  Generated on Wed Dec 15 19:18:13 2010 by 
+  <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
+  0.6.3 (ruby-1.8.7).
+</div>
+
+  </body>
+</html>

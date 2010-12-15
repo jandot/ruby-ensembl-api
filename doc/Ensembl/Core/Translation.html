@@ -1,0 +1,423 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+  <head>
+    <meta name="Content-Type" content="text/html; charset=utf-8" />
+<title>Class: Ensembl::Core::Translation</title>
+<link rel="stylesheet" href="../../css/style.css" type="text/css" media="screen" charset="utf-8" />
+<link rel="stylesheet" href="../../css/common.css" type="text/css" media="screen" charset="utf-8" />
+
+<script type="text/javascript" charset="utf-8">
+  relpath = '../..';
+  if (relpath != '') relpath += '/';
+</script>
+<script type="text/javascript" charset="utf-8" src="../../js/jquery.js"></script>
+<script type="text/javascript" charset="utf-8" src="../../js/app.js"></script>
+
+  </head>
+  <body>
+    <script type="text/javascript" charset="utf-8">
+      if (window.top.frames.main) document.body.className = 'frames';
+    </script>
+    
+    <div id="header">
+      <div id="menu">
+  
+    <a href="../../_index.html">Index (T)</a> &raquo; 
+    <span class='title'><span class='object_link'><a href="../../Ensembl.html" title="Ensembl (module)">Ensembl</a></span></span> &raquo; <span class='title'><span class='object_link'><a href="../Core.html" title="Ensembl::Core (module)">Core</a></span></span>
+     &raquo; 
+    <span class="title">Translation</span>
+  
+  
+  <div class="noframes"><span class="title">(</span><a href="." target="_top">no frames</a><span class="title">)</span></div>
+</div>
+
+      <div id="search">
+  <a id="class_list_link" href="#">Class List</a>
+  <a id="method_list_link" href="#">Method List</a>
+  <a id ="file_list_link" href="#">File List</a>
+</div>
+
+      <div class="clear"></div>
+    </div>
+    
+    <iframe id="search_frame"></iframe>
+    
+    <div id="content"><h1>Class: Ensembl::Core::Translation
+  
+  
+  
+</h1>
+
+<dl class="box">
+  
+    <dt class="r1">Inherits:</dt>
+    <dd class="r1">
+      <span class="inheritName"><span class='object_link'><a href="DBConnection.html" title="Ensembl::Core::DBConnection (class)">DBConnection</a></span></span>
+      
+        <ul class="fullTree">
+          <li>Object</li>
+          
+            <li class="next">ActiveRecord::Base</li>
+          
+            <li class="next"><span class='object_link'><a href="../DBRegistry/Base.html" title="Ensembl::DBRegistry::Base (class)">DBRegistry::Base</a></span></li>
+          
+            <li class="next"><span class='object_link'><a href="DBConnection.html" title="Ensembl::Core::DBConnection (class)">DBConnection</a></span></li>
+          
+            <li class="next">Ensembl::Core::Translation</li>
+          
+        </ul>
+        <a href="#" class="inheritanceTree">show all</a>
+      
+      </dd>
+    
+  
+  
+    
+  
+    
+  
+  
+  
+    <dt class="r2 last">Defined in:</dt>
+    <dd class="r2 last">lib/ensembl/core/activerecord.rb</dd>
+  
+</dl>
+<div class="clear"></div>
+
+<h2>Overview</h2><div class="docstring">
+  <div class="discussion">
+    <p>
+The Translation class provides an interface to the translation table. This
+table contains the translation start and stop positions and exons for a
+given Transcript
+</p>
+<p>
+This class uses ActiveRecord to access data in the Ensembl database. See
+the general documentation of the Ensembl module for more information on
+what this means and what methods are available.
+</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+  <div class="examples">
+    <h3>Examples:</h3>
+    
+      <h4><div class='inline'></div></h4>
+      <pre class="example code"><span class='comment val'>#TODO</span>
+</pre>
+    
+  </div>
+
+</div>
+
+  
+  
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <h2>
+      Class Method Summary
+      <small>(<a href="#" class="summary_toggle">collapse</a>)</small>
+    </h2>
+
+    <ul class="summary">
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#find_by_stable_id-class_method" title="find_by_stable_id (class method)">+ (Object) <strong>find_by_stable_id</strong>(stable_id) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'><p>
+The Translation#find_by_stable_id class method fetches a Translation object
+based on its stable ID (i.e. the &quot;ENSP&quot; accession number).
+</p>
+</div></span>
+  
+</li>
+
+      
+    </ul>
+  
+    <h2>
+      Instance Method Summary
+      <small>(<a href="#" class="summary_toggle">collapse</a>)</small>
+    </h2>
+
+    <ul class="summary">
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#display_label-instance_method" title="#display_label (instance method)">- (Object) <strong>display_label</strong> </a>
+    
+
+    
+      (also: #label, #display_name, #name)
+    
+  </span>
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'><p>
+The Translation#display_label method returns the default name of the
+translation.
+</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#stable_id-instance_method" title="#stable_id (instance method)">- (String) <strong>stable_id</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'><p>
+The Translation#stable_id method returns the stable ID of the translation.
+</p>
+</div></span>
+  
+</li>
+
+      
+    </ul>
+  
+
+
+  
+  
+  
+  
+  
+  
+  
+  <h3 class="inherited">Methods inherited from <span class='object_link'><a href="DBConnection.html" title="Ensembl::Core::DBConnection (class)">DBConnection</a></span></h3>
+  <p class="inherited"><span class='object_link'><a href="DBConnection.html#connect-class_method" title="Ensembl::Core::DBConnection.connect (method)">connect</a></span>, <span class='object_link'><a href="DBConnection.html#ensemblgenomes_connect-class_method" title="Ensembl::Core::DBConnection.ensemblgenomes_connect (method)">ensemblgenomes_connect</a></span></p>
+
+  
+  
+  
+  
+  
+  
+  
+  <h3 class="inherited">Methods inherited from <span class='object_link'><a href="../DBRegistry/Base.html" title="Ensembl::DBRegistry::Base (class)">DBRegistry::Base</a></span></h3>
+  <p class="inherited"><span class='object_link'><a href="../DBRegistry/Base.html#generic_connect-class_method" title="Ensembl::DBRegistry::Base.generic_connect (method)">generic_connect</a></span>, <span class='object_link'><a href="../DBRegistry/Base.html#get_info-class_method" title="Ensembl::DBRegistry::Base.get_info (method)">get_info</a></span>, <span class='object_link'><a href="../DBRegistry/Base.html#get_name_from_db-class_method" title="Ensembl::DBRegistry::Base.get_name_from_db (method)">get_name_from_db</a></span></p>
+
+  
+
+  <div id="class_method_details" class="method_details_list">
+    <h2>Class Method Details</h2>
+    
+    
+      <div class="method_details first">
+  <p class="signature first" id="find_by_stable_id-class_method">
+  
+    + (<tt>Object</tt>) <strong>find_by_stable_id</strong>(stable_id) 
+  
+
+  
+</p><div class="docstring">
+  <div class="discussion">
+    <p>
+The Translation#find_by_stable_id class method fetches a Translation object
+based on its stable ID (i.e. the &quot;ENSP&quot; accession number). If the
+name is not found, it returns nil.
+</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+1408
+1409
+1410
+1411
+1412
+1413
+1414
+1415</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/ensembl/core/activerecord.rb', line 1408</span>
+
+<span class='def def kw'>def</span> <span class='self self kw'>self</span><span class='dot token'>.</span><span class='find_by_stable_id identifier id'>find_by_stable_id</span><span class='lparen token'>(</span><span class='stable_id identifier id'>stable_id</span><span class='rparen token'>)</span>
+  <span class='translation_stable_id identifier id'>translation_stable_id</span> <span class='assign token'>=</span> <span class='TranslationStableId constant id'>TranslationStableId</span><span class='dot token'>.</span><span class='find_by_stable_id identifier id'>find_by_stable_id</span><span class='lparen token'>(</span><span class='stable_id identifier id'>stable_id</span><span class='rparen token'>)</span>
+  <span class='if if kw'>if</span> <span class='translation_stable_id identifier id'>translation_stable_id</span><span class='dot token'>.</span><span class='nil? fid id'>nil?</span>
+    <span class='return return kw'>return</span> <span class='nil nil kw'>nil</span>
+  <span class='else else kw'>else</span>
+    <span class='return return kw'>return</span> <span class='translation_stable_id identifier id'>translation_stable_id</span><span class='dot token'>.</span><span class='translation identifier id'>translation</span>
+  <span class='end end kw'>end</span>
+<span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+  </div>
+
+  <div id="instance_method_details" class="method_details_list">
+    <h2>Instance Method Details</h2>
+    
+    
+      <div class="method_details first">
+  <p class="signature first" id="display_label-instance_method">
+  
+    - (<tt>Object</tt>) <strong>display_label</strong> 
+  
+
+  
+    <span class="aliases">Also known as:
+    <span class="names"><span id='label-instance_method'>label</span>, <span id='display_name-instance_method'>display_name</span>, <span id='name-instance_method'>name</span></span>
+    </span>
+  
+</p><div class="docstring">
+  <div class="discussion">
+    <p>
+The Translation#display_label method returns the default name of the
+translation.
+</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+1398
+1399
+1400</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/ensembl/core/activerecord.rb', line 1398</span>
+
+<span class='def def kw'>def</span> <span class='display_label identifier id'>display_label</span>
+  <span class='return return kw'>return</span> <span class='Xref constant id'>Xref</span><span class='dot token'>.</span><span class='find identifier id'>find</span><span class='lparen token'>(</span><span class='self self kw'>self</span><span class='dot token'>.</span><span class='display_xref_id identifier id'>display_xref_id</span><span class='rparen token'>)</span><span class='dot token'>.</span><span class='display_label identifier id'>display_label</span>
+<span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <p class="signature " id="stable_id-instance_method">
+  
+    - (<tt>String</tt>) <strong>stable_id</strong> 
+  
+
+  
+</p><div class="docstring">
+  <div class="discussion">
+    <p>
+The Translation#stable_id method returns the stable ID of the translation.
+</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  <h3>Returns:</h3>
+<ul class="return">
+  
+    <li>
+      
+        <span class='type'>(<tt>String</tt>)</span>
+      
+      
+      
+      
+        &mdash;
+        <div class='inline'><p>
+Ensembl stable ID
+</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+1393
+1394
+1395</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/ensembl/core/activerecord.rb', line 1393</span>
+
+<span class='def def kw'>def</span> <span class='stable_id identifier id'>stable_id</span>
+  <span class='return return kw'>return</span> <span class='self self kw'>self</span><span class='dot token'>.</span><span class='translation_stable_id identifier id'>translation_stable_id</span><span class='dot token'>.</span><span class='stable_id identifier id'>stable_id</span>
+<span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+  </div>
+
+</div>
+    
+    <div id="footer">
+  Generated on Wed Dec 15 19:18:12 2010 by 
+  <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
+  0.6.3 (ruby-1.8.7).
+</div>
+
+  </body>
+</html>

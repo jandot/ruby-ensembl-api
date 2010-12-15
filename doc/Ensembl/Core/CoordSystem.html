@@ -1,0 +1,941 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+  <head>
+    <meta name="Content-Type" content="text/html; charset=utf-8" />
+<title>Class: Ensembl::Core::CoordSystem</title>
+<link rel="stylesheet" href="../../css/style.css" type="text/css" media="screen" charset="utf-8" />
+<link rel="stylesheet" href="../../css/common.css" type="text/css" media="screen" charset="utf-8" />
+
+<script type="text/javascript" charset="utf-8">
+  relpath = '../..';
+  if (relpath != '') relpath += '/';
+</script>
+<script type="text/javascript" charset="utf-8" src="../../js/jquery.js"></script>
+<script type="text/javascript" charset="utf-8" src="../../js/app.js"></script>
+
+  </head>
+  <body>
+    <script type="text/javascript" charset="utf-8">
+      if (window.top.frames.main) document.body.className = 'frames';
+    </script>
+    
+    <div id="header">
+      <div id="menu">
+  
+    <a href="../../_index.html">Index (C)</a> &raquo; 
+    <span class='title'><span class='object_link'><a href="../../Ensembl.html" title="Ensembl (module)">Ensembl</a></span></span> &raquo; <span class='title'><span class='object_link'><a href="../Core.html" title="Ensembl::Core (module)">Core</a></span></span>
+     &raquo; 
+    <span class="title">CoordSystem</span>
+  
+  
+  <div class="noframes"><span class="title">(</span><a href="." target="_top">no frames</a><span class="title">)</span></div>
+</div>
+
+      <div id="search">
+  <a id="class_list_link" href="#">Class List</a>
+  <a id="method_list_link" href="#">Method List</a>
+  <a id ="file_list_link" href="#">File List</a>
+</div>
+
+      <div class="clear"></div>
+    </div>
+    
+    <iframe id="search_frame"></iframe>
+    
+    <div id="content"><h1>Class: Ensembl::Core::CoordSystem
+  
+  
+  
+</h1>
+
+<dl class="box">
+  
+    <dt class="r1">Inherits:</dt>
+    <dd class="r1">
+      <span class="inheritName"><span class='object_link'><a href="DBConnection.html" title="Ensembl::Core::DBConnection (class)">DBConnection</a></span></span>
+      
+        <ul class="fullTree">
+          <li>Object</li>
+          
+            <li class="next">ActiveRecord::Base</li>
+          
+            <li class="next"><span class='object_link'><a href="../DBRegistry/Base.html" title="Ensembl::DBRegistry::Base (class)">DBRegistry::Base</a></span></li>
+          
+            <li class="next"><span class='object_link'><a href="DBConnection.html" title="Ensembl::Core::DBConnection (class)">DBConnection</a></span></li>
+          
+            <li class="next">Ensembl::Core::CoordSystem</li>
+          
+        </ul>
+        <a href="#" class="inheritanceTree">show all</a>
+      
+      </dd>
+    
+  
+  
+    
+  
+    
+  
+  
+  
+    <dt class="r2 last">Defined in:</dt>
+    <dd class="r2 last">lib/ensembl/core/activerecord.rb</dd>
+  
+</dl>
+<div class="clear"></div>
+
+<h2>Overview</h2><div class="docstring">
+  <div class="discussion">
+    <p>
+The CoordSystem class describes the coordinate system to which a given
+SeqRegion belongs. It is an interface to the coord_system table of the
+Ensembl mysql database.
+</p>
+<p>
+Two virtual coordinate systems exist for every species:
+</p>
+<ul>
+<li>toplevel: the coordinate system with rank 1
+
+</li>
+<li>seqlevel: the coordinate system that contains the seq_regions
+
+</li>
+</ul>
+<p>
+with the sequence
+</p>
+<p>
+This class uses ActiveRecord to access data in the Ensembl database. See
+the general documentation of the Ensembl module for more information on
+what this means and what methods are available.
+</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+  <div class="examples">
+    <h3>Examples:</h3>
+    
+      <h4><div class='inline'></div></h4>
+      <pre class="example code"><span class='coord_system identifier id'>coord_system</span> <span class='assign token'>=</span> <span class='Ensembl constant id'>Ensembl</span><span class='colon2 op'>::</span><span class='Core constant id'>Core</span><span class='colon2 op'>::</span><span class='CoordSystem constant id'>CoordSystem</span><span class='dot token'>.</span><span class='find_by_name identifier id'>find_by_name</span><span class='lparen token'>(</span><span class='string val'>'chromosome'</span><span class='rparen token'>)</span>
+<span class='if if kw'>if</span> <span class='coord_system identifier id'>coord_system</span> <span class='eq op'>==</span> <span class='CoordSystem constant id'>CoordSystem</span><span class='dot token'>.</span><span class='toplevel identifier id'>toplevel</span>
+<span class='puts identifier id'>puts</span> <span class='coord_system identifier id'>coord_system</span><span class='dot token'>.</span><span class='name identifier id'>name</span> <span class='plus op'>+</span> <span class='string val'>&quot; is the toplevel coordinate system.&quot;</span>
+<span class='end end kw'>end</span>
+</pre>
+    
+  </div>
+
+</div>
+
+  
+  
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <h2>
+      Class Method Summary
+      <small>(<a href="#" class="summary_toggle">collapse</a>)</small>
+    </h2>
+
+    <ul class="summary">
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#find_default_by_name-class_method" title="find_default_by_name (class method)">+ (Ensembl::Core::CoordSystem) <strong>find_default_by_name</strong>(name) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'><p>
+The CoordSystem#find_default_by_name class method returns the coordinate
+system by that name with the lowest rank.
+</p>
+</div></span>
+  
+</li>
+
+      
+    </ul>
+  
+    <h2>
+      Instance Method Summary
+      <small>(<a href="#" class="summary_toggle">collapse</a>)</small>
+    </h2>
+
+    <ul class="summary">
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#find_level-instance_method" title="#find_level (instance method)">- (Ensembl::Core::CoordSystem) <strong>find_level</strong>(coord_system_name) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'><p>
+The CoordSystem#find_level class method returns the seqlevel coordinate
+system corresponding to the name passed.
+</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#find_seqlevel-instance_method" title="#find_seqlevel (instance method)">- (Ensembl::Core::CoordSystem) <strong>find_seqlevel</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'><p>
+The CoordSystem#find_seqlevel class method returns the seqlevel coordinate
+system.
+</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#find_toplevel-instance_method" title="#find_toplevel (instance method)">- (Ensembl::Core::CoordSystem) <strong>find_toplevel</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'><p>
+The CoordSystem#find_toplevel class method returns the toplevel coordinate
+system.
+</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#name_with_version-instance_method" title="#name_with_version (instance method)">- (String) <strong>name_with_version</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'><p>
+The CoordSystem#name_with_version returns a string containing the name and
+version of the coordinate system.
+</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#seqlevel%3F-instance_method" title="#seqlevel? (instance method)">- (Boolean) <strong>seqlevel?</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'><p>
+The CoordSystem#seqlevel? method checks if this coordinate system is the
+seqlevel coordinate system or not.
+</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#toplevel%3F-instance_method" title="#toplevel? (instance method)">- (Boolean) <strong>toplevel?</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'><p>
+The CoordSystem#toplevel? method checks if this coordinate system is the
+toplevel coordinate system or not.
+</p>
+</div></span>
+  
+</li>
+
+      
+    </ul>
+  
+
+
+  
+  
+  
+  
+  
+  
+  
+  <h3 class="inherited">Methods inherited from <span class='object_link'><a href="DBConnection.html" title="Ensembl::Core::DBConnection (class)">DBConnection</a></span></h3>
+  <p class="inherited"><span class='object_link'><a href="DBConnection.html#connect-class_method" title="Ensembl::Core::DBConnection.connect (method)">connect</a></span>, <span class='object_link'><a href="DBConnection.html#ensemblgenomes_connect-class_method" title="Ensembl::Core::DBConnection.ensemblgenomes_connect (method)">ensemblgenomes_connect</a></span></p>
+
+  
+  
+  
+  
+  
+  
+  
+  <h3 class="inherited">Methods inherited from <span class='object_link'><a href="../DBRegistry/Base.html" title="Ensembl::DBRegistry::Base (class)">DBRegistry::Base</a></span></h3>
+  <p class="inherited"><span class='object_link'><a href="../DBRegistry/Base.html#generic_connect-class_method" title="Ensembl::DBRegistry::Base.generic_connect (method)">generic_connect</a></span>, <span class='object_link'><a href="../DBRegistry/Base.html#get_info-class_method" title="Ensembl::DBRegistry::Base.get_info (method)">get_info</a></span>, <span class='object_link'><a href="../DBRegistry/Base.html#get_name_from_db-class_method" title="Ensembl::DBRegistry::Base.get_name_from_db (method)">get_name_from_db</a></span></p>
+
+  
+
+  <div id="class_method_details" class="method_details_list">
+    <h2>Class Method Details</h2>
+    
+    
+      <div class="method_details first">
+  <p class="signature first" id="find_default_by_name-class_method">
+  
+    + (<tt><span class='object_link'><a href="" title="Ensembl::Core::CoordSystem (class)">Ensembl::Core::CoordSystem</a></span></tt>) <strong>find_default_by_name</strong>(name) 
+  
+
+  
+</p><div class="docstring">
+  <div class="discussion">
+    <p>
+The CoordSystem#find_default_by_name class method returns the coordinate
+system by that name with the lowest rank. Normally, a lower rank means a
+&#8216;bigger&#8217; coordinate system. The &#8216;chromosome&#8217;
+typically has rank 1. However, there might be more than one coordinate
+system with the name chromosome but with different version (e.g. in human,
+there is one for the NCBI36 and one for the NCBI35 version). The older
+version of these is typically given a high number and the one with the new
+version is the &#8216;default&#8217; system.
+</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  <h3>Returns:</h3>
+<ul class="return">
+  
+    <li>
+      
+        <span class='type'>(<tt><span class='object_link'><a href="" title="Ensembl::Core::CoordSystem (class)">Ensembl::Core::CoordSystem</a></span></tt>)</span>
+      
+      
+      
+      
+        &mdash;
+        <div class='inline'><p>
+Coordinate system object
+</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+296
+297
+298
+299
+300
+301
+302
+303</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/ensembl/core/activerecord.rb', line 296</span>
+
+<span class='def def kw'>def</span> <span class='self self kw'>self</span><span class='dot token'>.</span><span class='find_default_by_name identifier id'>find_default_by_name</span><span class='lparen token'>(</span><span class='name identifier id'>name</span><span class='rparen token'>)</span>
+  <span class='all_coord_systems_with_name identifier id'>all_coord_systems_with_name</span> <span class='assign token'>=</span> <span class='Ensembl constant id'>Ensembl</span><span class='colon2 op'>::</span><span class='Core constant id'>Core</span><span class='colon2 op'>::</span><span class='CoordSystem constant id'>CoordSystem</span><span class='dot token'>.</span><span class='find_all_by_name identifier id'>find_all_by_name</span><span class='lparen token'>(</span><span class='name identifier id'>name</span><span class='rparen token'>)</span>
+  <span class='if if kw'>if</span> <span class='all_coord_systems_with_name identifier id'>all_coord_systems_with_name</span><span class='dot token'>.</span><span class='length identifier id'>length</span> <span class='eq op'>==</span> <span class='integer val'>1</span>
+    <span class='return return kw'>return</span> <span class='all_coord_systems_with_name identifier id'>all_coord_systems_with_name</span><span class='lbrack token'>[</span><span class='integer val'>0</span><span class='rbrack token'>]</span>
+  <span class='else else kw'>else</span>
+    <span class='return return kw'>return</span> <span class='all_coord_systems_with_name identifier id'>all_coord_systems_with_name</span><span class='dot token'>.</span><span class='select identifier id'>select</span><span class='lbrace token'>{</span><span class='bitor op'>|</span><span class='cs identifier id'>cs</span><span class='bitor op'>|</span> <span class='cs identifier id'>cs</span><span class='dot token'>.</span><span class='attrib identifier id'>attrib</span> <span class='match op'>=~</span> <span class='regexp val'>/default_version/</span><span class='rbrace token'>}</span><span class='lbrack token'>[</span><span class='integer val'>0</span><span class='rbrack token'>]</span>
+  <span class='end end kw'>end</span>
+<span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+  </div>
+
+  <div id="instance_method_details" class="method_details_list">
+    <h2>Instance Method Details</h2>
+    
+    
+      <div class="method_details first">
+  <p class="signature first" id="find_level-instance_method">
+  
+    - (<tt><span class='object_link'><a href="" title="Ensembl::Core::CoordSystem (class)">Ensembl::Core::CoordSystem</a></span></tt>) <strong>find_level</strong>(coord_system_name) 
+  
+
+  
+</p><div class="docstring">
+  <div class="discussion">
+    <p>
+The CoordSystem#find_level class method returns the seqlevel coordinate
+system corresponding to the name passed.
+</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  <h3>Parameters:</h3>
+<ul class="param">
+  
+    <li>
+      
+        <span class='type'>(<tt>String</tt>)</span>
+      
+      
+        <span class='name'>coord_system_name</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'><p>
+Name of coordinate system
+</p>
+</div>
+      
+    </li>
+  
+</ul>
+<h3>Returns:</h3>
+<ul class="return">
+  
+    <li>
+      
+        <span class='type'>(<tt><span class='object_link'><a href="" title="Ensembl::Core::CoordSystem (class)">Ensembl::Core::CoordSystem</a></span></tt>)</span>
+      
+      
+      
+      
+        &mdash;
+        <div class='inline'><p>
+Coordinate system object
+</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+278
+279
+280
+281
+282
+283
+284</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/ensembl/core/activerecord.rb', line 278</span>
+
+<span class='def def kw'>def</span> <span class='find_level identifier id'>find_level</span><span class='lparen token'>(</span><span class='coord_system_name identifier id'>coord_system_name</span><span class='rparen token'>)</span>
+  <span class='if if kw'>if</span> <span class='Collection constant id'>Collection</span><span class='dot token'>.</span><span class='check identifier id'>check</span> <span class='comment val'># When usign multi-species databases</span>
+    <span class='return return kw'>return</span> <span class='CoordSystem constant id'>CoordSystem</span><span class='dot token'>.</span><span class='find_by_sql identifier id'>find_by_sql</span><span class='lparen token'>(</span><span class='dstring node'>&quot;SELECT * FROM coord_system WHERE name = '#{coord_system_name}' AND species_id = #{self.species_id}&quot;</span><span class='rparen token'>)</span><span class='lbrack token'>[</span><span class='integer val'>0</span><span class='rbrack token'>]</span>
+  <span class='else else kw'>else</span>
+    <span class='return return kw'>return</span> <span class='CoordSystem constant id'>CoordSystem</span><span class='dot token'>.</span><span class='find_by_name identifier id'>find_by_name</span><span class='lparen token'>(</span><span class='coord_system_name identifier id'>coord_system_name</span><span class='rparen token'>)</span>
+  <span class='end end kw'>end</span>
+<span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <p class="signature " id="find_seqlevel-instance_method">
+  
+    - (<tt><span class='object_link'><a href="" title="Ensembl::Core::CoordSystem (class)">Ensembl::Core::CoordSystem</a></span></tt>) <strong>find_seqlevel</strong> 
+  
+
+  
+</p><div class="docstring">
+  <div class="discussion">
+    <p>
+The CoordSystem#find_seqlevel class method returns the seqlevel coordinate
+system.
+</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  <h3>Returns:</h3>
+<ul class="return">
+  
+    <li>
+      
+        <span class='type'>(<tt><span class='object_link'><a href="" title="Ensembl::Core::CoordSystem (class)">Ensembl::Core::CoordSystem</a></span></tt>)</span>
+      
+      
+      
+      
+        &mdash;
+        <div class='inline'><p>
+Seqlevel coord_system object.
+</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+253
+254
+255
+256
+257
+258
+259
+260
+261
+262
+263
+264
+265
+266
+267
+268
+269
+270
+271</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/ensembl/core/activerecord.rb', line 253</span>
+
+<span class='def def kw'>def</span> <span class='find_seqlevel identifier id'>find_seqlevel</span>
+  <span class='not_cached identifier id'>not_cached</span> <span class='assign token'>=</span> <span class='false false kw'>false</span>
+  <span class='if if kw'>if</span> <span class='Ensembl constant id'>Ensembl</span><span class='colon2 op'>::</span><span class='SESSION constant id'>SESSION</span><span class='dot token'>.</span><span class='seqlevel_coord_system identifier id'>seqlevel_coord_system</span><span class='dot token'>.</span><span class='nil? fid id'>nil?</span> 
+    <span class='not_cached identifier id'>not_cached</span> <span class='assign token'>=</span> <span class='true true kw'>true</span>
+  <span class='elsif elsif kw'>elsif</span> <span class='Collection constant id'>Collection</span><span class='dot token'>.</span><span class='check identifier id'>check</span> <span class='comment val'># When usign multi-species databases</span>
+    <span class='not_cached identifier id'>not_cached</span> <span class='assign token'>=</span> <span class='true true kw'>true</span> <span class='if if_mod kw'>if</span> <span class='Ensembl constant id'>Ensembl</span><span class='colon2 op'>::</span><span class='SESSION constant id'>SESSION</span><span class='dot token'>.</span><span class='seqlevel_coord_system identifier id'>seqlevel_coord_system</span><span class='dot token'>.</span><span class='species_id identifier id'>species_id</span> <span class='neq op'>!=</span> <span class='self self kw'>self</span><span class='dot token'>.</span><span class='species_id identifier id'>species_id</span>
+  <span class='end end kw'>end</span>
+  <span class='if if kw'>if</span> <span class='not_cached identifier id'>not_cached</span>
+    <span class='if if kw'>if</span> <span class='Collection constant id'>Collection</span><span class='dot token'>.</span><span class='check identifier id'>check</span>
+      <span class='Ensembl constant id'>Ensembl</span><span class='colon2 op'>::</span><span class='SESSION constant id'>SESSION</span><span class='dot token'>.</span><span class='seqlevel_coord_system identifier id'>seqlevel_coord_system</span> <span class='assign token'>=</span> <span class='CoordSystem constant id'>CoordSystem</span><span class='dot token'>.</span><span class='find_by_sql identifier id'>find_by_sql</span><span class='lparen token'>(</span><span class='dstring node'>&quot;SELECT * FROM coord_system WHERE attrib LIKE '%sequence_level%' AND species_id = #{self.species_id}&quot;</span><span class='rparen token'>)</span><span class='lbrack token'>[</span><span class='integer val'>0</span><span class='rbrack token'>]</span>
+    <span class='else else kw'>else</span>
+      <span class='Ensembl constant id'>Ensembl</span><span class='colon2 op'>::</span><span class='SESSION constant id'>SESSION</span><span class='dot token'>.</span><span class='seqlevel_coord_system identifier id'>seqlevel_coord_system</span> <span class='assign token'>=</span> <span class='CoordSystem constant id'>CoordSystem</span><span class='dot token'>.</span><span class='find_by_sql identifier id'>find_by_sql</span><span class='lparen token'>(</span><span class='string val'>&quot;SELECT * FROM coord_system WHERE attrib LIKE '%sequence_level%'&quot;</span><span class='rparen token'>)</span><span class='lbrack token'>[</span><span class='integer val'>0</span><span class='rbrack token'>]</span>
+    <span class='end end kw'>end</span>  
+    <span class='Ensembl constant id'>Ensembl</span><span class='colon2 op'>::</span><span class='SESSION constant id'>SESSION</span><span class='dot token'>.</span><span class='seqlevel_id identifier id'>seqlevel_id</span> <span class='assign token'>=</span> <span class='Ensembl constant id'>Ensembl</span><span class='colon2 op'>::</span><span class='SESSION constant id'>SESSION</span><span class='dot token'>.</span><span class='seqlevel_coord_system identifier id'>seqlevel_coord_system</span><span class='dot token'>.</span><span class='id identifier id'>id</span>
+    <span class='Ensembl constant id'>Ensembl</span><span class='colon2 op'>::</span><span class='SESSION constant id'>SESSION</span><span class='dot token'>.</span><span class='coord_system_ids identifier id'>coord_system_ids</span><span class='lbrack token'>[</span><span class='Ensembl constant id'>Ensembl</span><span class='colon2 op'>::</span><span class='SESSION constant id'>SESSION</span><span class='dot token'>.</span><span class='seqlevel_coord_system identifier id'>seqlevel_coord_system</span><span class='dot token'>.</span><span class='name identifier id'>name</span><span class='rbrack token'>]</span> <span class='assign token'>=</span> <span class='Ensembl constant id'>Ensembl</span><span class='colon2 op'>::</span><span class='SESSION constant id'>SESSION</span><span class='dot token'>.</span><span class='seqlevel_id identifier id'>seqlevel_id</span>
+    <span class='Ensembl constant id'>Ensembl</span><span class='colon2 op'>::</span><span class='SESSION constant id'>SESSION</span><span class='dot token'>.</span><span class='coord_systems identifier id'>coord_systems</span><span class='lbrack token'>[</span><span class='Ensembl constant id'>Ensembl</span><span class='colon2 op'>::</span><span class='SESSION constant id'>SESSION</span><span class='dot token'>.</span><span class='seqlevel_id identifier id'>seqlevel_id</span><span class='rbrack token'>]</span> <span class='assign token'>=</span> <span class='Ensembl constant id'>Ensembl</span><span class='colon2 op'>::</span><span class='SESSION constant id'>SESSION</span><span class='dot token'>.</span><span class='seqlevel_coord_system identifier id'>seqlevel_coord_system</span>
+  <span class='end end kw'>end</span>
+  <span class='return return kw'>return</span> <span class='Ensembl constant id'>Ensembl</span><span class='colon2 op'>::</span><span class='SESSION constant id'>SESSION</span><span class='dot token'>.</span><span class='seqlevel_coord_system identifier id'>seqlevel_coord_system</span>
+<span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <p class="signature " id="find_toplevel-instance_method">
+  
+    - (<tt><span class='object_link'><a href="" title="Ensembl::Core::CoordSystem (class)">Ensembl::Core::CoordSystem</a></span></tt>) <strong>find_toplevel</strong> 
+  
+
+  
+</p><div class="docstring">
+  <div class="discussion">
+    <p>
+The CoordSystem#find_toplevel class method returns the toplevel coordinate
+system.
+</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  <h3>Returns:</h3>
+<ul class="return">
+  
+    <li>
+      
+        <span class='type'>(<tt><span class='object_link'><a href="" title="Ensembl::Core::CoordSystem (class)">Ensembl::Core::CoordSystem</a></span></tt>)</span>
+      
+      
+      
+      
+        &mdash;
+        <div class='inline'><p>
+Toplevel coord_system object.
+</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+229
+230
+231
+232
+233
+234
+235
+236
+237
+238
+239
+240
+241
+242
+243
+244
+245
+246
+247</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/ensembl/core/activerecord.rb', line 229</span>
+
+<span class='def def kw'>def</span> <span class='find_toplevel identifier id'>find_toplevel</span>
+  <span class='not_cached identifier id'>not_cached</span> <span class='assign token'>=</span> <span class='false false kw'>false</span>
+  <span class='if if kw'>if</span> <span class='Ensembl constant id'>Ensembl</span><span class='colon2 op'>::</span><span class='SESSION constant id'>SESSION</span><span class='dot token'>.</span><span class='toplevel_coord_system identifier id'>toplevel_coord_system</span><span class='dot token'>.</span><span class='nil? fid id'>nil?</span> 
+    <span class='not_cached identifier id'>not_cached</span> <span class='assign token'>=</span> <span class='true true kw'>true</span>
+  <span class='elsif elsif kw'>elsif</span> <span class='Collection constant id'>Collection</span><span class='dot token'>.</span><span class='check identifier id'>check</span>
+    <span class='not_cached identifier id'>not_cached</span> <span class='assign token'>=</span> <span class='true true kw'>true</span> <span class='if if_mod kw'>if</span> <span class='Ensembl constant id'>Ensembl</span><span class='colon2 op'>::</span><span class='SESSION constant id'>SESSION</span><span class='dot token'>.</span><span class='toplevel_coord_system identifier id'>toplevel_coord_system</span><span class='dot token'>.</span><span class='species_id identifier id'>species_id</span> <span class='neq op'>!=</span> <span class='self self kw'>self</span><span class='dot token'>.</span><span class='species_id identifier id'>species_id</span>
+  <span class='end end kw'>end</span>
+  <span class='if if kw'>if</span> <span class='not_cached identifier id'>not_cached</span>
+    <span class='if if kw'>if</span> <span class='Collection constant id'>Collection</span><span class='dot token'>.</span><span class='check identifier id'>check</span> <span class='comment val'># When usign multi-species databases</span>
+      <span class='Ensembl constant id'>Ensembl</span><span class='colon2 op'>::</span><span class='SESSION constant id'>SESSION</span><span class='dot token'>.</span><span class='toplevel_coord_system identifier id'>toplevel_coord_system</span> <span class='assign token'>=</span> <span class='CoordSystem constant id'>CoordSystem</span><span class='dot token'>.</span><span class='find_by_rank_and_species_id identifier id'>find_by_rank_and_species_id</span><span class='lparen token'>(</span><span class='integer val'>1</span><span class='comma token'>,</span><span class='self self kw'>self</span><span class='dot token'>.</span><span class='species_id identifier id'>species_id</span><span class='rparen token'>)</span>
+    <span class='else else kw'>else</span>
+      <span class='Ensembl constant id'>Ensembl</span><span class='colon2 op'>::</span><span class='SESSION constant id'>SESSION</span><span class='dot token'>.</span><span class='toplevel_coord_system identifier id'>toplevel_coord_system</span> <span class='assign token'>=</span> <span class='CoordSystem constant id'>CoordSystem</span><span class='dot token'>.</span><span class='find_by_rank identifier id'>find_by_rank</span><span class='lparen token'>(</span><span class='integer val'>1</span><span class='rparen token'>)</span>
+    <span class='end end kw'>end</span>
+    <span class='Ensembl constant id'>Ensembl</span><span class='colon2 op'>::</span><span class='SESSION constant id'>SESSION</span><span class='dot token'>.</span><span class='toplevel_id identifier id'>toplevel_id</span> <span class='assign token'>=</span> <span class='Ensembl constant id'>Ensembl</span><span class='colon2 op'>::</span><span class='SESSION constant id'>SESSION</span><span class='dot token'>.</span><span class='toplevel_coord_system identifier id'>toplevel_coord_system</span><span class='dot token'>.</span><span class='id identifier id'>id</span>
+    <span class='Ensembl constant id'>Ensembl</span><span class='colon2 op'>::</span><span class='SESSION constant id'>SESSION</span><span class='dot token'>.</span><span class='coord_system_ids identifier id'>coord_system_ids</span><span class='lbrack token'>[</span><span class='Ensembl constant id'>Ensembl</span><span class='colon2 op'>::</span><span class='SESSION constant id'>SESSION</span><span class='dot token'>.</span><span class='toplevel_coord_system identifier id'>toplevel_coord_system</span><span class='dot token'>.</span><span class='name identifier id'>name</span><span class='rbrack token'>]</span> <span class='assign token'>=</span> <span class='Ensembl constant id'>Ensembl</span><span class='colon2 op'>::</span><span class='SESSION constant id'>SESSION</span><span class='dot token'>.</span><span class='toplevel_id identifier id'>toplevel_id</span>
+    <span class='Ensembl constant id'>Ensembl</span><span class='colon2 op'>::</span><span class='SESSION constant id'>SESSION</span><span class='dot token'>.</span><span class='coord_systems identifier id'>coord_systems</span><span class='lbrack token'>[</span><span class='Ensembl constant id'>Ensembl</span><span class='colon2 op'>::</span><span class='SESSION constant id'>SESSION</span><span class='dot token'>.</span><span class='toplevel_id identifier id'>toplevel_id</span><span class='rbrack token'>]</span> <span class='assign token'>=</span> <span class='Ensembl constant id'>Ensembl</span><span class='colon2 op'>::</span><span class='SESSION constant id'>SESSION</span><span class='dot token'>.</span><span class='toplevel_coord_system identifier id'>toplevel_coord_system</span>
+  <span class='end end kw'>end</span>
+  <span class='return return kw'>return</span> <span class='Ensembl constant id'>Ensembl</span><span class='colon2 op'>::</span><span class='SESSION constant id'>SESSION</span><span class='dot token'>.</span><span class='toplevel_coord_system identifier id'>toplevel_coord_system</span>
+<span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <p class="signature " id="name_with_version-instance_method">
+  
+    - (<tt>String</tt>) <strong>name_with_version</strong> 
+  
+
+  
+</p><div class="docstring">
+  <div class="discussion">
+    <p>
+The CoordSystem#name_with_version returns a string containing the name and
+version of the coordinate system. If no version is available, then just the
+name is returned
+</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  <h3>Returns:</h3>
+<ul class="return">
+  
+    <li>
+      
+        <span class='type'>(<tt>String</tt>)</span>
+      
+      
+      
+      
+        &mdash;
+        <div class='inline'><p>
+Name of the coordinate system if possible including version
+</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+310
+311
+312
+313
+314
+315
+316</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/ensembl/core/activerecord.rb', line 310</span>
+
+<span class='def def kw'>def</span> <span class='name_with_version identifier id'>name_with_version</span>
+  <span class='if if kw'>if</span> <span class='self self kw'>self</span><span class='dot token'>.</span><span class='version identifier id'>version</span><span class='dot token'>.</span><span class='nil? fid id'>nil?</span>
+    <span class='return return kw'>return</span> <span class='name identifier id'>name</span>
+  <span class='else else kw'>else</span>
+    <span class='return return kw'>return</span> <span class='lbrack token'>[</span><span class='name identifier id'>name</span><span class='comma token'>,</span> <span class='version identifier id'>version</span><span class='rbrack token'>]</span><span class='dot token'>.</span><span class='join identifier id'>join</span><span class='lparen token'>(</span><span class='string val'>':'</span><span class='rparen token'>)</span>
+  <span class='end end kw'>end</span>
+<span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <p class="signature " id="seqlevel?-instance_method">
+  
+    - (<tt>Boolean</tt>) <strong>seqlevel?</strong> 
+  
+
+  
+</p><div class="docstring">
+  <div class="discussion">
+    <p>
+The CoordSystem#seqlevel? method checks if this coordinate system is the
+seqlevel coordinate system or not.
+</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  <h3>Returns:</h3>
+<ul class="return">
+  
+    <li>
+      
+        <span class='type'>(<tt>Boolean</tt>)</span>
+      
+      
+      
+      
+        &mdash;
+        <div class='inline'><p>
+True if coord_system is seqlevel, else false.
+</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+216
+217
+218
+219
+220
+221
+222
+223</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/ensembl/core/activerecord.rb', line 216</span>
+
+<span class='def def kw'>def</span> <span class='seqlevel? fid id'>seqlevel?</span>
+  <span class='if if kw'>if</span> <span class='Collection constant id'>Collection</span><span class='dot token'>.</span><span class='check identifier id'>check</span> <span class='comment val'># When usign multi-species databases</span>
+     <span class='return return kw'>return</span> <span class='true true kw'>true</span> <span class='if if_mod kw'>if</span> <span class='self self kw'>self</span> <span class='eq op'>==</span> <span class='CoordSystem constant id'>CoordSystem</span><span class='dot token'>.</span><span class='find_by_sql identifier id'>find_by_sql</span><span class='lparen token'>(</span><span class='dstring node'>&quot;SELECT * FROM coord_system WHERE attrib LIKE '%sequence_level%' AND species_id = #{self.species_id}&quot;</span><span class='rparen token'>)</span><span class='lbrack token'>[</span><span class='integer val'>0</span><span class='rbrack token'>]</span>
+  <span class='else else kw'>else</span>
+     <span class='return return kw'>return</span> <span class='true true kw'>true</span> <span class='if if_mod kw'>if</span> <span class='self self kw'>self</span> <span class='eq op'>==</span> <span class='CoordSystem constant id'>CoordSystem</span><span class='dot token'>.</span><span class='find_seqlevel identifier id'>find_seqlevel</span>
+  <span class='end end kw'>end</span>
+  <span class='return return kw'>return</span> <span class='false false kw'>false</span>
+<span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <p class="signature " id="toplevel?-instance_method">
+  
+    - (<tt>Boolean</tt>) <strong>toplevel?</strong> 
+  
+
+  
+</p><div class="docstring">
+  <div class="discussion">
+    <p>
+The CoordSystem#toplevel? method checks if this coordinate system is the
+toplevel coordinate system or not.
+</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  <h3>Returns:</h3>
+<ul class="return">
+  
+    <li>
+      
+        <span class='type'>(<tt>Boolean</tt>)</span>
+      
+      
+      
+      
+        &mdash;
+        <div class='inline'><p>
+True if coord_system is toplevel, else false.
+</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+203
+204
+205
+206
+207
+208
+209
+210</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/ensembl/core/activerecord.rb', line 203</span>
+
+<span class='def def kw'>def</span> <span class='toplevel? fid id'>toplevel?</span>
+  <span class='if if kw'>if</span> <span class='Collection constant id'>Collection</span><span class='dot token'>.</span><span class='check identifier id'>check</span> <span class='comment val'># When usign multi-species databases</span>
+    <span class='return return kw'>return</span> <span class='true true kw'>true</span> <span class='if if_mod kw'>if</span> <span class='self self kw'>self</span> <span class='eq op'>==</span> <span class='CoordSystem constant id'>CoordSystem</span><span class='dot token'>.</span><span class='find_by_rank_and_species_id identifier id'>find_by_rank_and_species_id</span><span class='lparen token'>(</span><span class='integer val'>1</span><span class='comma token'>,</span><span class='self self kw'>self</span><span class='dot token'>.</span><span class='species_id identifier id'>species_id</span><span class='rparen token'>)</span>
+  <span class='else else kw'>else</span>
+    <span class='return return kw'>return</span> <span class='true true kw'>true</span> <span class='if if_mod kw'>if</span> <span class='self self kw'>self</span> <span class='eq op'>==</span> <span class='CoordSystem constant id'>CoordSystem</span><span class='dot token'>.</span><span class='find_by_rank identifier id'>find_by_rank</span><span class='lparen token'>(</span><span class='integer val'>1</span><span class='rparen token'>)</span>  
+  <span class='end end kw'>end</span>
+  <span class='return return kw'>return</span> <span class='false false kw'>false</span>
+<span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+  </div>
+
+</div>
+    
+    <div id="footer">
+  Generated on Wed Dec 15 19:18:18 2010 by 
+  <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
+  0.6.3 (ruby-1.8.7).
+</div>
+
+  </body>
+</html>
