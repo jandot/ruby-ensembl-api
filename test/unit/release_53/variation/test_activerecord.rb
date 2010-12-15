@@ -138,8 +138,5 @@ class ActiveRecordVariation < Test::Unit::TestCase
     
     ag = Source.find(1).allele_groups
     assert_nil ag[0]
-    
-    s = Source.count(9)
-    assert_equal(4,s.size)
   end
 end
