@@ -8,7 +8,7 @@ Gem::Specification.new do |s|
   s.summary = "API to Ensembl databases"
   s.description = "ruby-ensembl-api provides a ruby API to the Ensembl databases (http://www.ensembl.org)"
 
-  s.has_rdoc = true
+  s.has_rdoc = "yard"
 
   s.platform = Gem::Platform::RUBY
   s.files = ["bin/ensembl","bin/variation_effect_predictor","lib/ensembl/core/activerecord.rb","lib/ensembl/core/collection.rb","lib/ensembl/core/project.rb","lib/ensembl/core/slice.rb","lib/ensembl/core/transcript.rb","lib/ensembl/core/transform.rb","lib/ensembl/db_connection.rb","lib/ensembl/variation/activerecord.rb","lib/ensembl/variation/variation.rb","lib/ensembl.rb","samples/ensembl_genomes_example.rb","samples/examples_perl_tutorial.rb","samples/small_example_ruby_api.rb","samples/variation_example.rb","test/unit/release_60/core/test_gene.rb","test/unit/release_60/core/test_slice.rb","test/unit/release_60/core/test_transform.rb","test/unit/release_60/core/test_project_human.rb","test/unit/release_60/core/test_transcript.rb","test/unit/release_60/variation/test_activerecord.rb","test/unit/release_60/variation/test_consequence.rb","test/unit/release_60/variation/test_variation.rb","test/unit/test_connection.rb","test/unit/test_releases.rb"]
