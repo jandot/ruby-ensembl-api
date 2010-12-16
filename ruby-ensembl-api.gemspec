@@ -1,6 +1,6 @@
 Gem::Specification.new do |s|
   s.name = "ruby-ensembl-api"
-  s.version ='1.0'
+  s.version ='1.0.1'
 
   s.authors = ["Jan Aerts", "Francesco Strozzi"]
   s.email = ["jan.aerts@gmail.com","francesco.strozzi@gmail.com"]
