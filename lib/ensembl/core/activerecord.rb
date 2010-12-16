@@ -1070,7 +1070,8 @@ module Ensembl
         xrefs.each do |xref|
           answer.push(Ensembl::Core::Gene.find_by_display_xref_id(xref.xref_id))
         end
-      
+        
+        answer.reject!{|a| a.nil?}
       	return answer
       end
       
