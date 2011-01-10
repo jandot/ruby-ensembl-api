@@ -41,6 +41,7 @@ module Ensembl
     class Base < ActiveRecord::Base
       self.abstract_class = true
       self.pluralize_table_names = false
+            
       def self.get_info
         host,user,password,db_name,port = self.retrieve_connection.instance_values["connection_options"]
         db_name =~/(\w+_\w+)_(core|variation|funcgen|compara)_(\d+)_\S+/
@@ -55,7 +56,7 @@ module Ensembl
       # Method to retrieve the name of a database, using species, release and connection parameters
       # passed by the user.    
       def self.get_name_from_db(db_type,species,release,args)
-        species = species.underscore # Always in lowercase. This keeps things simple when dealing with complex species names like in Ensembl Genomes database
+        species = species.underscore.tr(' ','_') # Always in lowercase. This keeps things simple when dealing with complex species names like in Ensembl Genomes database
         dummy_db = DummyDBConnection.connect(args)
         dummy_connection = dummy_db.connection
         # check if a database exists with exactly the species name passed (regular way)
