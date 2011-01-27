@@ -209,5 +209,13 @@ class ActiveRecordVariation < Test::Unit::TestCase
     assert_equal('Variation maps to more than 3 different locations',fd[0].description)
   end
   
+  def test_variation_set
+    v = Variation.find(8)
+    vs = v.variation_sets
+    assert_equal(5,vs.size)
+    assert_equal("1000 genomes - Trios - CEU",vs[0].name)
+    assert_equal("Variations called by the 1000 genomes project on high coverage sequence data from a CEU population trio",vs[0].description)
+  end
+  
   
 end
