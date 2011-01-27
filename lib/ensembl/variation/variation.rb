@@ -49,6 +49,8 @@ module Ensembl
       has_many :individual_genotype_multiple_bps
       has_many :failed_variations
       has_many :failed_descriptions, :through => :failed_variations
+      has_many :variation_set_variations
+      has_many :variation_sets, :through => :variation_set_variations
       
       def self.fetch_all_by_source(source)
         variations = Source.find_by_name(source).variations

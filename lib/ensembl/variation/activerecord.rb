@@ -187,6 +187,12 @@ module Ensembl
       has_many :allele_groups
     end
     
+    
+    # The PopulationStructure class gives information on super and sub populations
+    #
+    # This class uses ActiveRecord to access data in the Ensembl database.
+    # See the general documentation of the Ensembl module for
+    # more information on what this means and what methods are available.
     class PopulationStructure < DBConnection
       
     end
@@ -235,7 +241,12 @@ module Ensembl
       has_many :variation_annotations
       has_many :structural_variations
     end
-    
+
+    # The StructuralVariation class gives information on structural variations mapped on the genome
+    #
+    # This class uses ActiveRecord to access data in the Ensembl database.
+    # See the general documentation of the Ensembl module for
+    # more information on what this means and what methods are available.    
     class StructuralVariation < DBConnection
       set_primary_key "structural_variation_id"
       belongs_to :source
@@ -261,6 +272,12 @@ module Ensembl
       has_many :structural_variations
     end
     
+    
+    # The SubsnpHandle class gives information on SNP Submitters
+    #
+    # This class uses ActiveRecord to access data in the Ensembl database.
+    # See the general documentation of the Ensembl module for
+    # more information on what this means and what methods are available.    
     class SubsnpHandle < DBConnection
       set_primary_key "subsnp_id"
       has_many :individual_genotype_multiple_bps, :foreign_key => "subsnp_id"
@@ -325,6 +342,32 @@ module Ensembl
       belongs_to :phenotype
       belongs_to :source
     end
+    
+    # The VariationSet class gives information on variations grouped by study, method, quality measure etc.
+    #
+    # This class uses ActiveRecord to access data in the Ensembl database.
+    # See the general documentation of the Ensembl module for
+    # more information on what this means and what methods are available.   
+    class VariationSet < DBConnection
+      set_primary_key "variation_set_id"
+      has_many :variation_set_variations
+      has_many :variations, :through => :variation_set_variations
+    end
+    
+    class VariationSetVariation < DBConnection
+      belongs_to :variation
+      belongs_to :variation_set
+    end
+
+    # The VariationSet class gives information on super and sub VariationSets.
+    #
+    # This class uses ActiveRecord to access data in the Ensembl database.
+    # See the general documentation of the Ensembl module for
+    # more information on what this means and what methods are available. 
+    class VariationSetStructure < DBConnection
+      
+    end
+    
     
     
     # The FlankingSequence class gives information about the genomic coordinates 
