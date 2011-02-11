@@ -19,7 +19,7 @@ include Ensembl::Core
 class TestGene < Test::Unit::TestCase
   
   def setup
-    DBConnection.ensemblgenomes_connect('pyrococcus_collection',6) 
+    DBConnection.ensemblgenomes_connect('pyrococcus_collection',8) 
   end
   
   def teardown

@@ -20,7 +20,7 @@ include Ensembl::Variation
 class TestVariation < Test::Unit::TestCase
   
   def setup
-    DBConnection.ensemblgenomes_connect('vitis_vinifera',7)
+    DBConnection.ensemblgenomes_connect('vitis_vinifera',8)
   end
   
   def teardown
@@ -35,7 +35,7 @@ class TestVariation < Test::Unit::TestCase
     assert_equal('T/A',vf.allele_string)
     tv = vf.transcript_variations
     t = tv[0].transcript
-    assert_equal("GSVIVT00004799001",t.stable_id)
+    assert_equal("GSVIVT01004799001",t.stable_id)
   end
   
   
