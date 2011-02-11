@@ -14,7 +14,7 @@ $:.unshift(libpath) unless $:.include?(libpath)
 
 require 'test/unit'
 
-require 'lib/ensembl'
+require 'ensembl'
 
 include Ensembl::Core
 

@@ -11,7 +11,7 @@ require 'pathname'
 libpath = Pathname.new(File.join(File.dirname(__FILE__), ['..'] * 4, 'lib')).cleanpath.to_s
 $:.unshift(libpath) unless $:.include?(libpath)
 require 'test/unit'
-require 'lib/ensembl'
+require 'ensembl'
 
 include Ensembl::Core
 

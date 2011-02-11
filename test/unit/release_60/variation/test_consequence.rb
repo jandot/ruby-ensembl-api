@@ -10,7 +10,7 @@ libpath = Pathname.new(File.join(File.dirname(__FILE__), ['..'] * 4, 'lib')).cle
 $:.unshift(libpath) unless $:.include?(libpath)
 
 require 'test/unit'
-require 'lib/ensembl'
+require 'ensembl'
 
 include Ensembl::Variation
 DBConnection.connect('homo_sapiens',60)
