@@ -4,6 +4,8 @@ http://www.ensembl.org/info/software/core/core_tutorial.html (with permission of
 
 Based on release 60.
 
+For feedback (ideas, hints, bugs), please go to http://rubyensemblapi.userecho.com
+
 == Introduction
 This tutorial describes how to use the Ensembl Core Ruby API. It is intended to be an introduction and demonstration of the general API concepts. This tutorial is not comprehensive, but it will hopefully enable to reader to become quickly productive, and facilitate a rapid understanding of the core system. This tutorial assumes at least some familiarity with Ruby.
 
