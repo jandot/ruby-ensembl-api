@@ -109,7 +109,11 @@ module Ensembl
                             :port => args[:port]
                           )
         
-        self.retrieve_connection # Check if the connection is working       
+        self.retrieve_connection # Check if the connection is working
+        
+        # check which release is used and load the correct Variation API version
+        require (release <= 62) ? File.dirname(__FILE__) + '/variation/variation.rb' : File.dirname(__FILE__) + '/variation/variation62.rb'
+      
       end      
       
     end

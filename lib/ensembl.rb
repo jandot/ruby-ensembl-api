@@ -62,5 +62,4 @@ require File.dirname(__FILE__) + '/ensembl/core/collection.rb'
 
 # Variation modules
 require File.dirname(__FILE__) + '/ensembl/variation/activerecord.rb'
-require File.dirname(__FILE__) + '/ensembl/variation/variation.rb'
 
