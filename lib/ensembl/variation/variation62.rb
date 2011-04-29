@@ -83,7 +83,7 @@ module Ensembl
       has_many :tagged_variation_features
       has_many :samples, :through => :tagged_variation_features
       belongs_to :seq_region
-      validates_inclusion_of :consequence_type, :in => ['intergenic_variant',
+      validates_inclusion_of :consequence_types, :in => ['intergenic_variant',
                                                         'splice_acceptor_variant',
                                                         'splice_donor_variant',
                                                         'complex_change_in_transcript',
@@ -115,10 +115,10 @@ module Ensembl
                                                         'increased_binding_affinity',
                                                         'decreased_binding_affinity',
                                                         'binding_site_variant'
-                                                        ], :message => "Consequence type not allowed!"      
+                                                        ], :message => "Consequence type not allowed!"     
       
-      def consequence_type # workaround as ActiveRecord do not parse SET field in MySQL
-        "#{attributes_before_type_cast['consequence_type']}" 
+      def consequence_types # workaround as ActiveRecord do not parse SET field in MySQL
+        "#{attributes_before_type_cast['consequence_types']}" 
       end 
       
       # Based on Perl API 'get_all_Genes' method for Variation class. Get a genomic region
@@ -183,44 +183,51 @@ module Ensembl
         downstream = 5000
         upstream = 5000
         tvs = [] # store all the calculated TranscriptVariations
-         # retrieve the slice of the genomic region where the variation is located
-         region = Ensembl::Core::Slice.fetch_by_region(Ensembl::Core::CoordSystem.find(sr.coord_system_id).name,sr.name,vf.seq_region_start-upstream,vf.seq_region_end+downstream-1)
-         # iterate through all the transcripts present in the region
+        # retrieve the slice of the genomic region where the variation is located
+        var_start,var_end = 0,0
+        if vf.seq_region_start > vf.seq_region_end
+          var_start,var_end = vf.seq_region_end,vf.seq_region_start
+        else
+          var_start,var_end = vf.seq_region_start,vf.seq_region_end
+        end
+        region = Ensembl::Core::Slice.fetch_by_region(Ensembl::Core::CoordSystem.find(sr.coord_system_id).name,sr.name,var_start-upstream,var_end+downstream-1)
+        # iterate through all the transcripts present in the region
         genes = region.genes(inclusive = true)
          if genes[0] != nil
           genes.each do |g|
             g.transcripts.each do |t|
+              
+              @cache = {}
+              
               tv = TranscriptVariation.new() # create a new TranscriptVariation object for every transcript present
               # do the calculations
               
               # check if the variation is intergenic for this transcript (no effects)
-              tv.consequence_type = check_intergenic(vf,t)
+              tv.consequence_types = check_intergenic(vf,t)
               
               # check if the variation is upstram or downstram the transcript
-              tv.consequence_type = check_upstream_downstream(vf,t) if tv.consequence_type == ""
+              tv.consequence_types = check_upstream_downstream(vf,t) if tv.consequence_types == ""
+              
+              # check partial codon
+              tv.consequence_types = check_partial_codon(vf,t) if tv.consequence_types == ""
               
               # if no consequence type is found, then the variation is inside the transcript         
               # check for non coding gene
-              tv.consequence_type = check_non_coding(vf,t) if tv.consequence_type == "" and t.biotype != 'protein_coding'
+              tv.consequence_types = check_non_coding(vf,t) if tv.consequence_types == "" && t.biotype != 'protein_coding'
 
               # if no consequence type is found, then check intron / exon boundaries
-              tv.consequence_type = check_splice_site(vf,t) if tv.consequence_type == ""
+              tv.consequence_types = check_splice_site(vf,t) if tv.consequence_types == ""
 
               # if no consequence type is found, check if the variation is inside UTRs
-              tv.consequence_type = check_utr(vf,t) if tv.consequence_type == ""    
+              tv.consequence_types = check_utr(vf,t) if tv.consequence_types == ""    
                         
               # if no consequence type is found, then variation is inside an exon. 
               # Check the codon change
-              (tv.consequence_type,tv.peptide_allele_string) = check_aa_change(vf,t) if tv.consequence_type == ""
+              (tv.consequence_types,tv.pep_allele_string) = check_aa_change(vf,t) if tv.consequence_types == ""
                 
+              tv.feature_stable_id = t.stable_id
               
-              begin # this changed from release 58
-                 tv.transcript_stable_id = t.stable_id
-              rescue NoMethodError
-                 tv.transcript_id = t.id
-              end
-              
-              tv.consequence_type = "intergenic_variant" if tv.consequence_type == ""
+              tv.consequence_types = "intergenic_variant" if tv.consequence_types == ""
               tvs << tv 
             end   
           end
@@ -228,14 +235,14 @@ module Ensembl
          # if there are no transcripts/genes within 5000 bases upstream and downstream set the variation as INTERGENIC (no effects)
          if tvs.size == 0 then
           tv = TranscriptVariation.new()
-          tv.consequence_type = "intergenic_variant"
+          tv.consequence_types = "intergenic_variant"
           tvs << tv
          end
 
          return tvs
        end
       
-      ## CONSEQUENCE CALCULATION FUNCTIONS ##
+      ## CONSEQUENCE CALCULATION METHODS ##
       
       def check_intergenic(vf,t)
         if vf.seq_region_end < t.seq_region_start and ((t.seq_region_start - vf.seq_region_end) +1) > 5000 then
@@ -248,7 +255,7 @@ module Ensembl
       
       def check_upstream_downstream(vf,t)
         if vf.seq_region_end < t.seq_region_start
-          distance = t.seq_region_start - vf.seq_region_end +1
+          distance = t.seq_region_start - vf.seq_region_end+1
           if t.strand == 1 and distance <= 2000
             return "2KB_upstream_variant"
           elsif t.strand == -1 and distance <= 500
@@ -256,8 +263,8 @@ module Ensembl
           else
            return (t.strand == 1) ? "5KB_upstream_variant" : "5KB_downstream_variant"
           end
-        elsif vf.seq_region_start > t.seq_region_end then
-           distance = vf.seq_region_start - t.seq_region_end +1
+        elsif vf.seq_region_start > t.seq_region_end
+           distance = vf.seq_region_start - t.seq_region_end+1
            if t.strand == -1 and distance <= 2000
              return "2KB_upstream_variant"
            elsif t.strand == 1 and distance <= 500
@@ -294,6 +301,7 @@ module Ensembl
       end
       
       def check_splice_site(vf,t)
+          
           exon_up = t.exon_for_genomic_position(vf.seq_region_start)
           exon_down = t.exon_for_genomic_position(vf.seq_region_end)
           if exon_up.nil? and exon_down.nil? # we are inside an intron
@@ -309,7 +317,7 @@ module Ensembl
              elsif near_exon_up_8bp or near_exon_down_8bp then
                 return "splice_region_variant"
              else
-                return "intron_variant"   
+                return "intron_variant"
              end
           elsif exon_up and exon_down # the variation is inside an exon
                 # check if it is a splice site
@@ -325,13 +333,16 @@ module Ensembl
       def check_aa_change(vf,t)
           alleles = vf.allele_string.split('/') # get the different alleles for this variation          
           # if the variation is an InDel then it produces a frameshift
-          if (vf.seq_region_start - vf.seq_region_end).abs > 3 then
+          if vf.allele_string =~/INSERTION|DELETION|MUTATION/
+            return "coding_sequence_variant",nil
+          elsif vf.seq_region_start != vf.seq_region_end
             return "frameshift_variant",nil
           end
 
           # Find the position inside the CDS
           
-          mutation_position = t.genomic2cds(vf.seq_region_start)
+          mutation_position = (@cache[:mutation_positon]) ? @cache[:mutation_positon] : t.genomic2cds(vf.seq_region_start)
+          cds_sequence = (@cache[:cds_sequence]) ? @cache[:cds_sequence] : t.cds_seq      
           
           mutation_base = Bio::Sequence::NA.new(alleles[1])
           if t.seq_region_strand == -1
@@ -339,8 +350,6 @@ module Ensembl
           end
           # The rank of the codon 
           target_codon = (mutation_position)/3 + 1
-          cds_sequence = nil
-          cds_sequence = t.cds_seq
           mut_sequence = cds_sequence.dup
           # Replace base with the variant allele
           mut_sequence[mutation_position] = mutation_base.seq
@@ -366,6 +375,21 @@ module Ensembl
           end
            
        end
+       
+       def check_partial_codon(vf,t)
+         begin
+           mutation_position = t.genomic2cds(vf.seq_region_start)
+           cds_sequence = t.cds_seq
+           @cache[:mutation_position] = mutation_position
+           @cache[:cds_sequence] = cds_sequence
+           # check if the mutation is on the last codon and if it's a partial codon
+           if (cds_sequence.length - mutation_position) <= 3
+             return (cds_sequence.length % 3 == 0) ? nil : "incomplete_terminal_codon_variant"
+           end
+         rescue Exception => e
+           return nil
+         end 
+       end
       
       
     end # VariationFeature
@@ -386,7 +410,7 @@ module Ensembl
     class TranscriptVariation < DBConnection
       set_primary_key "transcript_variation_id"
       belongs_to :variation_feature
-      validates_inclusion_of :consequence_type, :in => ['intergenic_variant',
+      validates_inclusion_of :consequence_types, :in => ['intergenic_variant',
                                                         'splice_acceptor_variant',
                                                         'splice_donor_variant',
                                                         'complex_change_in_transcript',
@@ -420,8 +444,8 @@ module Ensembl
                                                         'binding_site_variant'
                                                         ], :message => "Consequence type not allowed!"
                                                         
-      def consequence_type # workaround as ActiveRecord do not parse SET field in MySQL
-        "#{attributes_before_type_cast['consequence_type']}" 
+      def consequence_types # workaround as ActiveRecord do not parse SET field in MySQL
+        "#{attributes_before_type_cast['consequence_types']}" 
       end                                                  
       
       def transcript
@@ -429,13 +453,7 @@ module Ensembl
         if !Ensembl::Core::DBConnection.connected? then     
             Ensembl::Core::DBConnection.connect(species,release.to_i,:username => user, :password => password,:host => host, :port => port)    
         end
-        
-        begin # this changed from release 58
-          return Ensembl::Core::Transcript.find_by_stable_id(self.transcript_stable_id)
-        rescue NoMethodError  
-          return Ensembl::Core::Transcript.find(self.transcript_id)
-        end
-        
+        return Ensembl::Core::Transcript.find_by_stable_id(self.feature_stable_id)        
       end
       
     end
