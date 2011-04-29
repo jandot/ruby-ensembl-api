@@ -190,7 +190,7 @@ module Ensembl
         else
           var_start,var_end = vf.seq_region_start,vf.seq_region_end
         end
-        region = Ensembl::Core::Slice.fetch_by_region(Ensembl::Core::CoordSystem.find(sr.coord_system_id).name,sr.name,var_start-upstream,var_end+downstream-1)
+        region = Ensembl::Core::Slice.fetch_by_region(Ensembl::Core::CoordSystem.find(sr.coord_system_id).name,sr.name,var_start-upstream,var_end+downstream)
         # iterate through all the transcripts present in the region
         genes = region.genes(inclusive = true)
          if genes[0] != nil
@@ -227,7 +227,7 @@ module Ensembl
                 
               tv.feature_stable_id = t.stable_id
               
-              tv.consequence_types = "intergenic_variant" if tv.consequence_types == ""
+              #tv.consequence_types = "intergenic_variant" if tv.consequence_types == ""
               tvs << tv 
             end   
           end
@@ -245,9 +245,9 @@ module Ensembl
       ## CONSEQUENCE CALCULATION METHODS ##
       
       def check_intergenic(vf,t)
-        if vf.seq_region_end < t.seq_region_start and ((t.seq_region_start - vf.seq_region_end) +1) > 5000 then
+        if vf.seq_region_end < t.seq_region_start and (t.seq_region_start - vf.seq_region_end) > 5000 then
            return "intergenic_variant"
-        elsif vf.seq_region_start > t.seq_region_end and ((vf.seq_region_start - t.seq_region_end) +1) > 5000 then
+        elsif vf.seq_region_start > t.seq_region_end and (vf.seq_region_start - t.seq_region_end) > 5000 then
            return "intergenic_variant"      
         end
         return nil        
@@ -301,15 +301,18 @@ module Ensembl
       end
       
       def check_splice_site(vf,t)
+          @cache[:exons] = []
+          var_start,var_end = (vf.seq_region_strand == 1) ? [vf.seq_region_start,vf.seq_region_end] : [vf.seq_region_end,vf.seq_region_start]
+          t.exons.each {|ex| @cache[:exons] << Range.new(ex.seq_region_start,ex.seq_region_end)}
           
-          exon_up = t.exon_for_genomic_position(vf.seq_region_start)
-          exon_down = t.exon_for_genomic_position(vf.seq_region_end)
-          if exon_up.nil? and exon_down.nil? # we are inside an intron
+          exon_up = check_near_exons(var_start,@cache[:exons])
+          exon_down = check_near_exons(var_end,@cache[:exons])
+          if !exon_up and !exon_down # we are inside an intron
              # checking boundaries
-             near_exon_up_2bp = t.exon_for_genomic_position(vf.seq_region_start-2)
-             near_exon_down_2bp = t.exon_for_genomic_position(vf.seq_region_end+2)
-             near_exon_up_8bp = t.exon_for_genomic_position(vf.seq_region_start-8)
-             near_exon_down_8bp = t.exon_for_genomic_position(vf.seq_region_end+8)
+             near_exon_up_2bp = check_near_exons(var_start-2..var_start,@cache[:exons])
+             near_exon_down_2bp = check_near_exons(var_end..var_end+2,@cache[:exons])
+             near_exon_up_8bp = check_near_exons(var_start+8..var_start,@cache[:exons])
+             near_exon_down_8bp = check_near_exons(var_end..var_end+8,@cache[:exons])
              if near_exon_up_2bp 
                 return (t.strand == 1) ? "splice_donor_variant" : "splice_acceptor_variant"
              elsif near_exon_down_2bp
@@ -321,7 +324,7 @@ module Ensembl
              end
           elsif exon_up and exon_down # the variation is inside an exon
                 # check if it is a splice site
-                if (vf.seq_region_start-exon_up.seq_region_start) <= 3 or (exon_down.seq_region_end-vf.seq_region_end) <= 3 then
+                if (var_start-exon_up.first) <= 3 or (exon_down.last-var_end) <= 3 then
                     return "splice_region_variant"                   
                 end
           else # a complex indel spanning intron/exon boundary
@@ -332,15 +335,15 @@ module Ensembl
       
       def check_aa_change(vf,t)
           alleles = vf.allele_string.split('/') # get the different alleles for this variation          
-          # if the variation is an InDel then it produces a frameshift
+          
           if vf.allele_string =~/INSERTION|DELETION|MUTATION/
             return "coding_sequence_variant",nil
           elsif vf.seq_region_start != vf.seq_region_end
+            # if the variation is an InDel then it produces a frameshift
             return "frameshift_variant",nil
           end
 
-          # Find the position inside the CDS
-          
+          # Find the position inside the CDS    
           mutation_position = (@cache[:mutation_positon]) ? @cache[:mutation_positon] : t.genomic2cds(vf.seq_region_start)
           cds_sequence = (@cache[:cds_sequence]) ? @cache[:cds_sequence] : t.cds_seq      
           
@@ -362,7 +365,7 @@ module Ensembl
             raise RuntimeError "Codon #{mutcodon.downcase} wasn't recognized."
           end
           pep_string = refaa+"/"+mutaa
-          if (mutaa == "*" and refaa == "a") && (refcodon != mutcodon.downcase)
+          if (mutaa == "*" and refaa == "*") && (refcodon != mutcodon.downcase)
             return "stop_retained_variant"    
           elsif mutaa == "*" and refaa != "*"
             return "stop_gained",pep_string
@@ -389,6 +392,17 @@ module Ensembl
          rescue Exception => e
            return nil
          end 
+       end
+       
+       def check_near_exons(feature,exons_ranges)
+        exons_ranges.each do |exon_range|
+          if feature.is_a? Range
+            return exon_range if (feature.first <= exon_range.last) && (exon_range.first <= feature.last)
+          else
+            return exon_range if exon_range.include? feature
+          end  
+        end
+        return false
        end
       
       
