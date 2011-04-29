@@ -85,7 +85,11 @@ module Ensembl
       end
       
       def self.generic_connect(db_type, species, release, args = {})
+        
+        # check which release is used and load the correct Variation API version
+        require (release < 62) ? File.dirname(__FILE__) + '/variation/variation.rb' : File.dirname(__FILE__) + '/variation/variation62.rb'
         Ensembl::SESSION.reset
+        Ensembl::SESSION.release = release
         db_name = nil
         # if the connection is established with Ensembl Genomes, set the default port and host
         if args[:ensembl_genomes] then
@@ -110,9 +114,6 @@ module Ensembl
                           )
         
         self.retrieve_connection # Check if the connection is working
-        
-        # check which release is used and load the correct Variation API version
-        require (release < 62) ? File.dirname(__FILE__) + '/variation/variation.rb' : File.dirname(__FILE__) + '/variation/variation62.rb'
       
       end      
       
