@@ -28,7 +28,7 @@ For additional information you can contact Jan Aerts (jan.aerts@sanger.ac.uk) or
 The Ensembl Ruby API is made available as a gem. See the github site for more information (http://github.com/jandot/ruby-ensembl-api/wikis/home).
 
 Basically, it comes down to:
-  sudo gem install jandot-ruby-ensembl-api --source http://gems.github.com
+  sudo gem install ruby-ensembl-api
 
 == Code conventions
 Several naming conventions are used throughout the API. Learning these conventions will aid in your understanding of the code.
