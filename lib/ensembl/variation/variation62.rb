@@ -335,17 +335,14 @@ module Ensembl
       
       def check_aa_change(vf,t)
           alleles = vf.allele_string.split('/') # get the different alleles for this variation          
-          
-          if vf.allele_string =~/INSERTION|DELETION|MUTATION/
-            return "coding_sequence_variant",nil
-          elsif vf.seq_region_start != vf.seq_region_end
-            # if the variation is an InDel then it produces a frameshift
-            return "frameshift_variant",nil
-          end
 
           # Find the position inside the CDS    
           mutation_position = (@cache[:mutation_positon]) ? @cache[:mutation_positon] : t.genomic2cds(vf.seq_region_start)
-          cds_sequence = (@cache[:cds_sequence]) ? @cache[:cds_sequence] : t.cds_seq      
+          cds_sequence = (@cache[:cds_sequence]) ? @cache[:cds_sequence] : t.cds_seq
+          
+          if vf.allele_string =~/INSERTION|DELETION|MUTATION/
+            return "coding_sequence_variant",nil
+          end  
           
           mutation_base = Bio::Sequence::NA.new(alleles[1])
           if t.seq_region_strand == -1
@@ -354,18 +351,32 @@ module Ensembl
           # The rank of the codon 
           target_codon = (mutation_position)/3 + 1
           mut_sequence = cds_sequence.dup
+          
           # Replace base with the variant allele
-          mut_sequence[mutation_position] = mutation_base.seq
-          refcodon =  cds_sequence[(target_codon*3 -3)..(target_codon*3-1)]
-          mutcodon =  mut_sequence[(target_codon*3 -3)..(target_codon*3-1)]
+          if alleles[1] == "-" # a deletion
+            mut_sequence.gsub!(/#{alleles[0]}/,'')
+          else # insertion or SNP  
+            mut_sequence[mutation_position] = mutation_base.seq
+          end
+          
+          mutcodon =  mut_sequence[(target_codon*3 -3)..(target_codon*3-1 + alleles[1].length-1)]
+          refcodon =  cds_sequence[(target_codon*3 -3)..(target_codon*3-1 + alleles[0].length-1)]
           codontable = Bio::CodonTable[1]
           refaa = codontable[refcodon]
           mutaa = codontable[mutcodon.downcase]
-          if mutaa == nil
-            raise RuntimeError "Codon #{mutcodon.downcase} wasn't recognized."
-          end
-          pep_string = refaa+"/"+mutaa
-          if (mutaa == "*" and refaa == "*") && (refcodon != mutcodon.downcase)
+
+          pep_string = refaa.to_s+"/"+mutaa.to_s
+          transcript_start = (t.strand == 1) ? t.coding_region_genomic_start : t.coding_region_genomic_end
+          if (vf.seq_region_start - transcript_start).abs <= 3
+            return "initiator_codon_change",pep_string
+          elsif (mutcodon.length > refcodon.length) && (mutcodon =~/^#{refcodon}/ || mutcodon =~/#{refcodon}$/)
+            return "inframe_codon_gain",pep_string
+          elsif (mutcodon.length < refcodon.length) && (refcodon =~/^#{mutcodon}/ || refcodon =~/#{mutcodon}$/)
+            return "inframe_codon_loss",pep_string
+          elsif vf.seq_region_start != vf.seq_region_end
+            # if the variation is an InDel then it produces a frameshift
+            return "frameshift_variant",nil   
+          elsif (mutaa == "*" and refaa == "*") && (refcodon != mutcodon.downcase)
             return "stop_retained_variant"    
           elsif mutaa == "*" and refaa != "*"
             return "stop_gained",pep_string
@@ -374,7 +385,7 @@ module Ensembl
           elsif mutaa != refaa
             return "non_synonymous_codon",pep_string
           elsif mutaa == refaa
-            return "synonymous_codon"  
+            return "synonymous_codon",pep_string
           end
            
        end
