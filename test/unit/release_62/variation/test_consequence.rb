@@ -70,6 +70,7 @@ class TestVariation < Test::Unit::TestCase
     tv = vf.transcript_variations
     assert_equal("non_synonymous_codon", tv[12].consequence_types)
     assert_equal("ENST00000535347",tv[12].feature_stable_id)
+    assert_equal("N/S",tv[12].pep_allele_string)
   end
 
   def test_stop_gained
@@ -140,23 +141,56 @@ class TestVariation < Test::Unit::TestCase
     vf = VariationFeature.new(:seq_region_id => 27519, :seq_region_start => 300500, :seq_region_end => 300500, :seq_region_strand => 1, :allele_string => "T/C", :variation_name => "rs10128942")
     tv = vf.transcript_variations
     assert_equal("5KB_downstream_variant", tv[15].consequence_types)
-    assert_equal("ENST00000535498",tv[15].feature_stable_id)    
+    assert_equal("ENST00000535498",tv[15].feature_stable_id)
   end
 
   def test_2KB_upstream_variant
     vf = VariationFeature.new(:seq_region_id => 27519, :seq_region_start => 300500, :seq_region_end => 300500, :seq_region_strand => 1, :allele_string => "T/C", :variation_name => "rs10128942")
     tv = vf.transcript_variations
     assert_equal("2KB_upstream_variant", tv[-1].consequence_types)
-    assert_equal("ENST00000544067",tv[-1].feature_stable_id)    
+    assert_equal("ENST00000544067",tv[-1].feature_stable_id) 
   end
 
   def test_5KB_upstream_variant
     vf = VariationFeature.new(:seq_region_id => 27511, :seq_region_start => 242503860, :seq_region_end => 242503860, :seq_region_strand => 1, :allele_string => "G/T", :variation_name => "rs12727465")
     tv = vf.transcript_variations
     assert_equal("5KB_upstream_variant", tv[-1].consequence_types)
-    assert_equal("ENST00000447710",tv[-1].feature_stable_id)    
+    assert_equal("ENST00000447710",tv[-1].feature_stable_id)
+  end
+  
+  def test_500B_downstream_variant
+    vf = VariationFeature.new(:seq_region_id => 27523, :seq_region_start => 43139379, :seq_region_end => 43139379, :seq_region_strand => 1, :allele_string => "T/A", :variation_name => "rs114568988")
+    tv = vf.transcript_variations
+    assert_equal("500B_downstream_variant", tv[0].consequence_types)
+    assert_equal("ENST00000522985",tv[0].feature_stable_id)
+  end
+  
+  def test_initiator_codon_change
+    vf = VariationFeature.new(:seq_region_id => 27509, :seq_region_start => 3450007, :seq_region_end => 3450007, :seq_region_strand => 1, :allele_string => "C/T", :variation_name => "rs390804")
+    tv = vf.transcript_variations
+    assert_equal("initiator_codon_change", tv[1].consequence_types)
+    assert_equal("ENST00000430263",tv[1].feature_stable_id)
   end
 
+  def test_stop_retained
+    vf = VariationFeature.new(:seq_region_id => 27515, :seq_region_start => 138202334, :seq_region_end => 138202334, :seq_region_strand => 1, :allele_string => "G/A", :variation_name => "COSM35908")
+    tv = vf.transcript_variations
+    assert_equal("stop_retained_variant", tv[0].consequence_types)
+    assert_equal("ENST00000535574",tv[0].feature_stable_id)
+  end
 
+  def test_inframe_codon_gain
+    vf = VariationFeature.new(:seq_region_id => 27509, :seq_region_start => 636321, :seq_region_end => 636320, :seq_region_strand => 1, :allele_string => "-/CTC", :variation_name => "rs111405529")
+    tv = vf.transcript_variations
+    assert_equal("inframe_codon_gain", tv[1].consequence_types)
+    assert_equal("ENST00000451373",tv[1].feature_stable_id)
+  end
+
+  def test_inframe_codon_loss
+    vf = VariationFeature.new(:seq_region_id => 27509, :seq_region_start => 4837133, :seq_region_end => 4837210, :seq_region_strand => 1, :allele_string => "GAGCCCACCTCAGAGCCCGCCCCCAGCCCGACCACCCCGGAGCCCACCTCAGAGCCCGCCCCCAGCCCGACCACCCCA/-", :variation_name => "rs41439349")
+    tv = vf.transcript_variations
+    assert_equal("inframe_codon_loss", tv[1].consequence_types)
+    assert_equal("ENST00000329125",tv[1].feature_stable_id)
+  end
 
 end
