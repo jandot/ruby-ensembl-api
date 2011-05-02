@@ -11,52 +11,6 @@ module Ensembl
   
   module Variation
     
-    # The Variation class represents single nucleotide polymorhisms (SNP) or variations 
-    # and provides information like the names (IDs), the validation status and 
-    # the allele information.
-    #
-    # *BUG*: fields like validation_status and consequence_type are created 
-    # using SET option directly in MySQL. These fields are bad interpreted by
-    # ActiveRecord, returning always 0.
-    #
-    # This class uses ActiveRecord to access data in the Ensembl database.
-    # See the general documentation of the Ensembl module for
-    # more information on what this means and what methods are available.
-    #
-    # @example
-    #   v = Variation.find_by_name('rs10111')
-    #   v.alleles.each do |a|
-    #     puts a.allele, a.frequency
-    #   end
-    #
-    #   variations = Variation.fetch_all_by_source('dbSNP') # many records
-    #   variations.each do |v|
-    #     puts v.name
-    #   end
-    # 
-    class Variation < DBConnection
-      set_primary_key "variation_id"
-      belongs_to :source
-      has_many :variation_synonyms
-      has_one :flanking_sequence
-      has_many :allele_group_alleles
-      has_many :allele_groups, :through => :allele_group_alleles
-      has_many :population_genotypes
-      has_many :alleles
-      has_many :variation_features
-      has_many :variation_group_variations
-      has_many :variation_groups, :through => :variation_group_variations
-      has_many :individual_genotype_multiple_bps
-      has_many :failed_variations
-      has_many :failed_descriptions, :through => :failed_variations
-      has_many :variation_set_variations
-      has_many :variation_sets, :through => :variation_set_variations
-      
-      def self.fetch_all_by_source(source)
-        variations = Source.find_by_name(source).variations
-      end
-    end
-    
     
     # The VariationFeature class gives information about the genomic position of 
     # each Variation, including also validation status and consequence type. 
