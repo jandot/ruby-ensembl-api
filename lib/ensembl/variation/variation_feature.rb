@@ -234,24 +234,26 @@ module Ensembl
            # checking boundaries
            near_exon_up_2bp = check_near_exons(var_start-2..var_start,@cache[:exons])
            near_exon_down_2bp = check_near_exons(var_end..var_end+2,@cache[:exons])
-           near_exon_up_8bp = check_near_exons(var_start+8..var_start,@cache[:exons])
-           near_exon_down_8bp = check_near_exons(var_end..var_end+8,@cache[:exons])
-             if near_exon_up_2bp or near_exon_down_2bp then
-                return "ESSENTIAL_SPLICE_SITE"
-             elsif near_exon_up_8bp or near_exon_down_8bp then
-                return "SPLICE_SITE"
-             else
-                return "INTRONIC"   
+           if near_exon_up_2bp or near_exon_down_2bp then
+              return "ESSENTIAL_SPLICE_SITE"
+           else
+              near_exon_up_8bp = check_near_exons(var_start+8..var_start,@cache[:exons])
+              near_exon_down_8bp = check_near_exons(var_end..var_end+8,@cache[:exons])    
+              if near_exon_up_8bp or near_exon_down_8bp then
+                 return "SPLICE_SITE"
+              else
+                 return "INTRONIC"   
+              end
+           end
+        elsif exon_up and exon_down # the variation is inside an exon
+             # check if it is a splice site
+             if (var_start-exon_up.first) <= 3 or (exon_down.last-var_end) <= 3 then
+                return "SPLICE_SITE"                   
              end
-          elsif exon_up and exon_down # the variation is inside an exon
-                # check if it is a splice site
-                if (var_start-exon_up.first) <= 3 or (exon_down.last-var_end) <= 3 then
-                    return "SPLICE_SITE"                   
-                end
-          else # a complex indel spanning intron/exon boundary
-               return "COMPLEX_INDEL"
-          end
-          return nil      
+        else # a complex indel spanning intron/exon boundary
+             return "COMPLEX_INDEL"
+        end
+        return nil      
       end
       
       def check_aa_change(vf,t)

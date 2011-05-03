@@ -265,16 +265,18 @@ module Ensembl
              # checking boundaries
              near_exon_up_2bp = check_near_exons(var_start-2..var_start,@cache[:exons])
              near_exon_down_2bp = check_near_exons(var_end..var_end+2,@cache[:exons])
-             near_exon_up_8bp = check_near_exons(var_start+8..var_start,@cache[:exons])
-             near_exon_down_8bp = check_near_exons(var_end..var_end+8,@cache[:exons])
              if near_exon_up_2bp 
                 return (t.strand == 1) ? "splice_donor_variant" : "splice_acceptor_variant"
              elsif near_exon_down_2bp
-                return (t.strand == 1) ? "splice_acceptor_variant" : "splice_donor_variant"   
-             elsif near_exon_up_8bp or near_exon_down_8bp then
-                return "splice_region_variant"
+                return (t.strand == 1) ? "splice_acceptor_variant" : "splice_donor_variant"
              else
-                return "intron_variant"
+                near_exon_up_8bp = check_near_exons(var_start+8..var_start,@cache[:exons])
+                near_exon_down_8bp = check_near_exons(var_end..var_end+8,@cache[:exons])   
+                if near_exon_up_8bp or near_exon_down_8bp
+                  return "splice_region_variant"
+                else
+                  return "intron_variant"
+                end
              end
           elsif exon_up and exon_down # the variation is inside an exon
                 # check if it is a splice site
