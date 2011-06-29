@@ -94,11 +94,10 @@ Of course, you can go the other way as well (a seq_region "belongs to" a coord_s
   chr4 = SeqRegion.find_by_name('4')
   puts chr4.coord_system.name  #--> 'chromosome'
 
-To find out what relationships exist for a given class, you can use the reflect_on_all_associations class methods:
+To find out what relationships exist for a given class, you can use the has_what and belongs_to_what class methods:
 
-  puts SeqRegion.reflect_on_all_associations(:has_many).collect{|a| a.name.to_s}.join("\n")
-  puts SeqRegion.reflect_on_all_associations(:has_one).collect{|a| a.name.to_s}.join("\n")
-  puts SeqRegion.reflect_on_all_associations(:belongs_to).collect{|a| a.name.to_s}.join("\n")
+  puts Gene.has_what.join(';')
+  puts Gene.belongs_to_what.join(';')
 
 == Connecting to the Ensembl database and a minimal script
 
