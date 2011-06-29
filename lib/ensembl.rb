@@ -39,7 +39,6 @@ module Ensembl
   end
 
   SESSION = Ensembl::Session.new
-
 end
 
 begin
@@ -64,3 +63,13 @@ require File.dirname(__FILE__) + '/ensembl/core/collection.rb'
 require File.dirname(__FILE__) + '/ensembl/variation/activerecord.rb'
 require File.dirname(__FILE__) + '/ensembl/variation/variation.rb'
 
+class ActiveRecord::Base
+  def self.belongs_to_what
+    return self.reflect_on_all_associations(:belongs_to).collect{|a| a.name.to_s}
+  end
+  
+  def self.has_what
+    a = [self.reflect_on_all_associations(:has_one), self.reflect_on_all_associations(:has_many)]
+    return a.flatten.uniq.collect{|a| a.name.to_s}
+  end
+end

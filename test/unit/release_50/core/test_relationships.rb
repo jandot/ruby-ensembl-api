@@ -64,3 +64,13 @@ class RelationshipsTest < Test::Unit::TestCase
     assert_equal('ZNF32', gene.hgnc)
   end
 end
+
+class ReflectionTest < Test::Unit::TestCase
+  def test_has_what
+    assert_equal(Gene.has_what.sort.join(';'), 'attrib_types;gene_attribs;gene_stable_id;object_xrefs;transcripts;xrefs')
+  end
+  
+  def test_belongs_to_what
+    assert_equal(Gene.belongs_to_what.sort.join(';'), 'analysis;seq_region')
+  end
+end
