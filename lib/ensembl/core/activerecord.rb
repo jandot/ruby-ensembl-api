@@ -1091,12 +1091,15 @@ module Ensembl
       # its stable ID (i.e. the "ENSG" accession number). If the name is
       # not found, it returns nil.
       def self.find_by_stable_id(stable_id)
-        gene_stable_id = GeneStableId.find_by_stable_id(stable_id)
-        if gene_stable_id.nil?
-          return nil
+        result = nil
+        if stable_id.kind_of? Array
+          gene_stable_ids = GeneStableId.where({:stable_id => stable_id})
+          result = (gene_stable_ids.size == 0) ? nil : gene_stable_ids.map {|id| id.gene}
         else
-          return gene_stable_id.gene
+          gene_stable_id = GeneStableId.find_by_stable_id(stable_id)
+          result = (gene_stable_id.nil?) ? nil : gene_stable_id.gene
         end
+        return result
       end
       
       # The Gene#all_xrefs method is a convenience method in that it combines

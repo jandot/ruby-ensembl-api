@@ -19,11 +19,13 @@ module Ensembl
     attr_accessor :coord_system_ids #map CS id to CS name
     attr_accessor :seq_regions
     attr_accessor :collection_species
+    attr_accessor :release
 
     def initialize
       @coord_systems = Hash.new # key = id; value = CoordSystem object
       @coord_system_ids = Hash.new # key = id; value = name
       @seq_regions = Hash.new
+      @release = ENSEMBL_RELEASE
     end
     
     def reset
@@ -61,7 +63,6 @@ require File.dirname(__FILE__) + '/ensembl/core/collection.rb'
 
 # Variation modules
 require File.dirname(__FILE__) + '/ensembl/variation/activerecord.rb'
-require File.dirname(__FILE__) + '/ensembl/variation/variation.rb'
 
 class ActiveRecord::Base
   def self.belongs_to_what

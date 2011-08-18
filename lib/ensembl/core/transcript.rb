@@ -81,7 +81,7 @@ module Ensembl
       has_many :transcript_attribs
       
       has_many :exon_transcripts
-#      has_many :exons, :through => :exon_transcripts
+      has_many :exons, :through => :exon_transcripts, :order => "exon_transcript.rank"
 
       has_one :translation
       
@@ -98,12 +98,12 @@ module Ensembl
       # the order of their ranks in the exon_transcript table.
       # 
       # @return [Array<Exon>] Sorted array of Exon objects
-      def exons
-        if @exons.nil?
-          @exons = self.exon_transcripts(:include => [:exons]).sort_by{|et| et.rank.to_i}.collect{|et| et.exon}
-        end
-        return @exons
-      end
+      #def exons
+      #  if @exons.nil?
+      #    @exons = self.exon_transcripts(:include => [:exons]).sort_by{|et| et.rank.to_i}.collect{|et| et.exon}
+      #  end
+      #  return @exons
+      #end
 
       # The Transcript#introns methods returns the introns for this transcript
       # 
