@@ -192,7 +192,7 @@ module Ensembl
     #	 puts coord_system.name + " is the toplevel coordinate system."
     #  end
     class CoordSystem < DBConnection
-      set_primary_key 'coord_system_id'
+      self.primary_key ='coord_system_id'
 
       has_many :seq_regions
 
@@ -350,7 +350,7 @@ module Ensembl
     #	 puts gene.biotype
     #  end
     class SeqRegion < DBConnection
-      set_primary_key 'seq_region_id'
+      self.primary_key ='seq_region_id'
 
       belongs_to :coord_system
       has_many :simple_features
@@ -520,8 +520,8 @@ module Ensembl
     #	   puts gene.biotype
     #  end
     class AssemblyLink < DBConnection
-      set_table_name 'assembly'
-      set_primary_key nil
+      self.table_name = 'assembly'
+      self.primary_key =nil
 
       # See http://blog.hasmanythrough.com/2006/4/21/self-referential-through
       belongs_to :asm_seq_region, :foreign_key => 'asm_seq_region_id', :class_name => 'SeqRegion'
@@ -544,7 +544,7 @@ module Ensembl
     class AssemblyException < DBConnection
       include Sliceable
       
-      set_primary_key 'assembly_exception_id'
+      self.primary_key ='assembly_exception_id'
       
       belongs_to :seq_region
     end
@@ -559,7 +559,7 @@ module Ensembl
     # See the general documentation of the Ensembl module for
     # more information on what this means and what methods are available.
     class MetaCoord < DBConnection
-      set_primary_key nil
+      self.primary_key =nil
     end
 
     # The Meta class describes meta data of the database. These include information
@@ -572,7 +572,7 @@ module Ensembl
     # See the general documentation of the Ensembl module for
     # more information on what this means and what methods are available.
     class Meta < DBConnection
-      set_primary_key nil
+      self.primary_key =nil
     end
 
     # The Analysis class describes an analysis.
@@ -585,7 +585,7 @@ module Ensembl
     #  repeat_masker_analysis = Analysis.find_by_logic_name('RepeatMask')
     #  puts repeat_masker_analysis.to_yaml
     class Analysis < DBConnection
-      set_primary_key 'analysis_id'
+      self.primary_key ='analysis_id'
 
       has_many :genes
       has_many :dna_align_features
@@ -609,7 +609,7 @@ module Ensembl
     #  descr = AnalysisDescription.find(3)
     #  puts descr.to_yaml
     class AnalysisDescription < DBConnection
-      set_primary_key nil
+      self.primary_key =nil
 
       belongs_to :analysis
     end
@@ -625,7 +625,7 @@ module Ensembl
     #  seq_region = SeqRegion.find(1)
     #  puts seq_region.dna.sequence
     class Dna < DBConnection
-      set_primary_key nil
+      self.primary_key =nil
 
       belongs_to :seq_region
     end
@@ -646,7 +646,7 @@ module Ensembl
     class Exon < DBConnection
       include Sliceable
 
-      set_primary_key 'exon_id'
+      self.primary_key ='exon_id'
 
       belongs_to :seq_region
       has_many :exon_transcripts
@@ -700,7 +700,7 @@ module Ensembl
     # @example
     #  my_exon = ExonStableId.find_by_stable_id('ENSE00001494622').exon
     class ExonStableId < DBConnection
-      set_primary_key 'stable_id'
+      self.primary_key ='stable_id'
       
       belongs_to :exon
     end
@@ -716,15 +716,15 @@ module Ensembl
     #  puts link.exon.to_yaml
     #  puts link.transcript.to_yaml
     class ExonTranscript < DBConnection
-      set_primary_key nil
+      self.primary_key =nil
 
       belongs_to :exon
       belongs_to :transcript
     end
 
     class ExonSupportingFeature < DBConnection
-      set_table_name 'supporting_feature'
-      set_primary_key nil
+      self.table_name = 'supporting_feature'
+      self.primary_key =nil
       
       belongs_to :exon
       belongs_to :dna_align_feature, :class_name => "DnaAlignFeature", :foreign_key => 'feature_id'
@@ -732,7 +732,7 @@ module Ensembl
     end
     
     class TranscriptSupportingFeature < DBConnection
-      set_primary_key nil
+      self.primary_key =nil
       
       belongs_to :transcript
       belongs_to :dna_align_feature, :class_name => "DnaAlignFeature", :foreign_key => 'feature_id'
@@ -756,7 +756,7 @@ module Ensembl
     class SimpleFeature < DBConnection
       include Sliceable
 
-      set_primary_key 'simple_feature_id'
+      self.primary_key ='simple_feature_id'
 
       belongs_to :seq_region
       belongs_to :analysis
@@ -777,7 +777,7 @@ module Ensembl
     #  density_feature = DensityFeature.find(2716384)
     #  puts density_feature.to_yaml
     class DensityFeature < DBConnection
-      set_primary_key 'density_feature_id'
+      self.primary_key ='density_feature_id'
 
       belongs_to :density_type
       belongs_to :seq_region
@@ -795,7 +795,7 @@ module Ensembl
     # class. See Sliceable and Slice for more information.
     #
     class DensityType < DBConnection
-      set_primary_key 'density_type_id'
+      self.primary_key ='density_type_id'
 
       has_many :density_features
       belongs_to :analysis
@@ -814,7 +814,7 @@ module Ensembl
     #  puts marker.right_primer
     #  puts marker.min_primer_dist.to_s
     class Marker < DBConnection
-      set_primary_key 'marker_id'
+      self.primary_key ='marker_id'
 
       has_many :marker_features
       has_many :marker_synonyms
@@ -884,7 +884,7 @@ module Ensembl
     #  puts marker.marker_synonym.source
     #  puts marker.marker_synonym.name
     class MarkerSynonym < DBConnection
-      set_primary_key 'marker_synonym_id'
+      self.primary_key ='marker_synonym_id'
 
       belongs_to :marker
     end
@@ -907,7 +907,7 @@ module Ensembl
     class MarkerFeature < DBConnection
       include Sliceable
 
-      set_primary_key 'marker_feature_id'
+      self.primary_key ='marker_feature_id'
 
       belongs_to :marker
       belongs_to :seq_region
@@ -929,7 +929,7 @@ module Ensembl
     class MiscFeature < DBConnection
       include Sliceable
 
-      set_primary_key 'misc_feature_id'
+      self.primary_key ='misc_feature_id'
 
       belongs_to :seq_region
       has_one :misc_feature_misc_set
@@ -968,7 +968,7 @@ module Ensembl
     #  puts marker.marker_feature.seq_region_start.to_s
     #  puts marker.marker_feature.seq_region_end.to_s
     class MiscAttrib < DBConnection
-      set_primary_key nil
+      self.primary_key =nil
 
       belongs_to :misc_feature
       belongs_to :attrib_type
@@ -990,7 +990,7 @@ module Ensembl
     #  feature_set = MiscFeature.find(1)
     #  puts feature_set.features.length.to_s
     class MiscSet < DBConnection
-      set_primary_key 'misc_set_id'
+      self.primary_key ='misc_set_id'
 
       has_many :misc_feature_misc_sets
       has_many :misc_features, :through => :misc_feature_misc_set
@@ -1007,7 +1007,7 @@ module Ensembl
     # @example
     #  # TODO
     class MiscFeatureMiscSet < DBConnection
-      set_primary_key nil
+      self.primary_key =nil
 
       belongs_to :misc_feature
       belongs_to :misc_set
@@ -1029,7 +1029,7 @@ module Ensembl
     class Gene < DBConnection
       include Sliceable
 
-      set_primary_key 'gene_id'
+      self.primary_key ='gene_id'
 
       belongs_to :seq_region
       has_one :gene_stable_id
@@ -1152,7 +1152,7 @@ module Ensembl
     # @example
     #  my_gene = GeneStableId.find_by_stable_id('ENSBTAG00000011670').gene
     class GeneStableId < DBConnection
-      set_primary_key 'stable_id'
+      self.primary_key ='stable_id'
 
       belongs_to :gene
     end
@@ -1172,7 +1172,7 @@ module Ensembl
     #	 puts mapping.chromosome_name + "\t" + mapping.position.to_s
     #  end
     class MarkerMapLocation < DBConnection
-      set_primary_key nil
+      self.primary_key =nil
 
       belongs_to :map
       belongs_to :marker
@@ -1190,7 +1190,7 @@ module Ensembl
     #  map = Map.find_by_name('MARC')
     #  puts map.markers.length.to_s
     class Map < DBConnection
-      set_primary_key 'map_id'
+      self.primary_key ='map_id'
 
       has_many :marker_map_locations
       has_many :markers, :through => :marker_map_locations
@@ -1211,7 +1211,7 @@ module Ensembl
     #  repeat = RepeatFeature.find(29)
     #  puts repeat.repeat_consensus.repeat_name + "\t" + repeat.repeat_consensus.repeat_consensus
     class RepeatConsensus < DBConnection
-      set_primary_key 'repeat_consensus_id'
+      self.primary_key ='repeat_consensus_id'
 
       has_many :repeat_features
     end
@@ -1233,7 +1233,7 @@ module Ensembl
     class RepeatFeature < DBConnection
       include Sliceable
 
-      set_primary_key 'repeat_feature_id'
+      self.primary_key ='repeat_feature_id'
 
       belongs_to :repeat_consensus
       belongs_to :seq_region
@@ -1252,7 +1252,7 @@ module Ensembl
     #	 puts attrib.attrib_type.name + "\t" + attrib.value.to_s
     #  end
     class SeqRegionAttrib < DBConnection
-      set_primary_key nil
+      self.primary_key =nil
 
       belongs_to :seq_region
       belongs_to :attrib_type
@@ -1268,7 +1268,7 @@ module Ensembl
     # @example
     #  #TODO
     class GeneAttrib < DBConnection
-      set_primary_key nil
+      self.primary_key =nil
 
       belongs_to :gene
       belongs_to :attrib_type
@@ -1285,7 +1285,7 @@ module Ensembl
     # @example
     #  #TODO
     class AttribType < DBConnection
-      set_primary_key 'attrib_type_id'
+      self.primary_key ='attrib_type_id'
 
       has_many :seq_region_attribs
       has_many :seq_regions, :through => :seq_region_attrib
@@ -1309,7 +1309,7 @@ module Ensembl
     #  transcript_stable_id = TranscriptStableId.find_by_stable_id('ENSBTAT00000015494')
     #  puts transcript_stable_id.transcript.to_yaml
     class TranscriptStableId < DBConnection
-      set_primary_key 'stable_id'
+      self.primary_key ='stable_id'
 
       belongs_to :transcript
     end
@@ -1327,7 +1327,7 @@ module Ensembl
     #	 puts attr.attrib_type.name + "\t" + attr.value
     #  end
     class TranscriptAttrib < DBConnection
-      set_primary_key nil
+      self.primary_key =nil
 
       belongs_to :transcript
       belongs_to :attrib_type
@@ -1353,7 +1353,7 @@ module Ensembl
     class DnaAlignFeature < DBConnection
       include Sliceable
 
-      set_primary_key 'dna_align_feature_id'
+      self.primary_key ='dna_align_feature_id'
 
       belongs_to :seq_region
       belongs_to :analysis
@@ -1373,7 +1373,7 @@ module Ensembl
     # @example
     #  #TODO
     class Translation < DBConnection
-      set_primary_key 'translation_id'
+      self.primary_key ='translation_id'
 
       belongs_to :transcript
       has_many :translation_stable_ids
@@ -1431,7 +1431,7 @@ module Ensembl
     #  stable_id = TranslationStableId.find_by_name('ENSBTAP00000015494')
     #  puts stable_id.to_yaml
     class TranslationStableId < DBConnection
-      set_primary_key 'stable_id'
+      self.primary_key ='stable_id'
 
       belongs_to :translation
     end
@@ -1450,7 +1450,7 @@ module Ensembl
     #	 puts attr.attr_type.name + "\t" + attr.value
     #  end
     class TranslationAttrib < DBConnection
-      set_primary_key nil
+      self.primary_key =nil
 
       belongs_to :translation
       belongs_to :attrib_type
@@ -1470,7 +1470,7 @@ module Ensembl
     #	   puts xref.display_label + "\t" + xref.description
     #  end
     class Xref < DBConnection
-      set_primary_key 'xref_id'
+      self.primary_key ='xref_id'
 
       belongs_to :external_db
       has_many :external_synonyms
@@ -1495,7 +1495,7 @@ module Ensembl
     #	   puts ox.to_yaml
     #  end
     class ObjectXref < DBConnection
-      set_primary_key 'object_xref_id'
+      self.primary_key ='object_xref_id'
       
       belongs_to :gene, :class_name => "Gene", :foreign_key => 'ensembl_id', :conditions => ["ensembl_object_type = 'Gene'"]
       belongs_to :transcript, :class_name => "Transcript", :foreign_key => 'ensembl_id', :conditions => ["ensembl_object_type = 'Transcript'"]
@@ -1512,7 +1512,7 @@ module Ensembl
     # See the general documentation of the Ensembl module for
     # more information on what this means and what methods are available.
     class GoXref < DBConnection
-      set_primary_key nil
+      self.primary_key =nil
       
       belongs_to :xref
     end
@@ -1529,7 +1529,7 @@ module Ensembl
     #  embl_db = ExternalDb.find_by_db_name('EMBL')
     #  puts embl_db.xrefs.length.to_s
     class ExternalDb < DBConnection
-      set_primary_key 'external_db_id'
+      self.primary_key ='external_db_id'
 
       has_many :xrefs
 
@@ -1582,7 +1582,7 @@ module Ensembl
     #  xref = Xref.find(185185)
     #  puts xref.external_synonyms[0].synonyms
     class ExternalSynonym < DBConnection
-      set_primary_key nil
+      self.primary_key =nil
 
       belongs_to :xref
     end
@@ -1604,7 +1604,7 @@ module Ensembl
     class Karyotype < DBConnection
       include Sliceable
 
-      set_primary_key 'karyotype_id'
+      self.primary_key ='karyotype_id'
 
       belongs_to :seq_region
     end
@@ -1627,7 +1627,7 @@ module Ensembl
     class OligoFeature < DBConnection
       include Sliceable
 
-      set_primary_key 'oligo_feature_id'
+      self.primary_key ='oligo_feature_id'
 
       belongs_to :seq_region
       belongs_to :oligo_probe
@@ -1645,7 +1645,7 @@ module Ensembl
     #  probe = OligoProbe.find_by_name('373:434;')
     #  puts probe.probeset + "\t" + probe.oligo_array.name
     class OligoProbe < DBConnection
-      set_primary_key 'oligo_probe_id'
+      self.primary_key ='oligo_probe_id'
 
       has_many :oligo_features
       belongs_to :oligo_array
@@ -1663,7 +1663,7 @@ module Ensembl
     #  array = OligoArray.find_by_name_and_type('Bovine','AFFY')
     #  puts array.oligo_probes.length
     class OligoArray < DBConnection
-      set_primary_key 'oligo_array_id'
+      self.primary_key ='oligo_array_id'
 
       has_many :oligo_probes
     end
@@ -1684,7 +1684,7 @@ module Ensembl
     class PredictionExon < DBConnection
       include Sliceable
 
-      set_primary_key 'prediction_exon_id'
+      self.primary_key ='prediction_exon_id'
 
       belongs_to :prediction_transcript
       belongs_to :seq_region
@@ -1707,7 +1707,7 @@ module Ensembl
     class PredictionTranscript < DBConnection
       include Sliceable
 
-      set_primary_key 'prediction_transcript_id'
+      self.primary_key ='prediction_transcript_id'
 
       has_many :prediction_exons
       belongs_to :seq_region
@@ -1731,7 +1731,7 @@ module Ensembl
     class ProteinFeature < DBConnection
       include Sliceable
 
-      set_primary_key 'protein_feature_id'
+      self.primary_key ='protein_feature_id'
 
       belongs_to :translation
       belongs_to :analysis
@@ -1757,7 +1757,7 @@ module Ensembl
     class ProteinAlignFeature < DBConnection
       include Sliceable
 
-      set_primary_key 'protein_align_feature_id'
+      self.primary_key ='protein_align_feature_id'
 
       belongs_to :seq_region
       belongs_to :analysis
@@ -1777,7 +1777,7 @@ module Ensembl
     #  factor = RegulatoryFactor.find_by_name('crtHsap8070')
     #  puts factor.to_yaml
     class RegulatoryFactor < DBConnection
-      set_primary_key 'regulatory_factor_id'
+      self.primary_key ='regulatory_factor_id'
 
       has_many :regulatory_features
     end
@@ -1802,7 +1802,7 @@ module Ensembl
     class RegulatoryFeature < DBConnection
       include Sliceable
 
-      set_primary_key 'regulatory_feature_id'
+      self.primary_key ='regulatory_feature_id'
 
       belongs_to :seq_region
       belongs_to :analysis

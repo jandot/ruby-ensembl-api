@@ -71,6 +71,7 @@ namespace :test do
  desc "Run tests for release 60"
  task :release60 do
    Dir.glob("test/unit/release_60/**/*.rb").each do |name|
+     puts "About to run... #{name}"
      ruby name
    end
  end

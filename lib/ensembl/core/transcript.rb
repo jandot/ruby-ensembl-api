@@ -72,8 +72,8 @@ module Ensembl
     class Transcript < DBConnection
       include Sliceable
 
-      set_table_name 'transcript'
-      set_primary_key 'transcript_id'
+      self.primary_key = 'transcript'
+      self.primary_key =  'transcript_id'
 
       belongs_to :gene
       belongs_to :seq_region
