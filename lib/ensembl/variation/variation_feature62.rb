@@ -32,7 +32,7 @@ module Ensembl
     #   up_region,down_region = vf.flanking_seq (returns two Ensembl::Core::Slice)
     #
     class VariationFeature < DBConnection
-      set_primary_key "variation_feature_id"
+      self.primary_key =  "variation_feature_id"
       belongs_to :variation
       has_many :tagged_variation_features
       has_many :samples, :through => :tagged_variation_features
@@ -389,7 +389,7 @@ module Ensembl
     #   end
     #
     class TranscriptVariation < DBConnection
-      set_primary_key "transcript_variation_id"
+      self.primary_key = "transcript_variation_id"
       belongs_to :variation_feature
       validates_inclusion_of :consequence_types, :in => ['intergenic_variant',
                                                         'splice_acceptor_variant',
