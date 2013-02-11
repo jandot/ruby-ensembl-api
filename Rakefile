@@ -61,6 +61,13 @@ namespace :test do
    end
  end
  
+ desc "Run tests for release 70"
+  task :release70 do
+    Dir.glob("test/unit/release_70/**/*.rb").each do |name|
+      ruby name
+    end
+  end
+ 
  desc "Run tests for release 62"
  task :release62 do
    Dir.glob("test/unit/release_62/**/*.rb").each do |name|
@@ -71,6 +78,7 @@ namespace :test do
  desc "Run tests for release 60"
  task :release60 do
    Dir.glob("test/unit/release_60/**/*.rb").each do |name|
+     puts "About to run... #{name}"
      ruby name
    end
  end

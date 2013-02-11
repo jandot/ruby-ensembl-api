@@ -29,7 +29,7 @@ class ActiveRecordVariation < Test::Unit::TestCase
   def test_allele
     allele = Allele.find(1)
     assert_equal('T', allele.allele)
-    assert_equal(0.04, allele.frequency)
+    assert_equal(0.04, allele.frequency.round(2))
   end
 
   def test_sample

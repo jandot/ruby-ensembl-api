@@ -72,8 +72,8 @@ module Ensembl
     class Transcript < DBConnection
       include Sliceable
 
-      set_table_name 'transcript'
-      set_primary_key 'transcript_id'
+      self.primary_key = 'transcript'
+      self.primary_key =  'transcript_id'
 
       belongs_to :gene
       belongs_to :seq_region
@@ -125,6 +125,9 @@ module Ensembl
       # 
       # @return [String] Ensembl stable ID of the transcript.
       def stable_id
+        unless self.class.has_stable_id_table?
+          return read_attribute(:stable_id)
+        end
       	return self.transcript_stable_id.stable_id
       end
 
@@ -141,29 +144,30 @@ module Ensembl
       # array is returned.
       def self.find_all_by_stable_id(stable_id)
       	answer = Array.new
-        transcript_stable_id_objects = Ensembl::Core::TranscriptStableId.find_all_by_stable_id(stable_id)
-        transcript_stable_id_objects.each do |transcript_stable_id_object|
-          answer.push(Ensembl::Core::Transcript.find(transcript_stable_id_object.transcript_id))
+      	
+      	if not has_stable_id_table?
+          #result = find(:first, :conditions => ["stable_id = ?" , stable_id])
+          answer = where({:stable_id => stable_id })
+          
+       else
+          transcript_stable_id_objects = Ensembl::Core::TranscriptStableId.find_all_by_stable_id(stable_id)
+          transcript_stable_id_objects.each do |transcript_stable_id_object|
+            answer.push(Ensembl::Core::Transcript.find(transcript_stable_id_object.transcript_id))
+          end
         end
-      
       	return answer
       end
       
-      # The Transcript#find_all_by_stable_id class method returns a
-      # transcripts with the given stable_id. If none was found, nil is returned.
-      def self.find_by_stable_id(stable_id)
-        all = self.find_all_by_stable_id(stable_id)
-        if all.length == 0
-          return nil
-        else
-          return all[0]
-        end
-      end
+    
       
       # The Transcript#find_by_stable_id class method fetches a Transcript object based on
       # its stable ID (i.e. the "ENST" accession number). If the name is
       # not found, it returns nil.
       def self.find_by_stable_id(stable_id)
+        unless has_stable_id_table?
+          result = find(:first, :conditions => ["stable_id = ?" , stable_id])
+          return result
+        end
         transcript_stable_id = TranscriptStableId.find_by_stable_id(stable_id)
         if transcript_stable_id.nil?
           return nil

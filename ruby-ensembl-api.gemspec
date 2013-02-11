@@ -17,8 +17,9 @@ Gem::Specification.new do |s|
   s.test_files = ["test/unit/release_60/core/test_gene.rb","test/unit/release_60/core/test_slice.rb","test/unit/release_60/core/test_transform.rb","test/unit/release_60/core/test_project_human.rb","test/unit/release_60/core/test_transcript.rb","test/unit/release_60/variation/test_activerecord.rb","test/unit/release_60/variation/test_consequence.rb","test/unit/release_60/variation/test_variation.rb","test/unit/test_connection.rb","test/unit/test_releases.rb"]
 
   s.add_dependency("bio", [">=1"])
-  s.add_dependency("activerecord")
-
+  s.add_dependency("activerecord", [">=3.2"])
+  s.add_dependency("activerecord-mysql-adapter")
+  s.add_dependency("mysql",["=2.8.1"])
   s.require_path = "lib"
 
   s.bindir = "bin"
