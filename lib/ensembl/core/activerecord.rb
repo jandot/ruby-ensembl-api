@@ -85,22 +85,22 @@ module Ensembl
       # @return [Ensembl::Core::Slice] Ensembl::Core::Slice object
       def slice
         start, stop, strand = nil, nil, nil
-        
-      	if self.class == Ensembl::Core::Intron or self.class.column_names.include?('seq_region_start')
+
+        if self.class == Ensembl::Core::Intron or self.class.column_names.include?('seq_region_start')
           start = self.seq_region_start
         end
-      	if self.class == Ensembl::Core::Intron or self.class.column_names.include?('seq_region_end')
+        if self.class == Ensembl::Core::Intron or self.class.column_names.include?('seq_region_end')
           stop = self.seq_region_end
         end
-      	if self.class == Ensembl::Core::Intron or self.class.column_names.include?('seq_region_strand')
+        if self.class == Ensembl::Core::Intron or self.class.column_names.include?('seq_region_strand')
           strand = self.seq_region_strand
-      	else #FIXME: we shouldn't do this, but can't #project if no strand given
+        else #FIXME: we shouldn't do this, but can't #project if no strand given
           strand = 1
         end
-      
+
         return Ensembl::Core::Slice.new(self.seq_region, start, stop, strand)
       end
-      
+
       # The Sliceable#seq method takes the coordinates on a reference, transforms
       # onto the seqlevel coordinate system if necessary, and retrieves the
       # sequence.
@@ -109,7 +109,7 @@ module Ensembl
       def seq
         return self.slice.seq
       end
-      
+
       # The Sliceable#start method is a convenience method and returns
       # self.seq_region_start.
       # 
@@ -117,7 +117,7 @@ module Ensembl
       def start
         return self.seq_region_start
       end
-      
+
       # The Sliceable#stop method is a convenience method and returns
       # self.seq_region_end.
       # 
@@ -125,7 +125,7 @@ module Ensembl
       def stop
         return self.seq_region_end
       end
-      
+
       # The Sliceable#strand method is a convenience method and returns
       # self.seq_region_strand.
       # 
@@ -133,7 +133,7 @@ module Ensembl
       def strand
         return self.seq_region_strand
       end
-      
+
       # The Sliceable#length method returns the length of the feature (based on
       # seq_region_start and seq_region_end.
       # 
@@ -141,7 +141,7 @@ module Ensembl
       def length
         return self.stop - self.start + 1
       end
-      
+
       # The Sliceable#project method is used to transfer coordinates from one
       # coordinate system to another. Suppose you have a feature on a
       # contig in human (let's say on contig AC000031.6.1.38703) and you
@@ -215,13 +215,13 @@ module Ensembl
       # @return [Boolean] True if coord_system is seqlevel, else false.
       def seqlevel?
         if Collection.check # When usign multi-species databases
-           return true if self == CoordSystem.find_by_sql("SELECT * FROM coord_system WHERE attrib LIKE '%sequence_level%' AND species_id = #{self.species_id}")[0]
+          return true if self == CoordSystem.find_by_sql("SELECT * FROM coord_system WHERE attrib LIKE '%sequence_level%' AND species_id = #{self.species_id}")[0]
         else
-           return true if self == CoordSystem.find_seqlevel
+          return true if self == CoordSystem.find_seqlevel
         end
         return false
       end
-      
+
       # The CoordSystem#find_toplevel class method returns the toplevel coordinate
       # system.
       # 
@@ -245,7 +245,7 @@ module Ensembl
         end
         return Ensembl::SESSION.toplevel_coord_system
       end
-      
+
       # The CoordSystem#find_seqlevel class method returns the seqlevel coordinate
       # system.
       # 
@@ -269,7 +269,7 @@ module Ensembl
         end
         return Ensembl::SESSION.seqlevel_coord_system
       end
-      
+
       # The CoordSystem#find_level class method returns the seqlevel coordinate
       # system corresponding to the name passed.
       # 
@@ -282,7 +282,7 @@ module Ensembl
           return CoordSystem.find_by_name(coord_system_name)
         end
       end
-      
+
       # The CoordSystem#find_default_by_name class method returns the
       # coordinate system by that name with the lowest rank. Normally, a lower
       # rank means a 'bigger' coordinate system. The 'chromosome' typically has
@@ -301,7 +301,7 @@ module Ensembl
           return all_coord_systems_with_name.select{|cs| cs.attrib =~ /default_version/}[0]
         end
       end
-      
+
       # The CoordSystem#name_with_version returns a string containing the name
       # and version of the coordinate system. If no version is available, then
       # just the name is returned
@@ -314,7 +314,7 @@ module Ensembl
           return [name, version].join(':')
         end
       end
-      
+
       ## Calculate the shortest path between a source coordinate system and a
       ## target coordinate system. This can be done by looking for the
       ## 'assembly.mapping' records in the meta_coord table.
@@ -380,7 +380,7 @@ module Ensembl
       has_many :cmp_seq_regions, :through => :asm_links_as_asm
 
       alias attribs seq_region_attribs
-      
+
       # The SeqRegion#slice method returns a slice object that covers the whole
       # of the seq_region.
       #
@@ -388,7 +388,7 @@ module Ensembl
       def slice
         return Ensembl::Core::Slice.new(self)
       end
-      
+
       # The SeqRegion#assembled_seq_regions returns the sequence regions on which
       # the current region is assembled. For example, calling this method on a
       # contig sequence region, it might return the chromosome that that contig
@@ -402,13 +402,13 @@ module Ensembl
           return self.asm_seq_regions
         else
           answer = Array.new
-      	  coord_system = CoordSystem.find_by_name(coord_system_name)
+          coord_system = CoordSystem.find_by_name(coord_system_name)
           self.asm_seq_regions.each do |asr|
             if asr.coord_system_id == coord_system.id
               answer.push(asr)
             end
           end
-      	  return answer
+          return answer
         end
       end
 
@@ -422,17 +422,17 @@ module Ensembl
       # @param [String] coord_system_name Name of coordinate system
       # @return [Array<SeqRegion>] Array of SeqRegion objects
       def component_seq_regions(coord_system_name = nil)
-      	if coord_system_name.nil?
+        if coord_system_name.nil?
           return self.cmp_seq_regions
         else
           answer = Array.new
-      	  coord_system = CoordSystem.find_by_name(coord_system_name)
+          coord_system = CoordSystem.find_by_name(coord_system_name)
           self.cmp_seq_regions.each do |csr|
             if csr.coord_system_id == coord_system.id
               answer.push(csr)
             end
           end
-      	  return answer
+          return answer
         end
       end
 
@@ -474,7 +474,7 @@ module Ensembl
         if coord_system.nil?
           return self.asm_links_as_cmp
         else
-      	  return self.asm_links_as_cmp.select{|alac| alac.asm_seq_region.coord_system_id == coord_system.id}
+          return self.asm_links_as_cmp.select{|alac| alac.asm_seq_region.coord_system_id == coord_system.id}
         end
       end
 
@@ -496,7 +496,7 @@ module Ensembl
       # @param [Integer] stop Stop position
       # @return [String] DNA sequence
       def subsequence(start, stop)
-      	return self.seq.slice(start - 1, (stop - start) + 1)
+        return self.seq.slice(start - 1, (stop - start) + 1)
       end
       alias subseq subsequence
 
@@ -543,9 +543,9 @@ module Ensembl
     # This class should normally not be used directly by the user.   
     class AssemblyException < DBConnection
       include Sliceable
-      
+
       self.primary_key ='assembly_exception_id'
-      
+
       belongs_to :seq_region
     end
 
@@ -662,7 +662,11 @@ module Ensembl
       has_many :protein_align_features, :through => :exon_supporting_features, :conditions => ["feature_type = 'protein_align_feature'"]
 
       def stable_id
+        unless self.class.has_stable_id_table?
+          return read_attribute(:stable_id)
+        end
         return self.exon_stable_id.stable_id
+        
       end
 
       # The Exon#seq method returns the sequence of the exon.
@@ -674,20 +678,26 @@ module Ensembl
           seq_region = self.seq_region
           Ensembl::SESSION.seq_regions[seq_region.id] = seq_region
         end
-      	slice = Ensembl::Core::Slice.new(seq_region, seq_region_start, seq_region_end, seq_region_strand)
+        slice = Ensembl::Core::Slice.new(seq_region, seq_region_start, seq_region_end, seq_region_strand)
         return slice.seq
       end
-      
-      
+
+
       def self.find_by_stable_id(stable_id)
-          exon_stable_id = ExonStableId.find_by_stable_id(stable_id)
-          if exon_stable_id.nil?
-            return nil
-          else
-            return exon_stable_id.exon
-          end
+
+        unless has_stable_id_table?
+          result = find(:first, :conditions => ["stable_id = ?" , stable_id])
+          return result
+        end
+        exon_stable_id = ExonStableId.find_by_stable_id(stable_id)
+        if exon_stable_id.nil?
+          return nil
+        else
+          return exon_stable_id.exon
+        end
+
       end
-      
+
     end
 
     # The ExonStableId class provides an interface to the exon_stable_id
@@ -701,7 +711,7 @@ module Ensembl
     #  my_exon = ExonStableId.find_by_stable_id('ENSE00001494622').exon
     class ExonStableId < DBConnection
       self.primary_key ='stable_id'
-      
+
       belongs_to :exon
     end
 
@@ -725,15 +735,15 @@ module Ensembl
     class ExonSupportingFeature < DBConnection
       self.table_name = 'supporting_feature'
       self.primary_key =nil
-      
+
       belongs_to :exon
       belongs_to :dna_align_feature, :class_name => "DnaAlignFeature", :foreign_key => 'feature_id'
       belongs_to :protein_align_feature, :class_name => "ProteinAlignFeature", :foreign_key => 'feature_id'
     end
-    
+
     class TranscriptSupportingFeature < DBConnection
       self.primary_key =nil
-      
+
       belongs_to :transcript
       belongs_to :dna_align_feature, :class_name => "DnaAlignFeature", :foreign_key => 'feature_id'
       belongs_to :protein_align_feature, :class_name => "ProteinAlignFeature", :foreign_key => 'feature_id'
@@ -831,7 +841,7 @@ module Ensembl
       #  marker = Marker.find(1)
       #  puts marker.name    --> 58017,D29149
       def name
-      	self.marker_synonyms.collect{|ms| ms.name}.join(',')
+        self.marker_synonyms.collect{|ms| ms.name}.join(',')
       end
 
       # The Marker#find_by_name class method returns one marker with this name.
@@ -851,12 +861,12 @@ module Ensembl
       # 
       # @return [Array] Empty array or array of Marker objects
       def self.find_all_by_name(name)
-      	marker_synonyms = Ensembl::Core::MarkerSynonym.find_all_by_name(name)
+        marker_synonyms = Ensembl::Core::MarkerSynonym.find_all_by_name(name)
         answers = Array.new
-      	marker_synonyms.each do |ms|
+        marker_synonyms.each do |ms|
           answers.push(Ensembl::Core::Marker.find_all_by_marker_id(ms.marker_id))
         end
-      	answers.flatten!
+        answers.flatten!
         return answers
       end
 
@@ -868,7 +878,7 @@ module Ensembl
       #	return output.join("\n")
       #
       #end
-      
+
     end
 
     # The MarkerSynonym class provides an interface to the marker_synonym
@@ -938,19 +948,19 @@ module Ensembl
       has_many :misc_attribs
 
       alias attribs misc_attribs
-      
+
       def self.find_by_attrib_type_value(code, value)
         return self.find_all_by_attrib_type_value(code, value)[0]
       end
-      
+
       def self.find_all_by_attrib_type_value(code, value)
         code_id = AttribType.find_by_code(code)
-      	misc_attribs = MiscAttrib.find_all_by_attrib_type_id_and_value(code_id, value)
+        misc_attribs = MiscAttrib.find_all_by_attrib_type_id_and_value(code_id, value)
         answers = Array.new
-      	misc_attribs.each do |ma|
+        misc_attribs.each do |ma|
           answers.push(MiscFeature.find_all_by_misc_feature_id(ma.misc_feature_id))
         end
-      	answers.flatten!
+        answers.flatten!
         return answers
       end
     end
@@ -972,7 +982,7 @@ module Ensembl
 
       belongs_to :misc_feature
       belongs_to :attrib_type
-      
+
       def to_s
         return self.attrib_type.code + ":" + self.value.to_s
       end
@@ -1040,7 +1050,7 @@ module Ensembl
       has_many :transcripts
 
       belongs_to :analysis
-      
+
       has_many :object_xrefs, :foreign_key => 'ensembl_id', :conditions => "ensembl_object_type = 'Gene'"
       has_many :xrefs, :through => :object_xrefs
 
@@ -1049,8 +1059,11 @@ module Ensembl
       # The Gene#stable_id method returns the stable_id of the gene (i.e. the
       # ENSG id).
       def stable_id
-        return self.gene_stable_id.stable_id
-      	
+        unless self.class.has_stable_id_table?
+          read_attribute(:stable_id)
+        else
+          return self.gene_stable_id.stable_id
+        end
       end
 
       # The Gene#display_label method returns the default name of the gene.
@@ -1065,16 +1078,16 @@ module Ensembl
       # and returns an array of the corresponding Gene objects. If the name is
       # not found, it returns an empty array.
       def self.find_all_by_name(name)
-      	answer = Array.new
+        answer = Array.new
         xrefs = Ensembl::Core::Xref.find_all_by_display_label(name)
         xrefs.each do |xref|
           answer.push(Ensembl::Core::Gene.find_by_display_xref_id(xref.xref_id))
         end
-        
+
         answer.reject!{|a| a.nil?}
-      	return answer
+        return answer
       end
-      
+
       # The Gene#find_by_name class method searches the Xrefs for that name
       # and returns one Gene objects (even if there should be more). If the name is
       # not found, it returns nil.
@@ -1086,13 +1099,17 @@ module Ensembl
           return all_names[0]
         end
       end
-      
+
       # The Gene#find_by_stable_id class method fetches a Gene object based on
       # its stable ID (i.e. the "ENSG" accession number). If the name is
       # not found, it returns nil.
       def self.find_by_stable_id(stable_id)
         result = nil
-        if stable_id.kind_of? Array
+        if  not self.has_stable_id_table?
+          result = Gene.where({:stable_id => stable_id })
+          result = result.first unless stable_id.kind_of? Array
+          result = result.map{|gene| gene} if stable_id.kind_of? Array
+        elsif stable_id.kind_of? Array
           gene_stable_ids = GeneStableId.where({:stable_id => stable_id})
           result = (gene_stable_ids.size == 0) ? nil : gene_stable_ids.map {|id| id.gene}
         else
@@ -1101,7 +1118,7 @@ module Ensembl
         end
         return result
       end
-      
+
       # The Gene#all_xrefs method is a convenience method in that it combines
       # three methods into one. It collects all xrefs for the gene itself, plus
       # all xrefs for all transcripts for the gene, and all xrefs for all
@@ -1118,13 +1135,13 @@ module Ensembl
         answer.flatten!
         return answer
       end
-      
+
       # The Gene#go_terms method returns all GO terms associated with a gene.
       def go_terms
         go_db_id = ExternalDb.find_by_db_name('GO').id
         return self.all_xrefs.select{|x| x.external_db_id == go_db_id}.collect{|x| x.dbprimary_acc}.uniq
       end
-      
+
       # The Gene#hgnc returns the HGNC symbol for the gene.
       def hgnc
         hgnc_db_id = ExternalDb.find_by_db_name('HGNC_curated_gene').id
@@ -1134,12 +1151,12 @@ module Ensembl
       end
 
     end
-    
+
     # The Gene#canonical_transcript returns the longest transcript for that gene.
     #
     def canonical_transcript
-     ct = self.transcripts.sort {|a,b| b.seq.length <=> a.seq.length}
-     return ct[0]
+      ct = self.transcripts.sort {|a,b| b.seq.length <=> a.seq.length}
+      return ct[0]
     end
 
     # The GeneStableId class provides an interface to the gene_stable_id
@@ -1176,7 +1193,7 @@ module Ensembl
 
       belongs_to :map
       belongs_to :marker
-      
+
     end
 
     # The Map class provides an interface to the map
@@ -1196,7 +1213,7 @@ module Ensembl
       has_many :markers, :through => :marker_map_locations
 
       def name
-      	return self.map_name
+        return self.map_name
       end
     end
 
@@ -1357,7 +1374,7 @@ module Ensembl
 
       belongs_to :seq_region
       belongs_to :analysis
-      
+
       has_many :exon_supporting_features
       has_many :protein_supporting_features
     end
@@ -1380,22 +1397,25 @@ module Ensembl
 
       has_many :translation_attribs
       has_many :protein_features
-      
+
       has_one :translation_stable_id
-      
+
       has_many :object_xrefs, :foreign_key => 'ensembl_id', :conditions => "ensembl_object_type = 'Translation'"
       has_many :xrefs, :through => :object_xrefs
-      
+
       belongs_to :start_exon, :class_name => 'Exon', :foreign_key => 'start_exon_id'
       belongs_to :end_exon, :class_name => 'Exon', :foreign_key => 'end_exon_id'
 
       alias attribs translation_attribs
-      
+
       # The Translation#stable_id method returns the stable ID of the translation.
       # 
       # @return [String] Ensembl stable ID
       def stable_id
-      	return self.translation_stable_id.stable_id
+        unless self.class.has_stable_id_table?
+          return read_attribute(:stable_id)
+        end
+        return self.translation_stable_id.stable_id
       end
 
       # The Translation#display_label method returns the default name of the translation.
@@ -1410,6 +1430,10 @@ module Ensembl
       # object based on its stable ID (i.e. the "ENSP" accession number). If the 
       # name is not found, it returns nil.
       def self.find_by_stable_id(stable_id)
+        unless has_stable_id_table?
+          result = find(:first, :conditions => ["stable_id = ?" , stable_id])
+          return result
+        end
         translation_stable_id = TranslationStableId.find_by_stable_id(stable_id)
         if translation_stable_id.nil?
           return nil
@@ -1476,7 +1500,7 @@ module Ensembl
       has_many :external_synonyms
 
       has_many :genes
-      
+
       def to_s
         return self.external_db.db_name.to_s + ":" + self.display_label
       end
@@ -1496,14 +1520,14 @@ module Ensembl
     #  end
     class ObjectXref < DBConnection
       self.primary_key ='object_xref_id'
-      
+
       belongs_to :gene, :class_name => "Gene", :foreign_key => 'ensembl_id', :conditions => ["ensembl_object_type = 'Gene'"]
       belongs_to :transcript, :class_name => "Transcript", :foreign_key => 'ensembl_id', :conditions => ["ensembl_object_type = 'Transcript'"]
       belongs_to :translation, :class_name => "Translation", :foreign_key => 'ensembl_id', :conditions => ["ensembl_object_type = 'Translation'"]
       belongs_to :xref
       has_one :go_xref
     end
-    
+
     # The GoXref class provides an interface to the
     # go_xref table. This table contains the evidence codes for those object_refs
     # that are GO terms.
@@ -1513,7 +1537,7 @@ module Ensembl
     # more information on what this means and what methods are available.
     class GoXref < DBConnection
       self.primary_key =nil
-      
+
       belongs_to :xref
     end
 
@@ -1542,15 +1566,15 @@ module Ensembl
       # one. If no databases are found with this name, this method returns an
       # empty array.
       def self.find_all_by_display_label(label)
-      	answer = Array.new
+        answer = Array.new
         xrefs = Xref.find_all_by_display_label(label)
-      	xrefs.each do |xref|
+        xrefs.each do |xref|
           answer.push(self.class.find_by_xref_id(xref.xref_id))
         end
 
         return answer
       end
-      
+
       # The ExternalDb#find_by_display_label method returns a
       # database that has this label. If no databases are found with this name,
       # this method returns nil.
@@ -1564,7 +1588,7 @@ module Ensembl
         end
       end
 
-      
+
     end
 
     # The ExternalSynonym class provides an interface to the
@@ -1761,7 +1785,7 @@ module Ensembl
 
       belongs_to :seq_region
       belongs_to :analysis
-      
+
       has_many :exon_supporting_features
       has_many :transcript_supporting_features
     end

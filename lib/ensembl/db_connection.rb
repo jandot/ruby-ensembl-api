@@ -53,10 +53,18 @@ module Ensembl
         end
       end
       
+      #Retrieves the Release of the database. This doesn't work with Ensemble Genomes that have a different naming convention. 
       def self.release
         return @release if @release
         @release = self.get_info[6]
         @release
+      end
+      
+      #Figures out if the database where it is connected has stable_id tables (Removed from version 65). 
+      def self.has_stable_id_table?
+        @@has_stable_id = self.connection.table_exists? ('gene_stable_id') unless @@has_stable_id_defined
+        @@has_stable_id_defined = true
+        @@has_stable_id
       end
       
       # Method to retrieve the name of a database, using species, release and connection parameters
@@ -91,6 +99,9 @@ module Ensembl
       end
       
       def self.generic_connect(db_type, species, release, args = {})
+        #Clears the variables that check if certain fetures are available
+        @@has_stable_id_defined  = false
+        
         
         # check which release is used and load the correct VariationFeature version
         require (release < 62) ? File.dirname(__FILE__) + '/variation/variation_feature.rb' : File.dirname(__FILE__) + '/variation/variation_feature62.rb'
@@ -101,6 +112,7 @@ module Ensembl
         if args[:ensembl_genomes] then
           args[:port] = EG_PORT
           args[:host] = EG_HOST
+          
         end    
         if args[:port].nil? then
           args[:port] = ( release > 47 ) ? 5306 : 3306
