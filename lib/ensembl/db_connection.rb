@@ -53,6 +53,12 @@ module Ensembl
         end
       end
       
+      def self.release
+        return @release if @release
+        @release = self.get_info[6]
+        @release
+      end
+      
       # Method to retrieve the name of a database, using species, release and connection parameters
       # passed by the user.    
       def self.get_name_from_db(db_type,species,release,args)
